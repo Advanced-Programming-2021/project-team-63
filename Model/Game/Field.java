@@ -10,6 +10,7 @@ public class Field {
     private ArrayList<Card> graveyard;
     private Deck deck;
     private Card fieldSpellZone;
+    int Lp ;
 
     public Card[] getMonsterZone() {
         return monsterZone;
