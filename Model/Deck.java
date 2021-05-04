@@ -4,9 +4,10 @@ import java.util.*;
 import Model.Game.Card.*;
 
 public class Deck {
-    public static ArrayList<Deck> decks;
     private String name;
-    private ArrayList<Card> cards;
+    private ArrayList<Card> mainDeck;
+    private ArrayList<Card> sideDeck;
+    private boolean isActive;
     
     static{
         decks = new ArrayList<Deck>();
@@ -14,7 +15,9 @@ public class Deck {
 
     public Deck(String name){
         setName(name);
-        decks.add(this);
+        setActive(false);
+        mainDeck = new ArrayList<Card>();
+        sideDeck = new ArrayList<Card>();
     }
 
     public void setName(String name) {
@@ -25,22 +28,55 @@ public class Deck {
         return name;
     }
 
-    public void addCard(Card card){
-        cards.add(card);
+    public void addCardToMainDeck(Card card){
+        mainDeck.add(card);
     }
 
-    public void removeCard(Card card){
-        cards.remove(card);
+    public void removeCardFromMainDeck(Card card){
+        mainDeck.remove(card);
     }
 
-    public static Deck getDeckByName(String name){
-        for(Deck deck : decks){
-            if(deck.getName().equals(name)) return deck;
+    public ArrayList<Card> getMainDeck() {
+        return mainDeck;
+    }
+
+    public int getMainDeckSize(){
+        return mainDeck.size();
+    }
+
+    public void addCardToSideDeck(Card card){
+        sideDeck.add(card);
+    }
+
+    public void removeCardFromSideDeck(Card card){
+        sideDeck.remove(Card);
+    }
+
+    public ArrayList<Card> getSideDeck() {
+        return sideDeck;
+    }
+
+    public int getSideDeckSize(){
+        return sideDeck.size();
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public boolean isValid(){
+        if(mainCards.size() >= 40) return true;
+        else return false;
+    }
+
+    public int cardCount(Card card){
+        int count;
+        for(Card c : mainDeck){
+            if(c.getName().equals(card.getName())) count++;
         }
-        return null;
-    }
-
-    public static ArrayList<Deck> getDecks() {
-        return decks;
+        for(Card c : sideDeck){
+            if(c.getName().equals(card.getName())) count++;
+        }
+        return count;
     }
 }

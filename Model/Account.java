@@ -12,11 +12,20 @@ public class Account{
     private int money;
     private ArrayList<Card> purchasedCards;
     private ArrayList<Deck> decks;
-    private Deck mainDeck;
-    private Deck sideDeck;
 
     static{
         accounts = new ArrayList<Account>();
+    }
+
+    public Account(String username, String password, String nickname){
+        setUsername(username);
+        setPassword(password);
+        setNickname(nickname);
+        setScore(0);
+        setMoney(10000);
+        purchasedCards = new ArrayList<Card>();
+        decks = new ArrayList<Deck>();
+        accounts.add(this);
     }
 
     public void setUsername(String username) {
@@ -80,8 +89,7 @@ public class Account{
     }
 
     public boolean hasCard(Card card){
-        if(purchasedCards.contains(card)) return true;
-        return false;
+       return purchasedCards.contains(card);
     }
 
     public void addToDecks(Deck deck){
@@ -93,24 +101,14 @@ public class Account{
     }
 
     public boolean hasDeck(Deck deck){
-        if(decks.contains(deck)) return true;
-        return false;
+        return decks.contains();
     }
 
-    public void setMainDeck(Deck mainDeck) {
-        this.mainDeck = mainDeck;
-    }
-
-    public Deck getMainDeck() {
-        return mainDeck;
-    }
-    
-    public void setSideDeck(Deck sideDeck) {
-        this.sideDeck = sideDeck;
-    }
-
-    public Deck getSideDeck() {
-        return sideDeck;
+    public Deck getDeckByName(String name){
+        for(Deck deck : decks){
+            if(deck.getName().equals(name)) return deck;
+        }
+        return null;
     }
 
     public static ArrayList<Account> getAccounts() {
