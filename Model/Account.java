@@ -101,7 +101,7 @@ public class Account{
     }
 
     public boolean hasDeck(Deck deck){
-        return decks.contains();
+        return decks.contains(deck);
     }
 
     public Deck getDeckByName(String name){
