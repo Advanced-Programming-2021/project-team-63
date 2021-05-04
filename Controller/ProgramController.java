@@ -3,6 +3,8 @@ package Controller;
 import java.util.regex.*;
 
 public class ProgramController {
+    private Account account ;
+    
     public void login(Matcher matcher){
 
     }
