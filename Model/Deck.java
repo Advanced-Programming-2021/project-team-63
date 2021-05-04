@@ -8,10 +8,6 @@ public class Deck {
     private ArrayList<Card> mainDeck;
     private ArrayList<Card> sideDeck;
     private boolean isActive;
-    
-    static{
-        decks = new ArrayList<Deck>();
-    }
 
     public Deck(String name){
         setName(name);
@@ -49,7 +45,7 @@ public class Deck {
     }
 
     public void removeCardFromSideDeck(Card card){
-        sideDeck.remove(Card);
+        sideDeck.remove(card);
     }
 
     public ArrayList<Card> getSideDeck() {
@@ -65,12 +61,12 @@ public class Deck {
     }
 
     public boolean isValid(){
-        if(mainCards.size() >= 40) return true;
+        if(mainDeck.size() >= 40) return true;
         else return false;
     }
 
     public int cardCount(Card card){
-        int count;
+        int count = 0;
         for(Card c : mainDeck){
             if(c.getName().equals(card.getName())) count++;
         }

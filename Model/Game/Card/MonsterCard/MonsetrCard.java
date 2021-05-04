@@ -3,7 +3,7 @@ package Model.Game.Card.MonsterCard;
 import java.util.*;
 import Model.Game.Card.*;
 
-public abstract class MonsetrCard extends Card{
+public class MonsetrCard extends Card{
     private int level;
     private int atk;
     private int def;
