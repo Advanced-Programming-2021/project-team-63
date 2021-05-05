@@ -1,5 +1,22 @@
 package Model.Game.Card.MonsterCard;
 
 public enum Type {
-    
+    NORMAL,
+    EFFECT,
+    RITUAL,
+    WARRIOR,
+    BEAST_WARRIOR,
+    FIEND,
+    AQUA,
+    BEAST,
+    PYRO,
+    SPELLCASTER,
+    THUNDER,
+    DRAGON,
+    MACHINE,
+    ROCK,
+    INSECT,
+    CYBERSE,
+    FAIRY,
+    SEA_SERPENT
 }

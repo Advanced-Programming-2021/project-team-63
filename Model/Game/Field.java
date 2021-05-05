@@ -2,11 +2,12 @@ package Model.Game;
 
 import java.util.*;
 import Model.Game.Card.*;
+import Model.Game.Card.SpellCard.*;
 import Model.Game.Card.MonsterCard.*;
 
 public class Field {
     private MonsterCard monsterZone[] = new MonsterCard[5];
-    private Card trapSpellZone[] = new Card[5];
+    private SpellCard trapSpellZone[] = new SpellCard[5];
     private ArrayList<Card> graveyard;
     private Card fieldSpellZone;
     private Card fieldZone;
