@@ -12,6 +12,7 @@ public class Account{
     private int money;
     private ArrayList<Card> purchasedCards;
     private ArrayList<Deck> decks;
+    private Deck activeDeck;
 
     static{
         accounts = new ArrayList<Account>();
@@ -109,6 +110,14 @@ public class Account{
             if(deck.getName().equals(name)) return deck;
         }
         return null;
+    }
+
+    public void setActiveDeck(Deck activeDeck) {
+        this.activeDeck = activeDeck;
+    }
+
+    public Deck getActiveDeck() {
+        return activeDeck;
     }
 
     public static ArrayList<Account> getAccounts() {

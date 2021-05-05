@@ -6,7 +6,7 @@ public abstract class Card {
     private String number;
     private Category category;
 
-    public static Card Construct(Category category){
+    public static Card constructCard(Category category){
         return null;
     }
     

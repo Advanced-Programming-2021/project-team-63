@@ -1,6 +1,6 @@
 package Model.Game.Card;
 
-enum Category {
+public enum Category {
     MONSTER,
     SPELL,
     TRAP

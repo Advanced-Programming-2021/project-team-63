@@ -1,6 +1,6 @@
 package Model.Game.Card.MonsterCard;
 
-enum MonsterCategory {
+public enum MonsterCategory {
     NORMAL,
     EFFECTIVE,
     RITUAL
