@@ -7,18 +7,16 @@ import Model.Game.Game;
 import Model.Game.Card.Card;
 
 public class GameController{
-    private Game game ;
-    
     public void createGame(Account player1 , Account player2){
-        game = new Game(player1 , player2) ;
+        
     }
    
     public void nextPhase(){
-        game.nextPhase();
+        
     }
 
     public void addCardFromDeckToHand(){
-        game.addCardFromDeckToHand();
+        
     }
 
     public void selectCard(String cardAddress){

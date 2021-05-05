@@ -3,15 +3,16 @@ package Model.Game.Card.MonsterCard;
 import java.util.*;
 import Model.Game.Card.*;
 
-public class MonsetrCard extends Card{
+public class MonsterCard extends Card{
     private int level;
     private int atk;
     private int def;
-    private ArrayList<Type> types;
     private Attribute attribute;
+    private Mode mode;
+    private ArrayList<Type> types;
     private MonsterCategory monsterCategory;
 
-    public static MonsetrCard Construct(MonsterCategory monsterCategory){
+    public MonsterCard Construct(MonsterCategory monsterCategory){
         return null;
     }
 
@@ -45,5 +46,13 @@ public class MonsetrCard extends Card{
 
     public Attribute getAttribute() {
         return attribute;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
+
+    public Mode getMode() {
+        return mode;
     }
 }

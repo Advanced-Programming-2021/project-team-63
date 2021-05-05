@@ -1,5 +1,5 @@
 package Model.Game.Card.MonsterCard;
 
-public class RitualMonsterCard {
+public class RitualMonsterCard extends MonsterCard{
     
 }

@@ -7,11 +7,9 @@ public class Deck {
     private String name;
     private ArrayList<Card> mainDeck;
     private ArrayList<Card> sideDeck;
-    private boolean isActive;
 
     public Deck(String name){
         setName(name);
-        setActive(false);
         mainDeck = new ArrayList<Card>();
         sideDeck = new ArrayList<Card>();
     }
@@ -54,10 +52,6 @@ public class Deck {
 
     public int getSideDeckSize(){
         return sideDeck.size();
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
     }
 
     public boolean isValid(){

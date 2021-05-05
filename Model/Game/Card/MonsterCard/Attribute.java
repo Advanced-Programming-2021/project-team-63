@@ -1,6 +1,6 @@
 package Model.Game.Card.MonsterCard;
 
-enum Attribute {
+public enum Attribute {
     DARK,
     LIGHT,
     FIRE,
