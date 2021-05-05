@@ -3,24 +3,26 @@ package Controller;
 import java.util.ArrayList;
 
 import Model.Account;
+import Model.Game.CardAddress;
 import Model.Game.Game;
 import Model.Game.Card.Card;
 
 public class GameController{
+    private Game game ;
     public void createGame(Account player1 , Account player2){
         
     }
    
     public void nextPhase(){
-        
+        game.nextPhase();
     }
 
     public void addCardFromDeckToHand(){
-        
+        game.addCardFromDeckToHand();
     }
 
-    public void selectCard(String cardAddress){
-        game.selectCard(cardAddress);
+    public void selectCard(CardAddress cardAddress, int id){
+        game.selectCard(cardAddress , id);
     }
 
     public void deselectCard(){
@@ -28,7 +30,7 @@ public class GameController{
     }
 
     public void summonMonster(){
-        game.summonMonster(); 
+        game.summon(); 
     }
 
     public void speciallSummonMonster(){
