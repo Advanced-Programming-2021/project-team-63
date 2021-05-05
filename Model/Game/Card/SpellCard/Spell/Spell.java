@@ -1,4 +1,4 @@
-package Model.Game.Card.SpellTrapCard.Spell;
+package Model.Game.Card.SpellCard.Spell;
 
 public interface Spell {
     public boolean isActivated();
