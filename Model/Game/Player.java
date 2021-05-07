@@ -104,6 +104,12 @@ public class Player {
         return randomCard;
     }
 
+    public void draw(){
+        Card card = this.getRandomCard();
+        this.removeFromCards(card);
+        this.addToHand(card);
+    }
+
     public void summon(MonsterCard monsterCard){
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SUMMON);
