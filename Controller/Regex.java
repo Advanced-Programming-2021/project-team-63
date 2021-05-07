@@ -48,6 +48,42 @@ public class Regex {
 
     ///////////delete card from deck
 
+    public static String deleteCardOfDeck_cds_="^\\s*deck rm-card (?:--card|-c) (.+) (?:--deck|-d) (.+)(?: (--side)|(-side))*\\s*$";
+    public static String deleteCardOfDeck_csd_="^\\s*deck rm-card (?:--card|-c) (.+)(?: (--side)|(-side))* (?:--deck|-d) (.+)\\s*$";
+    public static String deleteCardOfDeck_dsc_="^\\s*deck rm-card (?:--deck|-d) (.+)(?: (--side)|(-side))* (?:--card|-c) (.+)\\s*$";
+    public static String deleteCardOfDeck_dcs_="^\\s*deck rm-card (?:--deck|-d) (.+) (?:--card|-c) (.+)(?: (--side)|(-side))*\\s*$";
+    public static String deleteCardOfDeck_scd_="^\\s*deck rm-card (?:(--side)|(-side))* (?:--card|-c) (.+) (?:--deck|-d) (.+)\\s*$";
+    public static String deleteCardOfDeck_sdc_="^\\s*deck rm-card (?:(--side)|(-side))* (?:--deck|-d) (.+) (?:--card|-c) (.+)\\s*$";
+
+    ///////////////
+    public static String showCard="^\\s*deck show --all\\s*$";
+
+    public static String showDeck_dc_="^\\s*deck show(?: (--side)|(-side))* (?:--deck-name|-d) (.+)\\s*$";
+    public static String showDeck_ds_="^\\s*deck show (?:--deck-name|-d) (.+)(?: (--side)|(-side))*\\s*$";
+
+    public static String showAllCard="^\\s*deck show --cards\\s*$";
+
+    //////////////
+
+    public static String buyCard="^\\s*shop buy (.+)\\s*$";
+
+    //////////////// /////????????????????????????????????????currect names
+
+    public static String startNewDuel="^\\s*duel (?:--second-player|-sc|--ai|-a) (?:--new|-n) (?:--rounds|-r) (\\d)\\s*$";
+    public static String deleteCardOfDeck_csd_="^\\s*duel (?:--second-player|-sc|--ai|-a) (?:--rounds|-r) (\\d) (?:--new|-n)\\s*$";
+    public static String deleteCardOfDeck_dsc_="^\\s*duel (?:--new|-n) (?:--rounds|-r) (\\d) (?:--second-player|-sc|--ai|-a)\\s*$";
+    public static String deleteCardOfDeck_dcs_="^\\s*duel (?:--new|-n) (?:--second-player|-sc|--ai|-a) (?:--rounds|-r) (\\d)\\s*$";
+    public static String deleteCardOfDeck_scd_="^\\s*duel (?:--rounds|-r) (\\d) (?:--second-player|-sc|--ai|-a) (?:--new|-n)\\s*$";
+    public static String deleteCardOfDeck_sdc_="^\\s*duel (?:--rounds|-r) (\\d) (?:--new|-n) (?:--second-player|-sc|--ai|-a)\\s*$";
+
+    /////////////
+    public static String selectMonsterOfOurs="^\\s*select --monster (\\d)\\s*$";
+
+    public static String selectMonsterOfOpponent="^\\s*select (?:--monster|-m) (\\d) (?:--opponent|-o)\\s*$";
+    public static String selectMonsterOfOpponent="^\\s*select (?:--opponent|-o) (?:--monster|-m) (\\d)\\s*$";
+
+
+
 
 
 
