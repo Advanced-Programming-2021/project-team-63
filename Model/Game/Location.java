@@ -1,6 +1,6 @@
 package Model.Game;
 
-public enum CardAddress {
+public enum Location {
     NONE,
     MONSTER_ZONE,
     SPELL_TRAP_CARD_ZONE,

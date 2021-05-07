@@ -8,4 +8,8 @@ public class EffectiveMonsterCard extends MonsterCard{
     public void setEffect(Effect effect) {
         this.effect = effect;
     }
+
+    public Effect getEffect() {
+        return effect;
+    }
 }

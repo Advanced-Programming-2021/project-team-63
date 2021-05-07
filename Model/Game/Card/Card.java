@@ -4,6 +4,7 @@ public abstract class Card {
     private String name;
     private String description;
     private String number;
+    private Status status;
     private Category category;
 
     public static Card constructCard(Category category){
@@ -32,5 +33,21 @@ public abstract class Card {
 
     public String getNumber() {
         return number;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 }

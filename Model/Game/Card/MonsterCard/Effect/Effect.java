@@ -1,6 +1,8 @@
 package Model.Game.Card.MonsterCard.Effect;
 
+import Model.Game.*;
+
 public interface Effect {
-    public boolean isActivated();
-    public void action();
+    public boolean isActivated(Game game);
+    public void activate(Game game);
 }
