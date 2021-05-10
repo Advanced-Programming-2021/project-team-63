@@ -67,10 +67,10 @@ public class ProgramController {
 
 
     public boolean doesUserWithThisUsernameExist(String username){
-        GsonBuilder a = new GsonBuilder() ;
+       return false;
     }
 
     public boolean doesUserWithThisNicknameExist(String nickname){
-
+        return true;
     }
 }

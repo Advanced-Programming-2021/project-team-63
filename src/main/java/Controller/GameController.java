@@ -3,7 +3,6 @@ package Controller;
 import java.util.ArrayList;
 
 import Model.Account;
-import Model.Game.CardAddress;
 import Model.Game.Game;
 import Model.Game.Card.Card;
 
@@ -12,7 +11,7 @@ public class GameController{
     public void createGame(Account player1 , Account player2){
         
     }
-   
+   /*
     public void nextPhase(){
         game.nextPhase();
     }
@@ -84,5 +83,5 @@ public class GameController{
     public Card getSelectedCard(){
         return game.getSelectedCard();
     }
-
+*/
 }
