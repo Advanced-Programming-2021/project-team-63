@@ -1,13 +1,15 @@
 package Controller;
-
-import java.util.regex.*;
+import java.util.regex.Matcher;
 
 public class ProgramController {
-    public void login(Matcher matcher){
+    public void register(Matcher matcher){
+        String password = "";
+        String nickname = "";
+        String username = "";
 
     }
-
-    public void register(Matcher matcher){
+    
+    public void login(Matcher matcher){
 
     }
 
@@ -60,6 +62,15 @@ public class ProgramController {
     }
 
     public void showShopCards(Matcher matcher){
+
+    }
+
+
+    public boolean doesUserWithThisUsernameExist(String username){
+        GsonBuilder a = new GsonBuilder() ;
+    }
+
+    public boolean doesUserWithThisNicknameExist(String nickname){
 
     }
 }
