@@ -1,9 +1,7 @@
 package Controller;
-
 import java.util.ArrayList;
-
+import com.google.gson.Gson;
 import Model.Account;
-import Model.Game.CardAddress;
 import Model.Game.Game;
 import Model.Game.Card.Card;
 
