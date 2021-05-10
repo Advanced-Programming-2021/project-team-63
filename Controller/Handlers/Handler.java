@@ -3,7 +3,7 @@ package Controller.Handlers;
 public abstract class Handler {
     private Handler nextHandler;
 
-    public void setNextHandler(Handler nextHandler){
+    public setNextHandler(Handler nextHandler){
         this.nextHandler = nextHandler;
     }
     
