@@ -2,10 +2,12 @@ package Model;
 import java.lang.*;
 
 public class ApiMessage {
-    private String type;
-    private String message;
+    public static String error = "error";
+    public static String successful = "successful";
+    private final String type;
+    private final String message;
     public ApiMessage(String type, String message) throws Exception{
-        if(type != "error" && type != "successful"){
+        if(!type.equals("error") && !type.equals("successful")){
             throw new Exception("wrong initialize in apiMessage");
         }
         this.type = type;
