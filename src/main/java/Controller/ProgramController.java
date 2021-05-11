@@ -1,7 +1,9 @@
 package Controller;
 import Model.ApiMessage;
 import Model.JsonObject.AccountJson;
+import Model.JsonObject.DeckJson;
 import Model.JsonObject.ScoreboardInfo;
+import Model.JsonObject.ShowAllDecksJson;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -26,14 +28,16 @@ public class ProgramController {
             return new ApiMessage(ApiMessage.error,"user with username " + username + " already exists");
         }
 
-        if(doesUserWithThisNicknameExist(nickname)){
+        else if(doesUserWithThisNicknameExist(nickname)){
             return new ApiMessage(ApiMessage.error, "user with nickname " + nickname + " already exists");
         }
 
-        addUserInfoToDatabase(username , password , nickname);
-        return new ApiMessage(ApiMessage.successful, "user created successfully!");
-    }
+        else{
+            addUserInfoToDatabase(username , password , nickname);
+            return new ApiMessage(ApiMessage.successful, "user created successfully!");
+        }
 
+    }
 
     public ApiMessage login(Matcher matcher) throws Exception {
         String username = "";
@@ -43,15 +47,16 @@ public class ProgramController {
             return new ApiMessage(ApiMessage.error,"Username and password didn’t match!");
         }
 
-        if(!isCorrectPassword(username, password)){
+        else if(!isCorrectPassword(username, password)){
             return new ApiMessage(ApiMessage.error,"Username and password didn’t match!");
         }
 
-        setLoggedInUser(getUserInfoByUsername(username));
-        return new ApiMessage(ApiMessage.successful, "user logged in successfully!");
+        else{
+            setLoggedInUser(getUserInfoByUsername(username));
+            return new ApiMessage(ApiMessage.successful, "user logged in successfully!");
+        }
+
     }
-
-
 
     public ApiMessage logout(Matcher matcher) throws Exception {
         setLoggedInUser(null);
@@ -69,11 +74,12 @@ public class ProgramController {
         if(doesUserWithThisNicknameExist(nickname)){
             return new ApiMessage(ApiMessage.error,"user with nickname " + nickname + " already exists");
         }
-        loggedInUser.setNickname(nickname);
-        changeUserInfoInDataBase(loggedInUser);
-        return new ApiMessage(ApiMessage.successful,"nickname changed successfully!");
+        else{
+            loggedInUser.setNickname(nickname);
+            changeUserInfoInDataBase(loggedInUser);
+            return new ApiMessage(ApiMessage.successful,"nickname changed successfully!");
+        }
     }
-
 
     public ApiMessage changePassword(Matcher matcher) throws Exception {
         String currentPassword = "" ;
@@ -83,38 +89,139 @@ public class ProgramController {
             return new ApiMessage(ApiMessage.error,"current password is invalid");
         }
 
-        if(loggedInUser.getPassword().equals(newPassword)){
+        else if(loggedInUser.getPassword().equals(newPassword)){
             return new ApiMessage(ApiMessage.error,"please enter a new password");
         }
 
-        loggedInUser.setPassword(newPassword);
-        changeUserInfoInDataBase(loggedInUser);
-        return new ApiMessage(ApiMessage.successful,"password changed successfully!");
+        else{
+            loggedInUser.setPassword(newPassword);
+            changeUserInfoInDataBase(loggedInUser);
+            return new ApiMessage(ApiMessage.successful,"password changed successfully!");
+        }
     }
 
-    public void createDeck(Matcher matcher){
+    public ApiMessage createDeck(Matcher matcher) throws Exception {
+        String deckName = "";
+
+        if(loggedInUser.getDeckByName(deckName) == null){
+            return new ApiMessage(ApiMessage.error,"deck with name "+deckName+"  already exists");
+        }
+
+        else{
+            loggedInUser.addDeck(deckName);
+            changeUserInfoInDataBase(loggedInUser);
+            return new ApiMessage(ApiMessage.successful, "deck created successfully!");
+        }
+    }
+
+    public ApiMessage deleteDeck(Matcher matcher) throws Exception {
+        String deckName = "";
+
+        var deck = loggedInUser.getDeckByName(deckName);
+
+        if(deck == null){
+            return new ApiMessage(ApiMessage.error,"deck with name "+deckName+"  does not exist");
+        }
+
+        else{
+            loggedInUser.deleteDeck(deck);
+            changeUserInfoInDataBase(loggedInUser);
+            return new ApiMessage(ApiMessage.successful,"deck deleted successfully");
+        }
+    }
+
+    public ApiMessage selectActiveDeck(Matcher matcher) throws Exception {
+        String deckName = "";
+        var deck = loggedInUser.getDeckByName(deckName);
+
+        if(deck == null){
+            return new ApiMessage(ApiMessage.error,"deck with name " + deckName + " does not exist");
+        }
+
+        else{
+            loggedInUser.setActiveDeck(deck);
+            changeUserInfoInDataBase(loggedInUser);
+            return new ApiMessage(ApiMessage.successful,"deck activated successfully");
+        }
+    }
+
+    public ApiMessage addCardToDeck(Matcher matcher) throws Exception {
+        String cardName = "";
+        String deckName = "";
+        boolean inSideDeck = false;
+        var deck = loggedInUser.getDeckByName(deckName);
+
+        if(!loggedInUser.doesHaveThisCard(cardName)){
+            return new ApiMessage(ApiMessage.error,"card with name "+cardName+" does not exist");
+        }
+
+        else if(deck == null){
+            return new ApiMessage(ApiMessage.error,"deck with name "+deckName+" does not exist");
+        }
+
+        else if(!inSideDeck && deck.isMainDeckFull()){
+            return new ApiMessage(ApiMessage.error,"main deck is full");
+        }
+
+        else if(inSideDeck && deck.isSideDeckFull()){
+            return new ApiMessage(ApiMessage.error,"side deck is full");
+        }
+
+        else if(deck.getCntOfThisCard(cardName) == 3){
+            return new ApiMessage(ApiMessage.error,"there are already three cards with name "+cardName+" in deck "+deckName);
+        }
+
+        else{
+            if(inSideDeck)
+                deck.addToSideDeck(cardName);
+            else
+                deck.addToMainDeck(cardName);
+            changeUserInfoInDataBase(loggedInUser);
+            return new ApiMessage(ApiMessage.successful,"card added to deck successfully");
+        }
+    }
+
+    public ApiMessage removeCardFromDeck(Matcher matcher) throws Exception {
+        //hame ro hazf konim ya yekisho
+        //manaye mojoodi chiye
+        String cardName = "";
+        String deckName = "";
+        boolean fromSideDeck = false;
+        var deck = loggedInUser.getDeckByName(deckName);
+
+        if(deck == null){
+            return new ApiMessage(ApiMessage.error,"deck with name "+deckName+" does not exist");
+        }
+
+        else if(!fromSideDeck && deck.getCntOfThisCardInMainDeck(cardName) == 0){
+            return new ApiMessage(ApiMessage.error,"card with name "+cardName+"  does not exist in main deck");
+        }
+
+        else if(fromSideDeck && deck.getCntOfThisCardInSideDeck(cardName) == 0){
+            return new ApiMessage(ApiMessage.error,"card with name "+cardName+"  does not exist in side deck");
+        }
+
+        else{
+            if(!fromSideDeck)
+                deck.removeFromMainDeck(cardName);
+            else
+                deck.removeFromSideDeck(cardName);
+            changeUserInfoInDataBase(loggedInUser);
+            return new ApiMessage(ApiMessage.successful,"card removed form deck successfully");
+        }
 
     }
 
-    public void deleteDeck(Matcher matcher){
-        
+    public ApiMessage showAllDeck(Matcher matcher) throws Exception {
+        //how fix Gson null values
+        var ans = new ShowAllDecksJson(loggedInUser);
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }
 
-    public void activeDeck(Matcher matcher){
-        
-    }
-
-    public void addCard(Matcher matcher){
-
-    }
-
-    public void removeCard(Matcher matcher){
+    public ApiMessage showDeck(Matcher matcher){
 
     }
 
-    public void showDeck(Matcher matcher){
-
-    }
 
     public void showPurchasedCards(){
 
@@ -183,12 +290,14 @@ public class ProgramController {
         return null;
     }
 
-    public ArrayList<AccountJson> getUsersInfo() throws IOException {
+    private ArrayList<AccountJson> getUsersInfo() throws IOException {
         String json = new String(Files.readAllBytes(Paths.get(usersInfoPath)));
         return new Gson().fromJson(json ,new TypeToken<List<AccountJson>>(){}.getType());
     }
 
-    public void setLoggedInUser(AccountJson loggedInUser){
+    private void setLoggedInUser(AccountJson loggedInUser){
         this.loggedInUser = loggedInUser;
     }
+
+
 }

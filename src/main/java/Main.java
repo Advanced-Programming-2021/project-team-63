@@ -1,3 +1,4 @@
+import Model.JsonObject.CardJson;
 import Model.JsonObject.MonsterJson;
 import com.google.gson.Gson;
 
@@ -12,8 +13,8 @@ import java.util.stream.Collectors;
 
 public class Main{
     public static void main(String[] args) throws IOException {
-      //  File me = new File(".");
-     //   System.out.println(me.getAbsolutePath());
+      /*  File me = new File(".");
+        System.out.println(me.getAbsolutePath());
         ArrayList<MonsterJson> monsters = new ArrayList<>();
         File file = new File("src\\main\\java\\Monster.txt");
         Scanner scanner = new Scanner(file);
@@ -51,6 +52,6 @@ public class Main{
         scanner.close();
         FileWriter writer = new FileWriter("src\\main\\java\\MonstersInfo.txt");
         writer.write(new Gson().toJson(monsters));
-        writer.close();
+        writer.close();*/
     }
 }
