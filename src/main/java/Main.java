@@ -1,5 +1,6 @@
 import Model.JsonObject.CardJson;
 import Model.JsonObject.MonsterJson;
+import Model.JsonObject.SpellAndTrapJson;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -13,45 +14,36 @@ import java.util.stream.Collectors;
 
 public class Main{
     public static void main(String[] args) throws IOException {
-      /*  File me = new File(".");
-        System.out.println(me.getAbsolutePath());
-        ArrayList<MonsterJson> monsters = new ArrayList<>();
-        File file = new File("src\\main\\java\\Monster.txt");
+        ArrayList<SpellAndTrapJson> spellAndTrapJsons = new ArrayList<>();
+        File file = new File("src\\main\\java\\Spell&Trap.txt");
         Scanner scanner = new Scanner(file);
-        for(int i = 0 ; i < 41 ; i++) {
-            monsters.add(new MonsterJson());
+        for(int i = 0 ; i < 35 ; i++) {
+            spellAndTrapJsons.add(new SpellAndTrapJson());
         }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setName(scanner.nextLine().trim());
+        for(int i = 0 ; i < 35 ; i++){
+            spellAndTrapJsons.get(i).setName(scanner.nextLine().trim());
         }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setLevel(Integer.parseInt(scanner.nextLine().trim()));
+        for(int i = 0 ; i < 35 ; i++){
+            spellAndTrapJsons.get(i).setType(scanner.nextLine().trim());
         }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setAttribute(scanner.nextLine().trim());
+        for(int i = 0 ; i < 35 ; i++){
+            spellAndTrapJsons.get(i).setIcon(scanner.nextLine().trim());
         }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setMonsterType(scanner.nextLine().trim());
+        for(int i = 0 ; i < 35 ; i++){
+            spellAndTrapJsons.get(i).setDescription(scanner.nextLine().trim());
         }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setCardType(scanner.nextLine());
+        spellAndTrapJsons.get(33).setDescription(spellAndTrapJsons.get(33).getDescription()+"\nâ—\u008F Attack Position: It gains ATK equal to its original DEF." +
+                "\nâ—\u008F Defense Position: It gains DEF equal to its original ATK.");
+        for(int i = 0 ; i < 35 ; i++){
+            spellAndTrapJsons.get(i).setStatus(scanner.nextLine());
         }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setAtk(Integer.parseInt(scanner.nextLine().trim()));
-        }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setDef(Integer.parseInt(scanner.nextLine().trim()));
-        }
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setDescription(scanner.nextLine());
-        }
-        monsters.get(36).setDescription(monsters.get(36).getDescription()+"\nIMPORTANT: Capturing the \"Wattaildragon\" is forbidden by the Ancient Rules and is a Level 6 offense, the minimum sentence for which is imprisonment for no less than 2500 heliocycles.");
-        for(int i = 0 ; i < 41 ; i++){
-            monsters.get(i).setPrice(Integer.parseInt(scanner.nextLine().trim()));
+        for(int i = 0 ; i < 35 ; i++){
+            spellAndTrapJsons.get(i).setPrice(Integer.parseInt(scanner.nextLine().trim()));
         }
         scanner.close();
-        FileWriter writer = new FileWriter("src\\main\\java\\MonstersInfo.txt");
-        writer.write(new Gson().toJson(monsters));
-        writer.close();*/
+
+        FileWriter writer = new FileWriter("src\\main\\java\\Spell&TrapsInfo.txt");
+        writer.write(new Gson().toJson(spellAndTrapJsons));
+        writer.close();
     }
 }
