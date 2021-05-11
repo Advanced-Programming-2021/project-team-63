@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class ProgramController {
-    private final String usersInfoPath = "..\\Database\\UserInfo.txt";
+    private final String usersInfoPath = "src\\main\\java\\Database\\UserInfo.txt";
     private AccountJson loggedInUser ;
 
     // ToDo: get corrct value for every fucntion from matcher
