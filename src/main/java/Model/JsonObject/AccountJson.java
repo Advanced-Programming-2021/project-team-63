@@ -24,6 +24,10 @@ public class AccountJson {
         activeDeck = null;
     }
 
+    public ArrayList<CardJson> getPurchasedCards(){
+        return this.purchasedCards;
+    }
+
     public String getUsername() {
         return this.username;
     }
@@ -58,6 +62,10 @@ public class AccountJson {
         this.decks.remove(deck);
     }
 
+    public int getMoney(){
+        return this.money;
+    }
+
     public void setActiveDeck(DeckJson deck){
         this.activeDeck = deck;
     }
@@ -79,5 +87,13 @@ public class AccountJson {
                 return true;
         }
         return false;
+    }
+
+    public void addToPurchasedCards(String cardName) {
+        this.purchasedCards.add(new CardJson(cardName));
+    }
+
+    public void decrease(int price) {
+        this.money -= price;
     }
 }

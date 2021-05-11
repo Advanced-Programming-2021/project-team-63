@@ -35,6 +35,14 @@ public class DeckJson {
         return mainDeck.size() == 60;
     }
 
+    public ArrayList<CardJson> getMainDeck(){
+        return this.getMainDeck();
+    }
+
+    public ArrayList<CardJson> getSideDeck(){
+        return this.getSideDeck();
+    }
+
     public int getCntOfThisCard(String cardName){
         return getCntOfThisCardInMainDeck(cardName) + getCntOfThisCardInSideDeck(cardName);
     }

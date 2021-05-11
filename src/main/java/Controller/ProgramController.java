@@ -1,9 +1,6 @@
 package Controller;
 import Model.ApiMessage;
-import Model.JsonObject.AccountJson;
-import Model.JsonObject.DeckJson;
-import Model.JsonObject.ScoreboardInfo;
-import Model.JsonObject.ShowAllDecksJson;
+import Model.JsonObject.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -16,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class ProgramController {
     private final String usersInfoPath = "src\\main\\java\\Database\\UserInfo.txt";
+    private final String monstersInfoPath = "src\\main\\java\\Database\\MonstersInfo.txt";
+    private final String spellAndTrapsINfoPath = "src\\main\\java\\Database\\Spell&TrapsInfo.txt";
     private AccountJson loggedInUser ;
 
     // ToDo: get corrct value for every fucntion from matcher
@@ -218,21 +217,140 @@ public class ProgramController {
         return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }
 
-    public void showDeck(Matcher matcher){
+    public ApiMessage showDeck(Matcher matcher) throws Exception {
+        String deckName = "";
+        boolean isSideDeck = false;
+        var deck = loggedInUser.getDeckByName(deckName);
 
+        if(deck == null){
+            return new ApiMessage(ApiMessage.error,"deck with name "+deckName+" does not exist");
+        }
+        else{
+            var ans = new ShowDeckJson(deckName , isSideDeck);
+            if(!isSideDeck){
+                getCardGeneralInfoForShowDeck(ans , deck.getMainDeck());
+            }
+            else{
+                getCardGeneralInfoForShowDeck(ans , deck.getSideDeck());
+            }
+            return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
+        }
     }
 
 
-    public void showPurchasedCards(){
-
+    public ApiMessage showPurchasedCards() throws Exception {
+        ArrayList<CardGeneralInfo> purchaseCards =  new ArrayList<>();
+        for (CardJson card : loggedInUser.getPurchasedCards()) {
+            if(isMonsterExistWithThisName(card.getName())){
+                MonsterJson monster = getMonsterByName(card.getName());
+                purchaseCards.add(new CardGeneralInfo(monster));
+            }
+            else{
+                SpellAndTrapJson spellAndTrap = getSpellAndTrapByName(card.getName());
+                purchaseCards.add(new CardGeneralInfo(spellAndTrap));
+            }
+        }
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(purchaseCards));
     }
 
-    public void buyCard(Matcher matcher){
+    public ApiMessage buyCard(Matcher matcher) throws Exception {
+        String cardName = "";
 
+        if(!isMonsterExistWithThisName(cardName)&&!isSpellOrTrapExsistWithThisName(cardName)){
+            return new ApiMessage(ApiMessage.error,"there is no card with this name");
+        }
+
+        CardGeneralInfo card;
+        if(isMonsterExistWithThisName(cardName)){
+            MonsterJson monster = getMonsterByName(cardName);
+            card = new CardGeneralInfo(monster);
+        }
+        else{
+            SpellAndTrapJson spellAndTrap = getSpellAndTrapByName(cardName);
+            card = new CardGeneralInfo(spellAndTrap);
+        }
+
+        if(loggedInUser.getMoney() < card.getPrice()){
+            return new ApiMessage(ApiMessage.error,"not enough money");
+        }
+
+        loggedInUser.addToPurchasedCards(cardName);
+        loggedInUser.decrease(card.getPrice());
+        changeUserInfoInDataBase(loggedInUser);
+        return new ApiMessage(ApiMessage.successful,"card successfully purchased");
     }
 
-    public void showShopCards(Matcher matcher){
+    public ApiMessage showShopCards(Matcher matcher) throws Exception {
+        ArrayList<CardGeneralInfo> ans = new ArrayList<>();
 
+        for (MonsterJson monster : getMonstersInfo()) {
+            ans.add(new CardGeneralInfo(monster));
+        }
+
+        for (SpellAndTrapJson spellAndTrap : getSpellAndTrapsInfo()) {
+            ans.add(new CardGeneralInfo(spellAndTrap));
+        }
+
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
+    }
+
+    private void getCardGeneralInfoForShowDeck(ShowDeckJson ans, ArrayList<CardJson> deck) throws IOException {
+        for (CardJson card : deck) {
+            if(isMonsterExistWithThisName(card.getName())){
+                MonsterJson monster = getMonsterByName(card.getName());
+                ans.addToMonsters(new CardGeneralInfo(monster));
+            }
+            else{
+                SpellAndTrapJson spellAndTrap = getSpellAndTrapByName(card.getName());
+                ans.addToSpellAndTraps(new CardGeneralInfo(spellAndTrap));
+            }
+        }
+    }
+
+    private boolean isMonsterExistWithThisName(String name) throws IOException {
+        var monsters = getMonstersInfo();
+        for (MonsterJson monster : monsters) {
+            if(monster.getName().equals(name))
+                return true;
+        }
+        return false ;
+    }
+
+    private boolean isSpellOrTrapExsistWithThisName(String name) throws IOException {
+        var spellAndTraps = getSpellAndTrapsInfo();
+        for (SpellAndTrapJson spellAndTrap : spellAndTraps) {
+            if(spellAndTrap.getName().equals(name))
+                return true;
+        }
+        return false ;
+    }
+
+    private MonsterJson getMonsterByName(String name) throws IOException {
+        var monsters = getMonstersInfo();
+        for (MonsterJson monster : monsters) {
+            if(monster.getName().equals(name))
+                return monster;
+        }
+        return null;
+    }
+
+    private SpellAndTrapJson getSpellAndTrapByName(String name) throws IOException {
+        var spellAndTraps = getSpellAndTrapsInfo();
+        for (SpellAndTrapJson spellAndTrap : spellAndTraps) {
+            if(spellAndTrap.getName().equals(name))
+                return spellAndTrap;
+        }
+        return null;
+    }
+
+    private ArrayList<MonsterJson> getMonstersInfo() throws IOException {
+        String json = new String(Files.readAllBytes(Paths.get(monstersInfoPath)));
+        return new Gson().fromJson(json ,new TypeToken<List<MonsterJson>>(){}.getType());
+    }
+
+    private ArrayList<SpellAndTrapJson> getSpellAndTrapsInfo() throws IOException {
+        String json = new String(Files.readAllBytes(Paths.get(spellAndTrapsINfoPath)));
+        return new Gson().fromJson(json ,new TypeToken<List<SpellAndTrapJson>>(){}.getType());
     }
 
     private void changeUserInfoInDataBase(AccountJson newUserInfo) throws IOException {
@@ -298,6 +416,7 @@ public class ProgramController {
     private void setLoggedInUser(AccountJson loggedInUser){
         this.loggedInUser = loggedInUser;
     }
+
 
 
 }
