@@ -3,17 +3,19 @@ package Model.JsonObject;
 import java.util.*;
 
 public class DeckJson {
-    private String name;
-    private ArrayList<CardJson> mainDeck;
-    private ArrayList<CardJson> sideDeck;
+    private final String name;
+    private final ArrayList<CardJson> mainDeck;
+    private final ArrayList<CardJson> sideDeck;
+
+    public DeckJson(String name){
+        this.name = name;
+        mainDeck = new ArrayList<>();
+        sideDeck = new ArrayList<>();
+    }
 
     public int getMainDeckSize(){return mainDeck.size();}
 
     public int getSideDeckSize(){return sideDeck.size();}
-
-    public DeckJson(String name){
-        this.name = name;
-    }
 
     public String getName(){
         return this.name;
@@ -36,11 +38,11 @@ public class DeckJson {
     }
 
     public ArrayList<CardJson> getMainDeck(){
-        return this.getMainDeck();
+        return this.mainDeck;
     }
 
     public ArrayList<CardJson> getSideDeck(){
-        return this.getSideDeck();
+        return this.sideDeck;
     }
 
     public int getCntOfThisCard(String cardName){

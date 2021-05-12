@@ -1,10 +1,9 @@
 package Model.JsonObject;
 
 import java.util.ArrayList;
-import Model.Deck;
 
 public class AccountJson {
-    private String username;//Identity
+    private final String username;//Identity
     private String password;
     private String nickname;
     private int score;

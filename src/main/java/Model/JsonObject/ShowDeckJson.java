@@ -3,10 +3,10 @@ package Model.JsonObject;
 import java.util.ArrayList;
 
 public class ShowDeckJson {
-    private String name;
-    private boolean isSideDeck;
-    private ArrayList<CardGeneralInfo> monsters;
-    private ArrayList<CardGeneralInfo> spellAndTraps;
+    private final String name;
+    private final boolean isSideDeck;
+    private final ArrayList<CardGeneralInfo> monsters;
+    private final ArrayList<CardGeneralInfo> spellAndTraps;
 
     public ShowDeckJson(String name,boolean isSideDeck){
         this.name = name;
@@ -21,5 +21,21 @@ public class ShowDeckJson {
 
     public void addToSpellAndTraps(CardGeneralInfo card){
         this.spellAndTraps.add(card);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isSideDeck() {
+        return isSideDeck;
+    }
+
+    public ArrayList<CardGeneralInfo> getMonsters() {
+        return monsters;
+    }
+
+    public ArrayList<CardGeneralInfo> getSpellAndTraps() {
+        return spellAndTraps;
     }
 }

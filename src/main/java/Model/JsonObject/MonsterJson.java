@@ -1,11 +1,6 @@
 package Model.JsonObject;
 
-import Model.Game.Card.MonsterCard.Attribute;
-import Model.Game.Card.MonsterCard.Mode;
-import Model.Game.Card.MonsterCard.MonsterCategory;
-import Model.Game.Card.MonsterCard.Type;
 
-import java.util.ArrayList;
 
 public class MonsterJson {
     private String name;
