@@ -7,6 +7,9 @@ import Model.Deck;
 import Model.Game.Card.Category;
 import Model.Game.Card.MonsterCard.Mode;
 import Model.Game.Card.MonsterCard.MonsterCard;
+import Model.Game.Card.MonsterCard.MonsterCategory;
+import Model.Game.Card.MonsterCard.Type;
+import Model.Game.Card.SpellCard.Icon;
 import Model.Game.Card.SpellCard.SpellCard;
 import Model.Game.Card.Status;
 import Model.Game.CardAddress;
@@ -14,6 +17,7 @@ import Model.Game.Game;
 import Model.Game.Card.Card;
 import Model.Game.Phase;
 import Model.JsonObject.AccountJson;
+import Model.JsonObject.CardGeneralInfo;
 import Model.JsonObject.CardJson;
 import Model.JsonObject.DeckJson;
 import com.google.gson.Gson;
@@ -31,7 +35,7 @@ public class GameController{
     public ApiMessage createGame(AccountJson player1, AccountJson player2, int rounds) throws Exception {
         Deck player1Deck = getDeckFromDeckJson(player1.getActiveDeck());
         Deck player2Deck = getDeckFromDeckJson(player2.getActiveDeck());
-        game = new Game(player1.getNickname(), player1Deck, player2.getNickname(), player2Deck);
+        //game = new Game(player1.getNickname(), player1Deck, player2.getNickname(), player2Deck);
         return new ApiMessage(ApiMessage.successful,"duel was created successfully.");
     }
 
@@ -100,9 +104,12 @@ public class GameController{
         if(game.getActivePlayer().getSelectedCard() == null)
             return new ApiMessage(ApiMessage.error,"no card is selected yet");
 
-        if(!game.getActivePlayer().getHand().contains(game.getActivePlayer().getSelectedCard()) ||
-        game.getActivePlayer().getSelectedCard().getCategory() != Category.MONSTER ||
-        )
+        if(!game.getActivePlayer().getHand().contains(game.getActivePlayer().getSelectedCard()))
+            return new ApiMessage(ApiMessage.error,"you can’t summon this card");
+
+        var selectedCard = (MonsterCard)game.getActivePlayer().getSelectedCard();
+
+        if(selectedCard.getMonsterCategory() == MonsterCategory.RITUAL)//:?
             return new ApiMessage(ApiMessage.error,"you can’t summon this card");
 
         if(game.getPhase() != Phase.MAIN_PHASE_1 && game.getPhase() != Phase.MAIN_PHASE_2)
@@ -117,8 +124,6 @@ public class GameController{
         if(game.getActivePlayer().isMonsterSet())
             return new ApiMessage(ApiMessage.error,"you already set on this turn");
 
-        var selectedCard = (MonsterCard)game.getActivePlayer().getSelectedCard();
-
         if(selectedCard.getLevel() <= 4){
             game.getActivePlayer().summon(selectedCard);
             return new ApiMessage(ApiMessage.successful,("summoned successfully"));
@@ -127,14 +132,14 @@ public class GameController{
         else if(selectedCard.getLevel() <= 6){
             if(5 - game.getActivePlayer().getField().getCntFreeCellsInMonsterZone() < 1)
                 return new ApiMessage(ApiMessage.error,"there are not enough cards for tribute");
-            return new ApiMessage(ApiMessage.successful,"get 1 tributee");
+            return new ApiMessage(ApiMessage.successful,"{\"tribute\":1}");
         }
 
 
         else{
             if(5 - game.getActivePlayer().getField().getCntFreeCellsInMonsterZone() < 2)
                 return new ApiMessage(ApiMessage.error,"there are not enough cards for tribute");
-            return new ApiMessage(ApiMessage.successful,"get 2 tributes");
+            return new ApiMessage(ApiMessage.successful,"{\"tribute\":1}");
         }
 
 
@@ -239,7 +244,7 @@ public class GameController{
 
         var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
 
-        if(selectedCard.getMode() != Mode.ATTACK))
+        if(selectedCard.getMode() != Mode.ATTACK)
             return new ApiMessage(ApiMessage.error,"you can’t attack with this card");//khodam gozashtam
 
         if(game.getPhase() != Phase.BATTLE_PHASE)
@@ -254,7 +259,8 @@ public class GameController{
         if(targetMonster == null)
             return new ApiMessage(ApiMessage.error,"there is no card to attack here");
 
-
+        var ans = game.getActivePlayer().attack(game , selectedCard , targetMonster);
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }
 
     public ApiMessage directAttack() throws Exception {
@@ -279,7 +285,7 @@ public class GameController{
         return new ApiMessage(ApiMessage.successful,"{\"damage\"=" + selectedCard.getAtk() + "}");
     }
 
-    public ApiMessage activateEffect() throws Exception {//az koja befahmim bara field
+    public ApiMessage activateEffect() throws Exception {
         if(game.getActivePlayer().getSelectedCard() == null)
             return new ApiMessage(ApiMessage.error,"no card is selected yet");
 
@@ -295,19 +301,41 @@ public class GameController{
         if(selectedCard.isActivateInTurn())
             return new ApiMessage(ApiMessage.error,"you have already activated this card");
 
-        if(game.getActivePlayer().getField().getCntFreeCellsInSpellZone() == 0 && game.getActivePlayer().getField().isSpellZoneContains(selectedCard))//if in hand
+        if(game.getActivePlayer().getField().getCntFreeCellsInSpellZone() == 0 &&
+                game.getActivePlayer().getField().isSpellZoneContains(selectedCard) &&
+                selectedCard.getIcon() != Icon.FIELD)//if in hand
             return new ApiMessage(ApiMessage.error,"spell card zone is full");
 
         //sharayeti ke natoonim faal konim chi
 
-
-        game.getActivePlayer().activateSpell(game,selectedCard);
+        if(selectedCard.getIcon() == Icon.FIELD)
+            game.getActivePlayer().activateField(game,selectedCard);
+        else
+            game.getActivePlayer().activateSpell(game,selectedCard);
         return new ApiMessage(ApiMessage.successful,"spell activated");
-    }
+    } //pore shak
 
-    public void specialSummonMonster(){
+    public ApiMessage setSpellAndTrap() throws Exception {
         if(game.getActivePlayer().getSelectedCard() == null)
             return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(!game.getActivePlayer().getHand().contains(game.getActivePlayer().getSelectedCard()))
+            return new ApiMessage(ApiMessage.error,"you can’t set this card");
+
+        if(game.getPhase() != Phase.MAIN_PHASE_1 && game.getPhase() != Phase.MAIN_PHASE_2)
+            return new ApiMessage(ApiMessage.error,"you can’t do this action in this phase");
+
+        if(game.getActivePlayer().getField().getCntFreeCellsInSpellZone() == 0)
+            return new ApiMessage(ApiMessage.error,"spell card zone is full");
+
+
+        game.getActivePlayer().setSpell((SpellCard) game.getActivePlayer().getSelectedCard());
+        return new ApiMessage(ApiMessage.successful,"set successfully");//farghe spell & trap
+    }
+
+
+    public void specialSummonMonster(){
+
     }
 
     public void ritualSummonMonster(){
@@ -321,24 +349,29 @@ public class GameController{
     }
 
 
-    public void setSpell(){
-
-    }
-
-    public void setTrap(){
-
-    }
 
     public void setSpellOrTrapForOpponent(){
 
     }
 
-    public ArrayList<Card> getGraveyard(){
-
+    public ApiMessage getGraveyard() throws Exception {
+        ArrayList<CardGeneralInfo> ans = new ArrayList<>();
+        for (Card card : game.getActivePlayer().getField().getGraveyard()) {
+            ans.add(getCardGeneralInfoFromCard(card));
+        }
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }
 
-    public Card getSelectedCard(){
+    public ApiMessage getSelectedCard() throws Exception {
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
 
+        if(game.getInactivePlayer().containCard(game.getActivePlayer().getSelectedCard()) &&
+        game.getActivePlayer().getSelectedCard().getStatus() == Status.SET)
+            return new ApiMessage(ApiMessage.error,"card is not visible");
+
+        var ans = getCardGeneralInfoFromCard(game.getActivePlayer().getSelectedCard());
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }
 
     private Deck getDeckFromDeckJson(DeckJson deck) {
@@ -353,10 +386,11 @@ public class GameController{
     }
 
     private Card getCardFromCardJson(CardJson card) {
+        return new MonsterCard();//chert
     }
 
-    private CardJson getCardJsonFromCard(Card card){
-
+    private CardGeneralInfo getCardGeneralInfoFromCard(Card card){
+        return new CardGeneralInfo(card.getName(),card.getDescription());
     }
 
 }

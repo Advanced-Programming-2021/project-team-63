@@ -1,3 +1,4 @@
+import Controller.ProgramController;
 import Model.Game.Phase;
 import Model.JsonObject.CardJson;
 import Model.JsonObject.MonsterJson;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class Main{
     public static void main(String[] args)  {
-
+        var p = new ProgramController();
+        System.out.println(p.login("yes","no"));
     }
 }

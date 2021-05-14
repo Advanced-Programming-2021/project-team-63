@@ -7,7 +7,7 @@ public class SpellCard extends Card{
     private Spell spell;
     private SpellCategory SpellCategory;
     private Icon icon;
-    boolean isActivateInTurn
+    boolean isActivateInTurn;
 
     public void setSpell(Spell spell) {
         this.spell = spell;

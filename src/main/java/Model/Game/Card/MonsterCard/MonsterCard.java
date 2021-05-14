@@ -3,6 +3,7 @@ package Model.Game.Card.MonsterCard;
 import java.util.*;
 import Model.Game.*;
 import Model.Game.Card.*;
+import Model.JsonObject.AttackInfo;
 
 public class MonsterCard extends Card{
     private int level;
@@ -61,6 +62,7 @@ public class MonsterCard extends Card{
         return mode;
     }
 
+
     public void addToTypes(Type type){
         types.add(type);
     }
@@ -93,8 +95,7 @@ public class MonsterCard extends Card{
         isMonsterAttackInTurn = monsterAttackInTurn;
     }
 
-    public void attack(Game game, MonsterCard targetCard){
-        setMonsterAttackInTurn(true);
+    public AttackInfo attack(Game game, MonsterCard targetCard){
         int powerDiff = 0;
         if(targetCard.getMode().equals(Mode.ATTACK)){
             powerDiff = atk - targetCard.getAtk();
@@ -121,6 +122,8 @@ public class MonsterCard extends Card{
             }
             else;
         }
+        setMonsterAttackInTurn(true);
+        return new AttackInfo(targetCard.getName(),targetCard.getAtk(),targetCard.getDef(), targetCard.getStatus(),targetCard.getMode(),this.getAtk()) ;
     }
 
     public void directAttack(Game game){

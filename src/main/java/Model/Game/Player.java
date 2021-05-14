@@ -5,6 +5,7 @@ import Model.*;
 import Model.Game.Card.*;
 import Model.Game.Card.MonsterCard.*;
 import Model.Game.Card.SpellCard.*;
+import Model.JsonObject.AttackInfo;
 
 public class Player {
     private String nickname;
@@ -26,6 +27,7 @@ public class Player {
         setHand(new ArrayList<Card>());
         setSelectedCard(null);
     }
+
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
@@ -176,8 +178,8 @@ public class Player {
         monsterCard.setMode(Mode.ATTACK);
     }
 
-    public void attack(Game game,MonsterCard attackerCard,MonsterCard targetCard){
-        attackerCard.attack(game, targetCard);
+    public AttackInfo attack(Game game, MonsterCard attackerCard, MonsterCard targetCard){
+        return attackerCard.attack(game, targetCard);
     }
 
     public void directAttack(Game game,MonsterCard attackerCard){
@@ -217,6 +219,20 @@ public class Player {
         }
         summon(ritualMonsterCard);
         changeMode(ritualMonsterCard, mode);
+    }
+
+    public boolean containCard(Card card){
+        if(hand.contains(card))
+            return true;
+        if(field.isSpellZoneContains(card))
+            return true;
+        if(field.isMonsterZoneContains(card))
+            return true;
+        if(field.getGraveyard().contains(card))
+            return true;
+        if(field.getFieldZone() == card)
+            return true;
+        return false;
     }
 
     public boolean isMonsterSummon() {
