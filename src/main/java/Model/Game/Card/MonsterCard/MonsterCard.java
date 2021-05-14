@@ -12,6 +12,10 @@ public class MonsterCard extends Card{
     private Mode mode;
     private ArrayList<Type> types;
     private MonsterCategory monsterCategory;
+    private boolean isChangeModeInTurn;
+    private boolean isMonsterAttackInTurn;
+
+
 
     public MonsterCard Construct(MonsterCategory monsterCategory){
         return null;
@@ -73,7 +77,24 @@ public class MonsterCard extends Card{
         return monsterCategory;
     }
 
+    public boolean isChangeModeInTurn() {
+        return isChangeModeInTurn;
+    }
+
+    public void setChangeModeInTurn(boolean changeModeInTurn) {
+        isChangeModeInTurn = changeModeInTurn;
+    }
+
+    public boolean isMonsterAttackInTurn() {
+        return isMonsterAttackInTurn;
+    }
+
+    public void setMonsterAttackInTurn(boolean monsterAttackInTurn) {
+        isMonsterAttackInTurn = monsterAttackInTurn;
+    }
+
     public void attack(Game game, MonsterCard targetCard){
+        setMonsterAttackInTurn(true);
         int powerDiff = 0;
         if(targetCard.getMode().equals(Mode.ATTACK)){
             powerDiff = atk - targetCard.getAtk();
@@ -104,5 +125,6 @@ public class MonsterCard extends Card{
 
     public void directAttack(Game game){
         game.getInactivePlayer().decreaseLp(atk);
+        setMonsterAttackInTurn(true);
     }
 }

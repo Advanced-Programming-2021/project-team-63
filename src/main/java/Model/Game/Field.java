@@ -77,6 +77,40 @@ public class Field {
         emptyFieldZone();
         addToGraveyard(spellCard);
     }
+
+    public boolean isMonsterZoneContains(Object object){
+        for(int i = 0 ; i < monsterZone.length ; i++){
+            if(monsterZone[i] == object)
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isSpellZoneContains(Object object){
+        for(int i = 0 ; i < spellZone.length ; i++){
+            if(spellZone[i] == object)
+                return true;
+        }
+        return false;
+    }
+
+    public int getCntFreeCellsInMonsterZone() {
+        int ans = 0 ;
+        for(int i = 0 ; i < monsterZone.length ; i++){
+            if(monsterZone[i] == null)
+                ans++;
+        }
+            return ans;
+    }
+
+    public int getCntFreeCellsInSpellZone() {
+        int ans = 0 ;
+        for(int i = 0 ; i < spellZone.length ; i++){
+            if(spellZone[i] == null)
+                ans++;
+        }
+        return ans;
+    }
 }
 
 

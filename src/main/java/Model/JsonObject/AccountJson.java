@@ -27,6 +27,10 @@ public class AccountJson {
         return this.purchasedCards;
     }
 
+    public boolean isAllowedActiveDeck(){
+        return activeDeck.getMainDeckSize() >= 40;
+    }
+
     public String getUsername() {
         return this.username;
     }
@@ -92,7 +96,11 @@ public class AccountJson {
         this.purchasedCards.add(new CardJson(cardName));
     }
 
-    public void decrease(int price) {
+    public void decreaseMoney(int price) {
         this.money -= price;
+    }
+
+    public void increaseMoney(int value) {
+        this.money += value;
     }
 }

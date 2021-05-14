@@ -2,86 +2,361 @@ package Controller;
 
 import java.util.ArrayList;
 
-import Model.Account;
+import Model.ApiMessage;
+import Model.Deck;
+import Model.Game.Card.Category;
+import Model.Game.Card.MonsterCard.Mode;
+import Model.Game.Card.MonsterCard.MonsterCard;
+import Model.Game.Card.SpellCard.SpellCard;
+import Model.Game.Card.Status;
+import Model.Game.CardAddress;
 import Model.Game.Game;
 import Model.Game.Card.Card;
+import Model.Game.Phase;
+import Model.JsonObject.AccountJson;
+import Model.JsonObject.CardJson;
+import Model.JsonObject.DeckJson;
+import com.google.gson.Gson;
 
 public class GameController{
+    private static boolean justOneObejct = false;
     private Game game ;
-    public void createGame(Account player1 , Account player2){
-        
+
+    public GameController(){
+        assert !justOneObejct;
+        justOneObejct = true;
+        game = null;
     }
-   /*
-    public void nextPhase(){
+
+    public ApiMessage createGame(AccountJson player1, AccountJson player2, int rounds) throws Exception {
+        Deck player1Deck = getDeckFromDeckJson(player1.getActiveDeck());
+        Deck player2Deck = getDeckFromDeckJson(player2.getActiveDeck());
+        game = new Game(player1.getNickname(), player1Deck, player2.getNickname(), player2Deck);
+        return new ApiMessage(ApiMessage.successful,"duel was created successfully.");
+    }
+
+    public ApiMessage selectCard(CardAddress address, int id) throws Exception {
+        Card selectedCard;
+        switch (address){
+            case SPELL_ZONE:
+                if(5 <= id)
+                    return new ApiMessage(ApiMessage.error,"invalid selection");
+                selectedCard = game.getActivePlayer().getField().getSpellZone()[id];
+                break;
+            case MONSTER_ZONE:
+                if(game.getActivePlayer().getField().getMonsterZone().length <= id)
+                    return new ApiMessage(ApiMessage.error,"invalid selection");
+                selectedCard = game.getActivePlayer().getField().getMonsterZone()[id];
+                break;
+            case OPPONENT_SPELL_ZONE:
+                if(game.getActivePlayer().getField().getSpellZone().length <= id)
+                    return new ApiMessage(ApiMessage.error,"invalid selection");
+                selectedCard = game.getInactivePlayer().getField().getSpellZone()[id];
+                break;
+            case FIELD_ZONE:
+                assert id==0;
+                selectedCard = game.getActivePlayer().getField().getFieldZone();
+                break;
+            case OPPONENT_FIELD_ZONE:
+                assert id==0;
+                selectedCard = game.getInactivePlayer().getField().getFieldZone();
+                break;
+            case HAND:
+                var hand = game.getActivePlayer().getHand();
+                if(hand.size() <= id)
+                    return new ApiMessage(ApiMessage.error,"invalid selection");
+                selectedCard = hand.get(id);
+                break;
+            default:
+                return new ApiMessage(ApiMessage.error,"invalid selection");
+        }
+        if(selectedCard == null){
+            return new ApiMessage(ApiMessage.error,"no card found in the given position");
+        }
+        game.getActivePlayer().setSelectedCard(selectedCard);
+        return new ApiMessage(ApiMessage.successful,"card selected");
+    }
+
+    public ApiMessage deselectCard() throws Exception {
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+        game.getActivePlayer().setSelectedCard(null);
+        return new ApiMessage(ApiMessage.successful,"card deselected");
+    }
+
+    public ApiMessage nextPhase() throws Exception {
         game.nextPhase();
+        //ToDo: clear old data
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(game.getPhase()));
     }
 
-    public void addCardFromDeckToHand(){
-        game.addCardFromDeckToHand();
+    public ApiMessage addCardFromDeckToHand() throws Exception {
+        String cardName = game.getActivePlayer().draw();
+        return new ApiMessage(ApiMessage.successful,"new card added to the hand : " + cardName);
     }
 
-    public void selectCard(CardAddress cardAddress, int id){
-        game.selectCard(cardAddress , id);
+
+    public ApiMessage summonMonster() throws Exception {
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(!game.getActivePlayer().getHand().contains(game.getActivePlayer().getSelectedCard()) ||
+        game.getActivePlayer().getSelectedCard().getCategory() != Category.MONSTER ||
+        )
+            return new ApiMessage(ApiMessage.error,"you can’t summon this card");
+
+        if(game.getPhase() != Phase.MAIN_PHASE_1 && game.getPhase() != Phase.MAIN_PHASE_2)
+            return new ApiMessage(ApiMessage.error,"action not allowed in this phase");
+
+        if(game.getActivePlayer().getField().getCntFreeCellsInMonsterZone() == 0)
+            return new ApiMessage(ApiMessage.error, "monster card zone is full");
+
+        if(game.getActivePlayer().isMonsterSummon())
+            return new ApiMessage(ApiMessage.error,"you already summoned on this turn");
+
+        if(game.getActivePlayer().isMonsterSet())
+            return new ApiMessage(ApiMessage.error,"you already set on this turn");
+
+        var selectedCard = (MonsterCard)game.getActivePlayer().getSelectedCard();
+
+        if(selectedCard.getLevel() <= 4){
+            game.getActivePlayer().summon(selectedCard);
+            return new ApiMessage(ApiMessage.successful,("summoned successfully"));
+        }
+
+        else if(selectedCard.getLevel() <= 6){
+            if(5 - game.getActivePlayer().getField().getCntFreeCellsInMonsterZone() < 1)
+                return new ApiMessage(ApiMessage.error,"there are not enough cards for tribute");
+            return new ApiMessage(ApiMessage.successful,"get 1 tributee");
+        }
+
+
+        else{
+            if(5 - game.getActivePlayer().getField().getCntFreeCellsInMonsterZone() < 2)
+                return new ApiMessage(ApiMessage.error,"there are not enough cards for tribute");
+            return new ApiMessage(ApiMessage.successful,"get 2 tributes");
+        }
+
+
+    }
+    public ApiMessage getTributeForSummonMonster(int victimMonsterCellId) throws Exception {
+        var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
+        var victimMonster = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId];
+
+        if(victimMonster == null)
+            return new ApiMessage(ApiMessage.error,"there no monsters one this address");
+
+        game.getActivePlayer().tributeSummon(selectedCard , victimMonster);
+        return new ApiMessage(ApiMessage.successful,"summoned successfully");
+    }
+    public ApiMessage getTributesForSummonMonster(int victimMonsterCellId1, int victimMonsterCellId2) throws Exception {
+        var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
+        var victimMonster1 = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId1];
+        var victimMonster2 = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId2];
+
+        if(victimMonster1 == null || victimMonster2 == null)
+            return new ApiMessage(ApiMessage.error,"there is no monster on one of these addresses");
+
+        game.getActivePlayer().tributeSummon(selectedCard , victimMonster1 , victimMonster2);
+        return new ApiMessage(ApiMessage.successful,"summoned successfully");
     }
 
-    public void deselectCard(){
-        game.deselectCard();
+    public ApiMessage setMonster() throws Exception {
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(!game.getActivePlayer().getHand().contains(game.getActivePlayer().getSelectedCard()))
+            return new ApiMessage(ApiMessage.error,"you can’t set this card");
+
+        if(game.getPhase() != Phase.MAIN_PHASE_1 && game.getPhase() != Phase.MAIN_PHASE_2)
+            return new ApiMessage(ApiMessage.error,"you can’t do this action in this phase");
+
+        assert game.getActivePlayer().getSelectedCard().getCategory() == Category.MONSTER;
+
+        if(game.getActivePlayer().getField().getCntFreeCellsInMonsterZone() == 0)
+            return new ApiMessage(ApiMessage.error,"monster card zone is full");
+
+        if(game.getActivePlayer().isMonsterSummon())
+            return new ApiMessage(ApiMessage.error,"you already summoned on this turn");
+
+        if(game.getActivePlayer().isMonsterSet())
+            return new ApiMessage(ApiMessage.error,"you already set on this turn");
+
+        game.getActivePlayer().setMonster((MonsterCard) game.getActivePlayer().getSelectedCard());
+        return new ApiMessage(ApiMessage.successful,"set successfully");
+        //bedoone ghorbani amal kardim chon duck nagofte va namjoo gofte irad nadare
     }
 
-    public void summonMonster(){
-        game.summon(); 
+    public ApiMessage changeMonsterMode(Mode newMode) throws Exception {
+
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(!game.getActivePlayer().getField().isMonsterZoneContains(game.getActivePlayer().getSelectedCard()))
+            return new ApiMessage(ApiMessage.error,"you can’t change this card position");
+
+        if(game.getPhase() != Phase.MAIN_PHASE_1 && game.getPhase() != Phase.MAIN_PHASE_2)
+            return new ApiMessage(ApiMessage.error,"you can’t do this action in this phase");
+
+        var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
+
+        if(newMode != selectedCard.getMode())
+            return new ApiMessage(ApiMessage.error,"this card is already in the wanted position");
+
+        if(selectedCard.isChangeModeInTurn())
+            return new ApiMessage(ApiMessage.error,"you already changed this card position in this turn");
+
+        game.getActivePlayer().changeMode(selectedCard, newMode);
+        return new ApiMessage(ApiMessage.successful,"monster card position changed successfully");
     }
 
-    public void speciallSummonMonster(){
-        game.speciallSummonMonster();        
+
+    public ApiMessage flipSummonMonster() throws Exception {
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(!game.getActivePlayer().getField().isMonsterZoneContains(game.getActivePlayer().getSelectedCard()))
+            return new ApiMessage(ApiMessage.error,"you can’t change this card position");
+
+        if(game.getPhase() != Phase.MAIN_PHASE_1 && game.getPhase() != Phase.MAIN_PHASE_2)
+            return new ApiMessage(ApiMessage.error,"you can’t do this action in this phase");
+
+        var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
+
+        if(selectedCard.getStatus() != Status.SET)
+            return new ApiMessage(ApiMessage.error,"you can’t flip summon this card");
+
+        game.getActivePlayer().flipSummon(selectedCard);
+        return new ApiMessage(ApiMessage.successful,"flip summoned successfully");
     }
 
-    public void flipSummonMonster(){
-        game.flipSummonMonster();
+    public ApiMessage attack(int targetMonsterCellId) throws Exception {
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(!game.getActivePlayer().getField().isMonsterZoneContains(game.getActivePlayer().getSelectedCard()))
+            return new ApiMessage(ApiMessage.error,"you can’t attack with this card");
+
+        var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
+
+        if(selectedCard.getMode() != Mode.ATTACK))
+            return new ApiMessage(ApiMessage.error,"you can’t attack with this card");//khodam gozashtam
+
+        if(game.getPhase() != Phase.BATTLE_PHASE)
+            return new ApiMessage(ApiMessage.error,"you can’t do this action in this phase");
+
+        if(selectedCard.isMonsterAttackInTurn())
+            return new ApiMessage(ApiMessage.error,"this card already attacked");
+
+
+        var targetMonster = game.getInactivePlayer().getField().getMonsterZone()[targetMonsterCellId];
+
+        if(targetMonster == null)
+            return new ApiMessage(ApiMessage.error,"there is no card to attack here");
+
+
+    }
+
+    public ApiMessage directAttack() throws Exception {
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(!game.getActivePlayer().getField().isMonsterZoneContains(game.getActivePlayer().getSelectedCard()))
+            return new ApiMessage(ApiMessage.error,"you can’t attack with this card");
+
+        if(game.getPhase() != Phase.BATTLE_PHASE)
+            return new ApiMessage(ApiMessage.error,"you can’t do this action in this phase");
+
+        var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
+
+        if(selectedCard.isMonsterAttackInTurn())
+            return new ApiMessage(ApiMessage.error,"this card already attacked");
+
+        if(game.getInactivePlayer().getField().getCntFreeCellsInMonsterZone() != 0 || selectedCard.getMode() != Mode.ATTACK)
+            return new ApiMessage(ApiMessage.error,"you can’t attack the opponent directly");//ToDo: be har dalil yani chi
+
+        game.getActivePlayer().directAttack(game,selectedCard);
+        return new ApiMessage(ApiMessage.successful,"{\"damage\"=" + selectedCard.getAtk() + "}");
+    }
+
+    public ApiMessage activateEffect() throws Exception {//az koja befahmim bara field
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
+
+        if(game.getActivePlayer().getSelectedCard().getCategory() != Category.SPELL)//trap chi pas
+            return new ApiMessage(ApiMessage.error,"activate effect is only for spell cards.");
+
+        //hand.contain chi pas
+        if(game.getPhase() != Phase.MAIN_PHASE_1)//namotmaen
+            return new ApiMessage(ApiMessage.error,"you can’t activate an effect on this turn");
+
+        var selectedCard = (SpellCard) game.getActivePlayer().getSelectedCard();
+
+        if(selectedCard.isActivateInTurn())
+            return new ApiMessage(ApiMessage.error,"you have already activated this card");
+
+        if(game.getActivePlayer().getField().getCntFreeCellsInSpellZone() == 0 && game.getActivePlayer().getField().isSpellZoneContains(selectedCard))//if in hand
+            return new ApiMessage(ApiMessage.error,"spell card zone is full");
+
+        //sharayeti ke natoonim faal konim chi
+
+
+        game.getActivePlayer().activateSpell(game,selectedCard);
+        return new ApiMessage(ApiMessage.successful,"spell activated");
+    }
+
+    public void specialSummonMonster(){
+        if(game.getActivePlayer().getSelectedCard() == null)
+            return new ApiMessage(ApiMessage.error,"no card is selected yet");
     }
 
     public void ritualSummonMonster(){
-        game.ritualSummonMonster();
+
     }
 
-    public void setMonster(){
-        game.setMonster();
-    }
+
 
     public void changeStatusMonster(){
-        game.changeStatusMonster();
+
     }
 
-    public void attack(int targetMonster){
-        game.addCardFromDeckToHand(targetMonster);
-    }
-
-    public void directAttack(){
-        game.directAttack();
-    }
-
-    public void activateEffect(){
-        game.activateEffect();
-    }
 
     public void setSpell(){
-        game.setSpell();
+
     }
 
     public void setTrap(){
-        game.setTrap();
+
     }
 
     public void setSpellOrTrapForOpponent(){
-        game.setSpellOrTrapForOpponent();
+
     }
 
     public ArrayList<Card> getGraveyard(){
-        return game.getGraveyard();
+
     }
 
     public Card getSelectedCard(){
-        return game.getSelectedCard();
+
     }
-*/
+
+    private Deck getDeckFromDeckJson(DeckJson deck) {
+        Deck ans = new Deck(deck.getName());
+        for (CardJson card : deck.getMainDeck()) {
+            ans.addCardToMainDeck(getCardFromCardJson(card));
+        }
+        for (CardJson card : deck.getSideDeck()) {
+            ans.addCardToSideDeck(getCardFromCardJson(card));
+        }
+        return ans;
+    }
+
+    private Card getCardFromCardJson(CardJson card) {
+    }
+
+    private CardJson getCardJsonFromCard(Card card){
+
+    }
+
 }

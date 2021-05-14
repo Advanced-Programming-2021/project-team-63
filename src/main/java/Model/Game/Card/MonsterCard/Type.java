@@ -10,7 +10,7 @@ public enum Type {
     AQUA,
     BEAST,
     PYRO,
-    SPELLCASTER,
+    SPELL_CASTER,
     THUNDER,
     DRAGON,
     MACHINE,

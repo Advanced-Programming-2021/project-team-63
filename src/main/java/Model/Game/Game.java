@@ -11,6 +11,7 @@ public class Game {
     private Player activePlayer;
     private Player inactivePlayer;
     private Phase phase;
+    private int rounds;
     private static int counter;
     private static ArrayList<Game> games;
 

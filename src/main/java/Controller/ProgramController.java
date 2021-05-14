@@ -11,11 +11,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProgramController {
+    private static boolean justOneObject = false;
     private final static String usersInfoPath = "src\\main\\java\\Database\\UserInfo.txt";
     private final static String monstersInfoPath = "src\\main\\java\\Database\\MonstersInfo.txt";
     private final static String spellAndTrapsINfoPath = "src\\main\\java\\Database\\Spell&TrapsInfo.txt";
     private AccountJson loggedInUser ;
 
+    public ProgramController(){
+        assert !ProgramController.justOneObject;
+        justOneObject = true;
+        loggedInUser = null;
+    }
 
     public ApiMessage register(String username, String password, String nickname) throws Exception {
 
@@ -257,7 +263,7 @@ public class ProgramController {
         }
 
         loggedInUser.addToPurchasedCards(cardName);
-        loggedInUser.decrease(card.getPrice());
+        loggedInUser.decreaseMoney(card.getPrice());
         changeUserInfoInDataBase(loggedInUser);
         return new ApiMessage(ApiMessage.successful,"card successfully purchased");
     }
@@ -274,6 +280,38 @@ public class ProgramController {
         }
 
         return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
+    }
+
+    public ApiMessage createDuel(String usernamePlayer2, int rounds, GameController gameController) throws Exception {
+
+        if(!doesUserWithThisUsernameExist(usernamePlayer2)){
+            return new ApiMessage(ApiMessage.error,"there is no player with this username");
+        }
+
+        var player2 = getUserInfoByUsername(usernamePlayer2);
+        assert player2 != null;
+
+        if(loggedInUser.getActiveDeck() == null){
+            return new ApiMessage(ApiMessage.error,loggedInUser.getUsername()+" has no active deck");
+        }
+
+        if(player2.getActiveDeck() == null){
+            return new ApiMessage(ApiMessage.error,player2.getUsername()+" has no active deck");
+        }
+
+        if(!loggedInUser.isAllowedActiveDeck()){
+            return new ApiMessage(ApiMessage.error,loggedInUser.getUsername()+"’s deck is invalid");
+        }
+
+        if(!player2.isAllowedActiveDeck()){
+            return new ApiMessage(ApiMessage.error,player2.getUsername()+"’s deck is invalid");
+        }
+
+        if(rounds != 1 && rounds != 3){
+            return new ApiMessage(ApiMessage.error,"number of rounds is not supported");
+        }
+
+        return gameController.createGame(loggedInUser , player2 , rounds);
     }
 
     private void getCardGeneralInfoForShowDeck(ShowDeckJson ans, ArrayList<CardJson> deck) throws IOException {
@@ -307,6 +345,7 @@ public class ProgramController {
 
     private void addUserInfoToDatabase(String username, String password, String nickname) throws IOException {
         AccountJson newUser = new AccountJson(username, password, nickname);
+        newUser.increaseMoney(100000);//not sure
         ArrayList<AccountJson> users = getUsersInfo();
         FileWriter fileWriter = new FileWriter(usersInfoPath);
 

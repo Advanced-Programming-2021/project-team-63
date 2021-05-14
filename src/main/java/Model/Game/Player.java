@@ -13,6 +13,9 @@ public class Player {
     private Deck deck;
     private ArrayList<Card> cards;
     private ArrayList<Card> hand;
+
+    private boolean isMonsterSummon;
+    private boolean isMonsterSet;
     private Card selectedCard;
 
     public Player(Account account){
@@ -104,10 +107,11 @@ public class Player {
         return randomCard;
     }
 
-    public void draw(){
+    public String draw(){
         Card card = this.getRandomCard();
         this.removeFromCards(card);
         this.addToHand(card);
+        return card.getName();
     }
 
     public void summon(MonsterCard monsterCard){
@@ -115,6 +119,7 @@ public class Player {
         monsterCard.setStatus(Status.SUMMON);
         monsterCard.setMode(Mode.ATTACK);
         this.getField().addToMonsterZone(monsterCard);
+        setMonsterSummon(true);
     }
 
     public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard){
@@ -123,6 +128,7 @@ public class Player {
         monsterCard.setStatus(Status.SUMMON);
         monsterCard.setMode(Mode.ATTACK);
         this.getField().addToMonsterZone(monsterCard);
+        setMonsterSummon(true);
     }
 
     public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2){
@@ -132,6 +138,7 @@ public class Player {
         monsterCard.setStatus(Status.SUMMON);
         monsterCard.setMode(Mode.ATTACK);
         this.getField().addToMonsterZone(monsterCard);
+        setMonsterSummon(true);
     }
 
     public void setMonster(MonsterCard monsterCard){
@@ -139,6 +146,7 @@ public class Player {
         monsterCard.setStatus(Status.SET);
         monsterCard.setMode(Mode.DEFENSE);
         this.getField().addToMonsterZone(monsterCard);
+        setMonsterSet(true);
     }
 
     public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard){
@@ -160,6 +168,7 @@ public class Player {
 
     public void changeMode(MonsterCard monsterCard ,Mode mode){
         monsterCard.setMode(mode);
+        monsterCard.setChangeModeInTurn(true);
     }
 
     public void flipSummon(MonsterCard monsterCard){
@@ -180,6 +189,7 @@ public class Player {
         spellCard.setStatus(Status.SUMMON);
         this.getField().addToSpellZone(spellCard);
         spellCard.getSpell().activate(game);
+        spellCard.setActivateInTurn(true);
     }
 
     public void activateField(Game game,SpellCard spellCard){
@@ -187,6 +197,7 @@ public class Player {
         spellCard.setStatus(Status.SUMMON);
         this.getField().setFieldZone(spellCard);
         spellCard.getSpell().activate(game);
+        spellCard.setActivateInTurn(true);
     }
 
     public void setSpell(SpellCard spellCard){
@@ -206,5 +217,21 @@ public class Player {
         }
         summon(ritualMonsterCard);
         changeMode(ritualMonsterCard, mode);
+    }
+
+    public boolean isMonsterSummon() {
+        return isMonsterSummon;
+    }
+
+    public void setMonsterSummon(boolean monsterSummon) {
+        isMonsterSummon = monsterSummon;
+    }
+
+    public boolean isMonsterSet() {
+        return isMonsterSet;
+    }
+
+    public void setMonsterSet(boolean monsterSet) {
+        isMonsterSet = monsterSet;
     }
 }
