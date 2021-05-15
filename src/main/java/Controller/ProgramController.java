@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class ProgramController {
     private static boolean justOneObject = false;
-    private final static String usersInfoPath = "src\\main\\java\\Database\\UserInfo.txt";
+    private final static String usersInfoPath = "src\\main\\java\\Database\\UsersInfo.txt";
     private final static String monstersInfoPath = "src\\main\\java\\Database\\MonstersInfo.txt";
     private final static String spellAndTrapsINfoPath = "src\\main\\java\\Database\\Spell&TrapsInfo.txt";
     private AccountJson loggedInUser ;
@@ -99,8 +99,8 @@ public class ProgramController {
 
     public ApiMessage createDeck(String deckName) throws Exception {
 
-        if(loggedInUser.getDeckByName(deckName) == null){
-            return new ApiMessage(ApiMessage.error,"deck with name "+deckName+"  already exists");
+        if(loggedInUser.getDeckByName(deckName) != null){
+            return new ApiMessage(ApiMessage.error,"deck with name "+deckName+" already exists");
         }
 
         else{
@@ -118,6 +118,8 @@ public class ProgramController {
         }
 
         else{
+            if(loggedInUser.getActiveDeckName().equals(deck.getName()))
+                loggedInUser.setActiveDeckName(null);
             loggedInUser.deleteDeck(deck);
             changeUserInfoInDataBase(loggedInUser);
             return new ApiMessage(ApiMessage.successful,"deck deleted successfully");
@@ -132,7 +134,7 @@ public class ProgramController {
         }
 
         else{
-            loggedInUser.setActiveDeck(deck);
+            loggedInUser.setActiveDeckName(deck.getName());
             changeUserInfoInDataBase(loggedInUser);
             return new ApiMessage(ApiMessage.successful,"deck activated successfully");
         }
@@ -424,6 +426,7 @@ public class ProgramController {
     }
 
     private ArrayList<MonsterJson> getMonstersInfo() throws IOException {
+        System.out.println(Paths.get("."));
         String json = new String(Files.readAllBytes(Paths.get(monstersInfoPath)));
         return new Gson().fromJson(json ,new TypeToken<List<MonsterJson>>(){}.getType());
     }

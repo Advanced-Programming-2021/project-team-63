@@ -10,7 +10,7 @@ public class AccountJson {
     private int money;
     private ArrayList<CardJson> purchasedCards;
     private ArrayList<DeckJson> decks;
-    private DeckJson activeDeck;
+    private String activeDeckName;
 
     public AccountJson(String username, String password, String nickname){
         this.username = username;
@@ -20,7 +20,7 @@ public class AccountJson {
         this.money = 0;
         purchasedCards = new ArrayList<>();
         decks = new ArrayList<>();
-        activeDeck = null;
+        activeDeckName = null;
     }
 
     public ArrayList<CardJson> getPurchasedCards(){
@@ -28,7 +28,7 @@ public class AccountJson {
     }
 
     public boolean isAllowedActiveDeck(){
-        return activeDeck.getMainDeckSize() >= 40;
+        return getActiveDeck().getMainDeckSize() >= 40;
     }
 
     public String getUsername() {
@@ -69,12 +69,13 @@ public class AccountJson {
         return this.money;
     }
 
-    public void setActiveDeck(DeckJson deck){
-        this.activeDeck = deck;
+    public void setActiveDeckName(String deckName){
+        this.activeDeckName = deckName;
     }
-    public DeckJson getActiveDeck(){
-        return this.activeDeck;
+    public String getActiveDeckName(){
+        return this.activeDeckName;
     }
+    public DeckJson getActiveDeck(){return getDeckByName(getActiveDeckName());}
 
     public DeckJson getDeckByName(String deckName){
         for (DeckJson deck : getDecks()) {
