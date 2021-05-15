@@ -128,6 +128,19 @@ public class Menu {
                 command = scan.nextLine();
 
                 if (commandMatch(command, "^\\s*scoreboars show\\s*$") != null) {
+
+                    request_JSON.put("command", "show_scorboard");
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(respone.get("message"));
+                    else {
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!
+
+                        //sorting data NEEDED
+                        LinkedHashMap<String, Integer> scoreboard = new LinkedHashMap<>();
+                        scoreboard = new Gson().fromJson(respone.get("message"), new TypeToken<LinkedHashMap<String, Integer>>().getType());
+                    }
                 }  /////show scoreboard
 
 
@@ -174,7 +187,7 @@ public class Menu {
                         else {
 
                             request_JSON.put("command", "changeProfile_nickname");
-                            request_JSON.put("nickname",changeNickname1.nickname);
+                            request_JSON.put("nickname", changeNickname1.nickname);
                             API request = new API();
                             JSONObject respone = request.run(respone_JSON);
                             clearJSON_OBJ(request_JSON);
@@ -192,8 +205,8 @@ public class Menu {
 
                         else {
                             request_JSON.put("command", "changeProfile_password");
-                            request_JSON.put("currentPass",changeNickname1.current);
-                            request_JSON.put("newPass",changeNickname1.neww);
+                            request_JSON.put("currentPass", changeNickname1.current);
+                            request_JSON.put("newPass", changeNickname1.neww);
                             API request = new API();
                             JSONObject respone = request.run(respone_JSON);
                             clearJSON_OBJ(request_JSON);
@@ -235,9 +248,9 @@ public class Menu {
 
                 else if (commandMatch(command, "^\\s*shop buy (.)+\\s*$") != null) {
 
-                    Matcher cardName=commandMatch(command, "^\\s*shop buy (.)+\\s*$");
+                    Matcher cardName = commandMatch(command, "^\\s*shop buy (.)+\\s*$");
                     request_JSON.put("command", "buyCard");
-                    request_JSON.put("cardName",cardName.gruop(1));
+                    request_JSON.put("cardName", cardName.gruop(1));
                     API request = new API();
                     JSONObject respone = request.run(respone_JSON);
                     clearJSON_OBJ(request_JSON);
@@ -269,6 +282,127 @@ public class Menu {
     }
 /////////////////////////////////////////////////////////////////////////////////deck menu
 
+    public void deckMenu() {
+
+        while (true) {
+            try {
+                command = scan.nextLine();
+
+                if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("scoreboard");
+
+
+                else if (commandMatch(command, "^\\s*deck create (.)+\\s*$") != null) {
+                    Matcher deckName = commandMatch(command, "^\\s*deck create (.)+\\s*$");
+                    request_JSON.put("command", "crate_deck");
+                    request_JSON.put("deckName", deckName.group(1));
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+
+                } else if (commandMatch(command, "^\\s*deck delete (.)+\\s*$") != null) {
+                    //validating
+                    Matcher deckName = commandMatch(command, "^\\s*deck delete (.)+\\s*$");
+                    request_JSON.put("command", "delete_deck");
+                    request_JSON.put("deckName", deckName.group(1));
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+
+                } else if (commandMatch(command, "^\\s*deck rm-card") != null) {
+
+                    int startwith = commandMatch(command, "^\\s*deck rm-card").end() + 1;
+                    AddCardToDeck addCardToDeck = new AddCardToDeck();
+                    AddCardToDeck addCardToDeck1 = (AddCardToDeck) addCardToDeck.run(command.substring(startwith));
+                    request_JSON.put("command", "remove_card_deck");
+                    request_JSON.put("deckName", addCardToDeck1.deckName);
+                    request_JSON.put("cardName", addCardToDeck1.cardName);
+                    request_JSON.put("side", addCardToDeck1.side);
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+
+
+                } else if (commandMatch(command, "^\\s*deck add-card") != null) {
+
+                    int startwith = commandMatch(command, "^\\s*deck add-card").end() + 1;
+                    AddCardToDeck addCardToDeck = new AddCardToDeck();
+                    AddCardToDeck addCardToDeck1 = (AddCardToDeck) addCardToDeck.run(command.substring(startwith));
+                    request_JSON.put("command", "remove_card_deck");
+                    request_JSON.put("deckName", addCardToDeck1.deckName);
+                    request_JSON.put("cardName", addCardToDeck1.cardName);
+                    request_JSON.put("side", addCardToDeck1.side);
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+
+                } else if (commandMatch(command, "^\\s*deck show --all") != null || commandMatch(command, "^\\s*deck show -a") != null) {
+
+                    request_JSON.put("command", "show_deck_all");
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+//////
+                } else if (commandMatch(command, "^\\s*deck show") != null) {
+
+                    int startwith = commandMatch(command, "^\\s*deck add-card").end() + 1;
+                    ShowDeck showDeck = new ShowDeck();
+                    ShowDeck showDeck1 = (ShowDeck) showDeck.run(command.substring(startwith));
+                    request_JSON.put("command", "show_deck");
+                    request_JSON.put("deckName", addCardToDeck1.deckName);
+                    request_JSON.put("side", addCardToDeck1.side);
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+                }
+
+//////
+
+                else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                else System.out.println("invalid command");
+
+            } catch (ParameterException c) {
+                System.out.println("invalid command");
+            } catch (StringIndexOutOfBoundsException a) {
+                System.out.println("invalid command");
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////import/export menu
+    public void importExportMenu() {
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////duel menu
+    public void duelMenu() {
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////duelBoardMenu
+    public void duelBoardMenu() {
+    }
 /////////////////////////////////////////////////////////////////////////////////aid functions
 
     public void clearJSON_OBJ(JSONObject o) {
