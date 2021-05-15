@@ -147,6 +147,127 @@ public class Menu {
 
 
     }
+/////////////////////////////////////////////////////////////////////////////////profile menu
+
+
+    public void profileMenue() {
+
+        while (true) {
+            try {
+                command = scan.nextLine();
+
+                if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("profile");
+
+                else if (commandMatch(command, "^\\s*profile change") != null) {
+
+
+                    int startwith = commandMatch(command, "^\\s*profile change").end() + 1;
+                    ChangeNickname changeNickname = new ChangeNickname();
+                    ChangeNickname changeNickname1 = (ChangeNickname) changeNickname.run(command.substring(startwith));
+
+                    if (changeNickname1.nickname != null) {
+
+                        if (changeNickname1.password) System.out.println("invalid command");
+                        else if (changeNickname1.current != null) System.out.println("invalid command");
+                        else if (changeNickname1.neww != null) System.out.println("invalid command");
+
+                        else {
+
+                            request_JSON.put("command", "changeProfile_nickname");
+                            request_JSON.put("nickname",changeNickname1.nickname);
+                            API request = new API();
+                            JSONObject respone = request.run(respone_JSON);
+                            clearJSON_OBJ(request_JSON);
+                            if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                            else {
+                                System.out.println(API.get("message"));
+                            }
+
+
+                        }
+                    } else if (changeNickname1.password) {
+
+                        if (changeNickname1.current == null) System.out.println("invalid command");
+                        else if (changeNickname1.neww == null) System.out.println("invalid command");
+
+                        else {
+                            request_JSON.put("command", "changeProfile_password");
+                            request_JSON.put("currentPass",changeNickname1.current);
+                            request_JSON.put("newPass",changeNickname1.neww);
+                            API request = new API();
+                            JSONObject respone = request.run(respone_JSON);
+                            clearJSON_OBJ(request_JSON);
+                            if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                            else {
+                                System.out.println(API.get("message"));
+                            }
+
+                        }
+
+                    } else System.out.println("invalid command");
+
+
+                } else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("profile");
+
+                else if (command.equals("menu exit")) return;
+
+                else System.out.println("invalid command");
+
+
+            } catch (ParameterException c) {
+                System.out.println("invalid command");
+            } catch (StringIndexOutOfBoundsException a) {
+                System.out.println("invalid command");
+            }
+        }
+
+    }
+
+
+/////////////////////////////////////////////////////////////////////////////////shop menu
+
+
+    public void shopMenu() {
+        while (true) {
+            try {
+                command = scan.nextLine();
+                if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("shop");
+
+                else if (commandMatch(command, "^\\s*shop buy (.)+\\s*$") != null) {
+
+                    Matcher cardName=commandMatch(command, "^\\s*shop buy (.)+\\s*$");
+                    request_JSON.put("command", "buyCard");
+                    request_JSON.put("cardName",cardName.gruop(1));
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+
+                } else if (commandMatch(command, "^\\s*shop show --all") != null || commandMatch(command, "^\\s*shop show -a") != null) {
+
+                    request_JSON.put("command", "shop_show_all");
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
+                    clearJSON_OBJ(request_JSON);
+                    if (respone.get("type").equal("error")) System.out.println(API.get("message"));
+                    else {
+                        System.out.println(API.get("message"));
+                    }
+
+                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                else System.out.println("invalid command");
+
+            } catch (ParameterException c) {
+                System.out.println("invalid command");
+            } catch (StringIndexOutOfBoundsException a) {
+                System.out.println("invalid command");
+            }
+        }
+    }
+/////////////////////////////////////////////////////////////////////////////////deck menu
 
 /////////////////////////////////////////////////////////////////////////////////aid functions
 
