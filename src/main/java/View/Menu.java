@@ -13,7 +13,7 @@ public class Menu {
 
 /////////////////////////////////////////////////////////////////////login menu
 
-    public void loginMenu() {
+    public void loginMenu() throws JSONException {
 
         while (true) {
             try {
@@ -35,13 +35,13 @@ public class Menu {
                     request_JSON.put("username", userCreate1.username);
                     request_JSON.put("password", userCreate1.password);
                     request_JSON.put("nickname", userCreate1.nickname);
-                    API request = new Api(request_JSON);
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
                     clearJSON_OBJ(request_JSON);
-                    JSONObject respone = request.run;
+
                     if (respone.get("type").equal("error")) System.out.println(API.get("message"));
                     else {
                         System.out.println(API.get("message"));
-                        mainMenu();
                     }
 
                     ////////////////////////////////////////////////
@@ -57,9 +57,9 @@ public class Menu {
                     request_JSON.put("command", "logn_user");
                     request_JSON.put("username", userLogin1.username);
                     request_JSON.put("password", userLogin1.password);
-                    API request = new Api(request_JSON);
+                    API request = new API();
+                    JSONObject respone = request.run(respone_JSON);
                     clearJSON_OBJ(request_JSON);
-                    JSONObject respone = request.run;
                     if (respone.get("type").equal("error")) System.out.println(API.get("message"));
                     else {
                         System.out.println(API.get("message"));
@@ -118,6 +118,35 @@ public class Menu {
         }
     }
 
+
+/////////////////////////////////////////////////////////////////////////////////scoreboard menu   (JSON NEEDED)
+
+    public void scoreboardMenu() throws JSONException {
+
+        while (true) {
+            try {
+                command = scan.nextLine();
+
+                if (commandMatch(command, "^\\s*scoreboars show\\s*$") != null) {
+                }  /////show scoreboard
+
+
+                else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("scoreboard");
+
+                else if (command.equals("menu exit")) return;
+
+                else System.out.println("invalid command");
+
+
+            } catch (ParameterException c) {
+                System.out.println("invalid command");
+            } catch (StringIndexOutOfBoundsException a) {
+                System.out.println("invalid command");
+            }
+        }
+
+
+    }
 
 /////////////////////////////////////////////////////////////////////////////////aid functions
 
