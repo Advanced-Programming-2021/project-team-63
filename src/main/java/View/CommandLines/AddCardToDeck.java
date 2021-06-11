@@ -1,8 +1,15 @@
 //package com.company;
+import java.io.IOException;
+import java.io.InputStream;
+package View.CommandLines;
+
+import opennlp.tools.sentdetect.SentenceDetector;
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
 
 import com.beust.jcommander.*;
 
-public class AddCardToDeck extends CommandLine{
+public class AddCardToDeck extends CommandLine {
 
     @Parameter(names ={"--deck","-d"}, description = "the deck where you want to add card to",arity=1)
     public String deckName;

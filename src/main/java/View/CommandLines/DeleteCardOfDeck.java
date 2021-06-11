@@ -1,6 +1,8 @@
+package View.CommandLines;
 import com.beust.jcommander.Parameter;
 
-public class DeleteCardOfDeck extends CommandLine{
+
+public class DeleteCardOfDeck extends CommandLine {
 
     @Parameter(names ={"--deck","-d"}, description = "the deck where you want to add card to",arity=0,required = true)
     public String deckName;

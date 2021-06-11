@@ -1,5 +1,7 @@
 
+package View.CommandLines;
 import com.beust.jcommander.Parameter;
+
 
 public class ChangeNickname extends CommandLine {
 
