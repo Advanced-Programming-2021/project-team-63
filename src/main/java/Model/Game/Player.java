@@ -65,7 +65,6 @@ public class Player {
         String line = ""; 
         for(String name : mainDeckNames){ 
             try{  
-                //parsing a CSV file into BufferedReader class constructor  
                 BufferedReader reader = new BufferedReader(new FileReader("\\src\\main\\java\\Database\\Monster.csv"));  
                 while ((line = reader.readLine()) != null){  
                     String[] card = line.split(",");
@@ -80,8 +79,7 @@ public class Player {
             }catch (IOException e){  
             }
             if(!isMonster){ 
-                try{  
-                    //parsing a CSV file into BufferedReader class constructor  
+                try{   
                     BufferedReader reader = new BufferedReader(new FileReader("\\src\\main\\java\\Database\\SpellTrap.csv"));  
                     while ((line = reader.readLine()) != null){  
                         String[] card = line.split(",");
