@@ -150,11 +150,11 @@ public class Player {
         return randomCard;
     }
 
-    public String draw(){
+    public Card draw(){
         Card card = this.getRandomCard();
         this.removeFromCards(card);
         this.addToHand(card);
-        return card.getName();
+        return card;
     }
 
     public void summon(MonsterCard monsterCard){
@@ -166,7 +166,7 @@ public class Player {
     }
 
     public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard){
-        this.getField().killMonsterCard(sacrificeCard);
+        this.getField().killMonsterCard(sacrificeCard, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SUMMON);
         monsterCard.setMode(Mode.ATTACK);
@@ -175,8 +175,8 @@ public class Player {
     }
 
     public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2){
-        this.getField().killMonsterCard(sacrificeCard1);
-        this.getField().killMonsterCard(sacrificeCard2);
+        this.getField().killMonsterCard(sacrificeCard1, game);
+        this.getField().killMonsterCard(sacrificeCard2, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SUMMON);
         monsterCard.setMode(Mode.ATTACK);
@@ -193,7 +193,7 @@ public class Player {
     }
 
     public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard){
-        this.getField().killMonsterCard(sacrificeCard);
+        this.getField().killMonsterCard(sacrificeCard, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SET);
         monsterCard.setMode(Mode.DEFENSE);
@@ -201,8 +201,8 @@ public class Player {
     }
 
     public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2){
-        this.getField().killMonsterCard(sacrificeCard1);
-        this.getField().killMonsterCard(sacrificeCard2);
+        this.getField().killMonsterCard(sacrificeCard1, game);
+        this.getField().killMonsterCard(sacrificeCard2, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SET);
         monsterCard.setMode(Mode.DEFENSE);
@@ -256,7 +256,7 @@ public class Player {
 
     public void ritualSummon(RitualMonsterCard ritualMonsterCard,ArrayList<MonsterCard> sacrificeCards,Mode mode){
         for(MonsterCard sacrifiseCard : sacrificeCards){
-            this.getField().killMonsterCard(sacrifiseCard);
+            this.getField().killMonsterCard(sacrifiseCard, game);
         }
         summon(ritualMonsterCard);
         changeMode(ritualMonsterCard, mode);

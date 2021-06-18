@@ -63,9 +63,10 @@ public class Field {
         setFieldZone(null);
     }
     
-    public void killMonsterCard(MonsterCard monsterCard){
+    public void killMonsterCard(MonsterCard monsterCard, Game game){
         removeFromMonsterZone(monsterCard);
         addToGraveyard(monsterCard);
+        game.addDeathMonster(monsterCard.hashCode());
     }
 
     public void killSpellCard(SpellCard spellCard){
