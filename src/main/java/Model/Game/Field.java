@@ -66,7 +66,7 @@ public class Field {
     public void killMonsterCard(MonsterCard monsterCard, Game game){
         removeFromMonsterZone(monsterCard);
         addToGraveyard(monsterCard);
-        game.addDeathMonster(monsterCard.hashCode());
+        game.addToGameLog(GameLogType.DEATH_MONSTER,monsterCard.hashCode());
     }
 
     public void killSpellCard(SpellCard spellCard){

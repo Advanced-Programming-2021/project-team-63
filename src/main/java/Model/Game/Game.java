@@ -5,6 +5,7 @@ import java.util.*;
 //import Model.Game.Card.MonsterCard.*;
 import Model.Game.Card.GameLogType;
 import Model.Game.Card.MonsterCard.Mode;
+import com.google.gson.Gson;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -142,122 +143,46 @@ public class Game {
         //ToDo: check effects
     }
 
-    public void addSelectCardLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.SELECT_CARD);
-        jsonObject.put("cardIdentity", cardIdentity);
-        addToGameLog(jsonObject.toString());
+    public void addToGameLog(GameLogInfo log){
+        addToGameLog(new Gson().toJson(log));
     }
 
-    public void addDeselectCardLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.DESELECT_CARD);
-        jsonObject.put("cardIdentity", cardIdentity);
-        addToGameLog(jsonObject.toString());
+    public void addToGameLog(GameLogType type, int mainCardIdentity){
+        GameLogInfo gameLogInfo = new GameLogInfo(type,mainCardIdentity);
+        addToGameLog(gameLogInfo);
     }
 
     public void addNextPhaseLog(Phase nowPhase) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.NEXT_PHASE);
-        jsonObject.put("newPhase", getPhase());
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addAddCardFromDeckToHandLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.ADD_CARD_TO_HAND);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
+        GameLogInfo gameLogInfo = new GameLogInfo();
+        gameLogInfo.setType(GameLogType.NEXT_PHASE);
+        gameLogInfo.setNowPhase(nowPhase);
+        addToGameLog(gameLogInfo);
     }
 
     public void addSummonMonsterLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.SUMMON_MONSTER);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.SUMMON_MONSTER,cardIdentity);
+        addToGameLog(gameLogInfo);
     }
 
     public void addSummonMonsterWith1Tribute(int cardIdentity, int victimIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.SUMMON_MONSTER_WITH_1TRIBUTE);
-        jsonObject.put("cardIdentity",cardIdentity);
-        jsonObject.put("victimIdentity",victimIdentity);
-        addToGameLog(jsonObject.toString());
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.SUMMON_MONSTER,cardIdentity);
+        gameLogInfo.getTributes().add(victimIdentity);
+        addToGameLog(gameLogInfo);
     }
 
     public void addSummonMonsterWith2Tributes(int cardIdentity, int victim1Identity, int victim2Identity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.SUMMON_MONSTER_WITH_2TRIBUTES);
-        jsonObject.put("cardIdentity",cardIdentity);
-        jsonObject.put("victim1Identity",victim1Identity);
-        jsonObject.put("victim2Identity",victim2Identity);
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addSetMonsterLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.SET_MONSTER);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addChangeMonsterModeLog(int cardIdentity, Mode newMode) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.CHANGE_MONSTER_MODE);
-        jsonObject.put("cardIdentity",cardIdentity);
-        jsonObject.put("newMode",newMode);
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addFlipSummonMonsterLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.FLIP_SUMMON_MONSTER);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.SUMMON_MONSTER,cardIdentity);
+        gameLogInfo.getTributes().add(victim1Identity);
+        gameLogInfo.getTributes().add(victim2Identity);
+        addToGameLog(gameLogInfo);
     }
 
     public void addAttackLog(int cardIdentity, int targetIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.ATTACK);
-        jsonObject.put("cardIdentity",cardIdentity);
-        jsonObject.put("targetIdentity",targetIdentity);
-        addToGameLog(jsonObject.toString());
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.ATTACK,cardIdentity);
+        gameLogInfo.setTargetCard(targetIdentity);
+        addToGameLog(gameLogInfo);
     }
 
-    public void addDeathMonster(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.DEATH_MONSTER);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addDirectAttackLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.DIRECT_ATTACK);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addActiveFieldLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.ACTIVE_EFFECT_FIELD);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addActiveSpellLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.ACTIVE_EFFECT_SPELL);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
-    }
-
-    public void addSetSpellLog(int cardIdentity) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.SET_SPELL);
-        jsonObject.put("cardIdentity",cardIdentity);
-        addToGameLog(jsonObject.toString());
-    }
 
 
 }

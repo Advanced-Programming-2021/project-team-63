@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Model.ApiMessage;
 import Model.Deck;
 import Model.Game.Card.Category;
+import Model.Game.Card.GameLogType;
 import Model.Game.Card.MonsterCard.Mode;
 import Model.Game.Card.MonsterCard.MonsterCard;
 import Model.Game.Card.MonsterCard.MonsterCategory;
@@ -14,11 +15,9 @@ import Model.Game.Card.Status;
 import Model.Game.CardAddress;
 import Model.Game.Game;
 import Model.Game.Card.Card;
+import Model.Game.GameLogInfo;
 import Model.Game.Phase;
-import Model.JsonObject.AccountJson;
-import Model.JsonObject.CardGeneralInfo;
-import Model.JsonObject.CardJson;
-import Model.JsonObject.DeckJson;
+import Model.JsonObject.*;
 import com.google.gson.Gson;
 
 public class GameController{
@@ -77,14 +76,14 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"no card found in the given position");
         }
         game.getActivePlayer().setSelectedCard(selectedCard);
-        game.addSelectCardLog(selectedCard.hashCode());
+        game.addToGameLog(GameLogType.SELECT_CARD, selectedCard.hashCode());
         return new ApiMessage(ApiMessage.successful,"card selected");
     }
 
     public ApiMessage deselectCard() throws Exception {
         if(game.getActivePlayer().getSelectedCard() == null)
             return new ApiMessage(ApiMessage.error,"no card is selected yet");
-        game.addDeselectCardLog(game.getActivePlayer().getSelectedCard().hashCode());
+        game.addToGameLog(GameLogType.DESELECT_CARD, game.getActivePlayer().getSelectedCard().hashCode());
         game.getActivePlayer().setSelectedCard(null);
         return new ApiMessage(ApiMessage.successful,"card deselected");
     }
@@ -98,7 +97,7 @@ public class GameController{
 
     public ApiMessage addCardFromDeckToHand() throws Exception {
         var card = game.getActivePlayer().draw();
-        game.addAddCardFromDeckToHandLog(card.hashCode());
+        game.addToGameLog(GameLogType.ADD_CARD_TO_HAND,card.hashCode());
         return new ApiMessage(ApiMessage.successful,"new card added to the hand : " + card.getName());
     }
 
@@ -154,7 +153,7 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"there no monsters one this address");
 
         //ToDo: aya tartib dastoor mohem ast?
-        game.getActivePlayer().tributeSummon(selectedCard , victimMonster);
+        game.getActivePlayer().tributeSummon(selectedCard , victimMonster, game);
         game.addSummonMonsterWith1Tribute(selectedCard.hashCode(),victimMonster.hashCode());
         return new ApiMessage(ApiMessage.successful,"summoned successfully");
     }
@@ -167,7 +166,7 @@ public class GameController{
         if(victimMonster1 == null || victimMonster2 == null)
             return new ApiMessage(ApiMessage.error,"there is no monster on one of these addresses");
 
-        game.getActivePlayer().tributeSummon(selectedCard , victimMonster1 , victimMonster2);
+        game.getActivePlayer().tributeSummon(selectedCard , victimMonster1 , victimMonster2, game);
         game.addSummonMonsterWith2Tributes(selectedCard.hashCode(),victimMonster1.hashCode(),victimMonster2.hashCode());
         return new ApiMessage(ApiMessage.successful,"summoned successfully");
     }
@@ -194,7 +193,7 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"you already set on this turn");
 
         game.getActivePlayer().setMonster((MonsterCard) game.getActivePlayer().getSelectedCard());
-        game.addSetMonsterLog(game.getActivePlayer().getSelectedCard().hashCode());
+        game.addToGameLog(GameLogType.SET_MONSTER,game.getActivePlayer().getSelectedCard().hashCode());
         return new ApiMessage(ApiMessage.successful,"set successfully");
         //bedoone ghorbani amal kardim chon duck nagofte va namjoo gofte irad nadare
     }
@@ -219,7 +218,7 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"you already changed this card position in this turn");
 
         game.getActivePlayer().changeMode(selectedCard, newMode);
-        game.addChangeMonsterModeLog(selectedCard.hashCode(), newMode);
+        game.addToGameLog(GameLogType.CHANGE_MONSTER_MODE,selectedCard.hashCode());
         return new ApiMessage(ApiMessage.successful,"monster card position changed successfully");
     }
 
@@ -239,7 +238,7 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"you can’t flip summon this card");
 
         game.getActivePlayer().flipSummon(selectedCard);
-        game.addFlipSummonMonsterLog(selectedCard.hashCode());
+        game.addToGameLog(GameLogType.FLIP_SUMMON_MONSTER,selectedCard.hashCode());
         return new ApiMessage(ApiMessage.successful,"flip summoned successfully");
     }
 
@@ -290,7 +289,7 @@ public class GameController{
         if(game.getInactivePlayer().getField().getCntFreeCellsInMonsterZone() != 0 || selectedCard.getMode() != Mode.ATTACK)
             return new ApiMessage(ApiMessage.error,"you can’t attack the opponent directly");//ToDo: be har dalil yani chi
 
-        game.addDirectAttackLog(selectedCard.hashCode());
+        game.addToGameLog(GameLogType.DIRECT_ATTACK,selectedCard.hashCode());
         game.getActivePlayer().directAttack(game,selectedCard);
         return new ApiMessage(ApiMessage.successful,"{\"damage\"=" + selectedCard.getAtk() + "}");
     }
@@ -318,12 +317,11 @@ public class GameController{
 
         //sharayeti ke natoonim faal konim chi
 
+        game.addToGameLog(GameLogType.ACTIVE_EFFECT,selectedCard.hashCode());
         if(selectedCard.getIcon() == Icon.FIELD){
-            game.addActiveFieldLog(selectedCard.hashCode());
             game.getActivePlayer().activateField(game,selectedCard);
         }
         else{
-            game.addActiveSpellLog(selectedCard.hashCode());
             game.getActivePlayer().activateSpell(game,selectedCard);
         }
         return new ApiMessage(ApiMessage.successful,"spell activated");
@@ -343,7 +341,7 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"spell card zone is full");
 
 
-        game.addSetSpellLog(game.getActivePlayer().getSelectedCard().hashCode());
+        game.addToGameLog(GameLogType.SET_SPELL,game.getActivePlayer().getSelectedCard().hashCode());
         game.getActivePlayer().setSpell((SpellCard) game.getActivePlayer().getSelectedCard());
         return new ApiMessage(ApiMessage.successful,"set successfully");//farghe spell & trap
     }
@@ -353,6 +351,7 @@ public class GameController{
     }
 
     public void ritualSummonMonster(){
+
     }
 
     public void changeStatusMonster(){
@@ -360,6 +359,10 @@ public class GameController{
     }
 
     public void setSpellOrTrapForOpponent(){
+    }
+
+    public ApiMessage getBoard() throws  Exception {
+        return new ApiMessage(ApiMessage.successful,new Gson().toJson(new BoardJson(new FieldJson(game.getActivePlayer()),new FieldJson(game.getInactivePlayer()))));
     }
 
     public ApiMessage getGraveyard() throws Exception {

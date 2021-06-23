@@ -165,7 +165,7 @@ public class Player {
         setMonsterSummon(true);
     }
 
-    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard){
+    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard,Game game){
         this.getField().killMonsterCard(sacrificeCard, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SUMMON);
@@ -174,7 +174,7 @@ public class Player {
         setMonsterSummon(true);
     }
 
-    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2){
+    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2, Game game){
         this.getField().killMonsterCard(sacrificeCard1, game);
         this.getField().killMonsterCard(sacrificeCard2, game);
         this.removeFromHand(monsterCard);
@@ -192,7 +192,7 @@ public class Player {
         setMonsterSet(true);
     }
 
-    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard){
+    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard, Game game){
         this.getField().killMonsterCard(sacrificeCard, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SET);
@@ -200,7 +200,7 @@ public class Player {
         this.getField().addToMonsterZone(monsterCard);
     }
 
-    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2){
+    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2,Game game){
         this.getField().killMonsterCard(sacrificeCard1, game);
         this.getField().killMonsterCard(sacrificeCard2, game);
         this.removeFromHand(monsterCard);
@@ -254,13 +254,15 @@ public class Player {
         spellCard.getSpell().activate(game);
     }
 
-    public void ritualSummon(RitualMonsterCard ritualMonsterCard,ArrayList<MonsterCard> sacrificeCards,Mode mode){
+    public void ritualSummon(RitualMonsterCard ritualMonsterCard,ArrayList<MonsterCard> sacrificeCards,Mode mode,Game game){
         for(MonsterCard sacrifiseCard : sacrificeCards){
             this.getField().killMonsterCard(sacrifiseCard, game);
         }
         summon(ritualMonsterCard);
         changeMode(ritualMonsterCard, mode);
     }
+
+
 
     public boolean containCard(Card card){
         if(hand.contains(card))

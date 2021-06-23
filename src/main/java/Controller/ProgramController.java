@@ -202,7 +202,6 @@ public class ProgramController {
     }
 
     public ApiMessage showAllDeck() throws Exception {
-        //how fix Gson null values
         var ans = new ShowAllDecksJson(loggedInUser);
         return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }

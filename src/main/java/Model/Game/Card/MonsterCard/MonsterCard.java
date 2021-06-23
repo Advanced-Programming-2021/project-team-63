@@ -63,6 +63,7 @@ public class MonsterCard extends Card{
     }
 
 
+
     public void addToTypes(Type type){
         types.add(type);
     }
