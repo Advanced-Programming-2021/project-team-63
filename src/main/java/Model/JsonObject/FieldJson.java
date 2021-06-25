@@ -14,8 +14,13 @@ public class FieldJson {
     private CardBoardInfo spellZone[] = new CardBoardInfo[5];
     private CardBoardInfo fieldZone;
     private int graveyardSize;
+    private int handSize;
+    private int deckSize;
+
 
     public FieldJson(Player player){
+        this.deckSize = player.getMainDeck().size();
+        this.handSize = player.getHand().size();
         this.nickName = player.getNickname();
         this.life = player.getLp();
 
@@ -61,5 +66,13 @@ public class FieldJson {
 
     public int getGraveyardSize() {
         return graveyardSize;
+    }
+
+    public int getHandSize() {
+        return handSize;
+    }
+
+    public int getDeckSize() {
+        return deckSize;
     }
 }
