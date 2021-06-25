@@ -9,7 +9,7 @@ public class Yami implements Spell{
 
     public void activate(Game game) {
         if(!wasActivated){
-            MonsterCard monsterCard = new MonsterCard();
+            MonsterCard monsterCard = null;
             for (int i = 0; i < 5; i++) {
                 monsterCard = game.getPlayer1().getField().getMonsterZone()[i];
                 if(monsterCard.getTypes().contains(Type.FAIRY)){
@@ -37,7 +37,7 @@ public class Yami implements Spell{
     public void activate(Game game, String cardName){}
     
     public void deactivate(Game game){
-        MonsterCard monsterCard = new MonsterCard();
+        MonsterCard monsterCard = null;
         for (int i = 0; i < 5; i++) {
             monsterCard = game.getPlayer1().getField().getMonsterZone()[i];
             if(monsterCard.getTypes().contains(Type.FAIRY)){

@@ -11,7 +11,7 @@ public class MonsterReborn implements Spell{
 
     public void activate(Game game,String cardName){
         if(!wasActivated){
-            MonsterCard monsterCard = new MonsterCard();
+            MonsterCard monsterCard = null;
             for(Card card : game.getActivePlayer().getField().getGraveyard()){
                 if(card.getName().equals(cardName) && card.getCategory().equals(Category.MONSTER)) monsterCard = (MonsterCard)card;
             }

@@ -6,10 +6,6 @@ public abstract class Card {
     private String number;
     private Status status;
     private Category category;
-
-    public static Card constructCard(Category category){
-        return null;
-    }
     
     public void setName(String name) {
         this.name = name;

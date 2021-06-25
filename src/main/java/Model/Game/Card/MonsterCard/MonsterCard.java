@@ -18,8 +18,15 @@ public class MonsterCard extends Card{
 
 
 
-    public MonsterCard Construct(MonsterCategory monsterCategory){
-        return null;
+    public MonsterCard(String name,String description,String number,String level,String atk,String def,String attribute,String type){
+        setName(name);
+        setDescription(description);
+        setNumber(number);
+        setLevel(Integer.parseInt(level));
+        setAtk(Integer.parseInt(atk));
+        setDef(Integer.parseInt(def));
+        setAttribute(attribute);
+        types.add(stringToType(type));
     }
 
     public void setLevel(int level) {
@@ -146,5 +153,65 @@ public class MonsterCard extends Card{
     public void directAttack(Game game){
         game.getInactivePlayer().decreaseLp(atk);
         setMonsterAttackInTurn(true);
+    }
+
+    public void setAttribute(String attribute){
+        switch (attribute) {
+            case "DARK" :
+                this.attribute = Attribute.DARK;
+            case "LIGHT" :
+                this.attribute = Attribute.LIGHT;
+            case "FIRE" :
+                this.attribute = Attribute.FIRE;
+            case "WATER" :
+                this.attribute = Attribute.WATER;
+            case "WIND" :
+                this.attribute = Attribute.WIND;
+            case "EARTH" :
+                this.attribute = Attribute.EARTH;
+        }
+    }
+
+    public Type stringToType(String type){
+        switch (type) {
+            case "Normal" :
+                return Type.NORMAL;
+            case "Effect" :
+                return Type.EFFECT;
+            case "Ritual" :
+                return Type.RITUAL;
+            case "Warrior" :
+                return Type.WARRIOR;
+            case "Beast-Warrior" :
+                return Type.BEAST_WARRIOR;
+            case "Fiend" :
+                return Type.FIEND;
+            case "Aqua" :
+                return Type.AQUA;
+            case "Beast" :
+                return Type.BEAST;
+            case "Pyro" :
+                return Type.PYRO;
+            case "Spellcaster" :
+                return Type.SPELL_CASTER;
+            case "Thunder" :
+                return Type.THUNDER;
+            case "Dragon" :
+                return Type.DRAGON;
+            case "Machine" :
+                return Type.MACHINE;
+            case "Rock" :
+                return Type.ROCK;
+            case "Insect" :
+                return Type.INSECT;
+            case "Cyberse" :
+                return Type.CYBERSE;
+            case "Fairy" :
+                return Type.FAIRY;
+            case "Sea Serpent" :
+                return Type.SEA_SERPENT;
+            default :
+                return Type.NORMAL;
+        }
     }
 }

@@ -1,14 +1,8 @@
 package Model.Game;
 
 import java.util.*;
-//import Model.Game.Card.*;
-//import Model.Game.Card.MonsterCard.*;
 import Model.Game.Card.GameLogType;
-import Model.Game.Card.MonsterCard.Mode;
 import com.google.gson.Gson;
-import org.json.JSONObject;
-import org.json.JSONArray;
-
 
 public class Game {
     private int id;
@@ -27,10 +21,11 @@ public class Game {
         games = new ArrayList<Game>();
     }
 
-    public Game(Player player1 , Player player2){
+    public Game(Player player1 , Player player2,int rounds){
         setId(counter);
         setPlayer1(player1);
         setPlayer2(player2);
+        setRounds(rounds);
         setActivePlayer(getRandomPlayer());
         setPhase(Phase.BATTLE_PHASE);
         gameLog = new ArrayList<>();
@@ -115,6 +110,14 @@ public class Game {
 
     public Player getPlayer2() {
         return player2;
+    }
+
+    public void setRounds(int rounds) {
+        this.rounds = rounds;
+    }
+
+    public int getRounds() {
+        return rounds;
     }
 
     public void setPhase(Phase phase) {

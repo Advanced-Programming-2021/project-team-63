@@ -13,7 +13,7 @@ public class TrapHole implements Spell{
             JSONObject log = new JSONObject(string);
             if(log.get("type").equals("SUMMON_MONSTER") || log.get("type").equals("FLIP_SUMMON_MONSTER")){
                 int code = log.getInt("mainCard");
-                MonsterCard monsterCard = new MonsterCard();
+                MonsterCard monsterCard = null;
                 for (int i = 0; i < 5; i++) {
                     if(game.getActivePlayer().getField().getMonsterZone()[i].hashCode() == code) monsterCard = game.getActivePlayer().getField().getMonsterZone()[i];
                 }

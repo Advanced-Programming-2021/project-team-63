@@ -5,10 +5,10 @@ import Model.Game.Card.MonsterCard.*;
 
 public class Forest implements Spell{
     private boolean wasActivated = false;
-    
+
     public void activate(Game game) {
         if(!wasActivated){
-            MonsterCard monsterCard = new MonsterCard();
+            MonsterCard monsterCard = null;
             for (int i = 0; i < 5; i++) {
                 monsterCard = game.getPlayer1().getField().getMonsterZone()[i];
                 if(monsterCard.getTypes().contains(Type.INSECT) || monsterCard.getTypes().contains(Type.BEAST) || monsterCard.getTypes().contains(Type.BEAST_WARRIOR)){
@@ -28,7 +28,7 @@ public class Forest implements Spell{
     public void activate(Game game, String cardName){}
     
     public void deactivate(Game game){
-        MonsterCard monsterCard = new MonsterCard();
+        MonsterCard monsterCard = null;
         for (int i = 0; i < 5; i++) {
             monsterCard = game.getPlayer1().getField().getMonsterZone()[i];
             if(monsterCard.getTypes().contains(Type.INSECT) || monsterCard.getTypes().contains(Type.BEAST) || monsterCard.getTypes().contains(Type.BEAST_WARRIOR)){

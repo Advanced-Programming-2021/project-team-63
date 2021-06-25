@@ -16,7 +16,7 @@ public class Player {
     private ArrayList<Card> sideDeck;
     private ArrayList<Card> cards;
     private ArrayList<Card> hand;
-
+    private boolean canRitualSummon;
     private boolean isMonsterSummon;
     private boolean isMonsterSet;
     private Card selectedCard;
@@ -31,6 +31,13 @@ public class Player {
         setSelectedCard(null);
     }
 
+    public void setCanRitualSummon(boolean canRitualSummon) {
+        this.canRitualSummon = canRitualSummon;
+    }
+
+    public boolean getCardRitualSummon(){
+        return canRitualSummon;
+    }
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
@@ -70,9 +77,9 @@ public class Player {
                     String[] card = line.split(",");
                     if(card[0].equals(name)){
                         isMonster = true;
-                        if(card[4].equals("Normal")) mainDeck.add(new MonsterCard());
-                        else if(card[4].equals("Ritual")) mainDeck.add(new RitualMonsterCard());
-                        else mainDeck.add(new EffectiveMonsterCard());
+                        if(card[4].equals("Normal")) mainDeck.add(new MonsterCard(card[0],card[7],"0",card[1],card[5],card[6],card[3],card[4]));
+                        else if(card[4].equals("Ritual")) mainDeck.add(new RitualMonsterCard(card[0],card[7],"0",card[1],card[5],card[6],card[3],card[4]));
+                        else mainDeck.add(new EffectiveMonsterCard(card[0],card[7],"0",card[1],card[5],card[6],card[3],card[4]));
                     }
                 }
                 reader.close(); 
@@ -84,7 +91,7 @@ public class Player {
                     while ((line = reader.readLine()) != null){  
                         String[] card = line.split(",");
                         if(card[0].equals(name)){
-                            mainDeck.add(new SpellCard());
+                            mainDeck.add(new SpellCard(card[0],card[3],"0",card[1],card[2]));
                         }
                     }
                     reader.close(); 
