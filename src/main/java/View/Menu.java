@@ -5,12 +5,14 @@ import Controller.API;
 import Model.Game.Card.Card;
 import Model.Game.Card.MonsterCard.Mode;
 import Model.Game.Card.Status;
+import Model.Game.Phase;
 import Model.JsonObject.*;
 import View.CommandLines.*;
 import View.CommandLines.Set;
 import com.beust.jcommander.ParameterException;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import javafx.scene.control.Label;
 import org.json.JSONException;
@@ -28,19 +30,19 @@ public class Menu {
     public String command;
     public JSONObject request_JSON = new JSONObject();
     public JSONObject response;
-    JSONObject _JSON = new JSONObject();
+
 
 ///////////////////////////////////////////////////////////////  login menu  //////////////////////////////////////////////////
 
     public void loginMenu() throws JSONException {
 
         while (true) {
+
             try {
                 command = scan.nextLine();
 
 
-                if (commandMatch(command, "^\\s*menu enter (.+)\\s*$") != null)
-                    System.out.println("please login first");
+                if (commandMatch(command, "^\\s*menu enter (.+)\\s*$") != null) System.out.println("please login first");
 
                 else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("login menu");
 
@@ -69,7 +71,7 @@ public class Menu {
     }
 
 
-///////////////////////////////////////////////////////////////   main menu  /////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////   main menu  ////////////////////////////////////////////////////////////
 
 
     public void mainMenu() {
@@ -79,7 +81,7 @@ public class Menu {
             try {
                 command = scan.nextLine();
 
-/////////////////////////////////////////////////////////////////////////////////////menu enter
+
 
                 if (commandMatch(command, "menu enter (.+)") != null) {
 
@@ -92,8 +94,8 @@ public class Menu {
                     else if (commandMatch(menuName, "import/export") != null) importExportMenu();
                     else if (commandMatch(menuName, "shop") != null) shopMenu();
 
-
-                } else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("main");
+                }
+                else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("main");
 
                 else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
 
@@ -132,8 +134,7 @@ public class Menu {
                     else {
 
                         Gson gson = new Gson();
-                        Type userListType = new TypeToken<ArrayList<ScoreboardInfo>>() {
-                        }.getType();
+                        Type userListType = new TypeToken<ArrayList<ScoreboardInfo>>() {}.getType();
                         ArrayList<ScoreboardInfo> usersArray = gson.fromJson((String) response.get("message"), userListType);
                         showScoreboard(usersArray);
 
@@ -426,8 +427,28 @@ public class Menu {
 
                 command = scan.nextLine();
 
+                if (commandMatch(command, "^\\s*next phase") != null) {
+                    JSONObject response = js_Pass("command", "next_phase");
+                    Gson gson1 = new Gson();
+                    Phase phase = gson1.fromJson((String) response.get("message"), Phase.class);
+                    System.out.println("Phase: "+ phase.name());
 
-                if (commandMatch(command, "^\\s*set") != null) set(command);
+                    if (phase==Phase.DRAW_PHASE){
+                        JSONObject response1 = js_Pass("command", "add_card_to_hand");
+                        System.out.println(response1.get("message"));
+                    }
+                    else if (phase==Phase.END_PHASE){
+                       // System.out.println("its "+);                                                 //bayad esme harif ro dashte basham
+                    }
+
+
+                }
+
+
+
+
+
+                else if (commandMatch(command, "^\\s*set") != null) set(command);
 
                 else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("duel");
 
@@ -442,7 +463,7 @@ public class Menu {
                             = js_Pass("command", "flip_summon_card");
                     System.out.println(response
                             .get("message"));
-                } else if (commandMatch(command, "^\\s*select -d\\s*$")) {
+                } else if (commandMatch(command, "^\\s*select -d\\s*$")!=null) {
 
                     JSONObject response = js_Pass("command", "back_select");
                     System.out.println(response.get("message"));
@@ -532,10 +553,34 @@ public class Menu {
 
                 }
 
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 
                 else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
                 else System.out.println("invalid command");
+
+                if (true) {
+                    JSONObject response = js_Pass("command", "get_phase");
+
+                    Gson gson1 = new Gson();
+
+                    Phase phase = gson1.fromJson((String) response.get("message"), Phase.class);
+                    if (phase == Phase.MAIN_PHASE_1) {
+                        JSONObject response1 = js_Pass("command", "get_board");
+                        Gson gson = new Gson();
+
+                        BoardJson boardJson = gson.fromJson((String) response.get("message"), BoardJson.class);
+
+                        printBoard(boardJson);
+
+
+                    }
+
+                }
+
+
+
 
             } catch (ParameterException c) {
                 System.out.println("invalid command");
@@ -565,7 +610,7 @@ public class Menu {
     }
 
 
-    public JSONObject js_Pass(String... args) throws JSONException {
+    public JSONObject js_Pass(String... args) throws Exception {
         for (int i = 0; i <= args.length - 2; i = +2) {
             request_JSON.put(args[i], args[i + 1]);
         }
@@ -703,9 +748,9 @@ public class Menu {
 
         LinkedList<CardGeneralInfo> orderdSpellsAndTraps = new LinkedList<>(object.getSpellAndTraps());
 
-        int quantity = orderdSpellsAndTraps.size();
-        for (int i = 0; i <= quantity - 2; i++) {
-            for (int j = i + 1; i <= quantity - 1; i++) {
+        int quantity1 = orderdSpellsAndTraps.size();
+        for (int i = 0; i <= quantity1 - 2; i++) {
+            for (int j = i + 1; i <= quantity1 - 1; i++) {
 
                 if (orderdSpellsAndTraps.get(i).getName().compareTo(orderdSpellsAndTraps.get(j).getName()) < 0) {
                     interChange.add(orderdSpellsAndTraps.get(j));
@@ -870,7 +915,7 @@ public class Menu {
 
 
         JSONObject response
-                = js_Pass("command", "remove_card_deck", "deckName", addCardToDeck1.deckName, "cardName", addCardToDeck1.cardName, "main_side_?", (String) addCardToDeck1.side);
+                = js_Pass("command", "remove_card_deck", "deckName", addCardToDeck1.deckName, "cardName", addCardToDeck1.cardName, "main_side_?",  Boolean.toString(addCardToDeck1.side));
 
         if (response
                 .get("type").equals("error")) System.out.println(response
@@ -888,7 +933,7 @@ public class Menu {
 
 
         JSONObject response
-                = js_Pass("command", "add_card_deck", "deckName", addCardToDeck1.deckName, "cardName", addCardToDeck1.cardName, "main_side_?", (String) addCardToDeck1.side);
+                = js_Pass("command", "add_card_deck", "deckName", addCardToDeck1.deckName, "cardName", addCardToDeck1.cardName, "main_side_?",  Boolean.toString(addCardToDeck1.side));
 
         if (response
                 .get("type").equals("error")) System.out.println(response
@@ -905,26 +950,26 @@ public class Menu {
         ShowDeck showDeck = new ShowDeck();
         ShowDeck showDeck1 = (ShowDeck) showDeck.run(command);
 
-        if (showDeck1.cards == null && showDeck1.deckName != null) {
+        if (Boolean.toString(showDeck1.cards) == null && showDeck1.deckName != null) {
 
             JSONObject response
-                    = js_Pass("command", "show_deck", "deckName", showDeck1.deckName, "main_side_?", (String) showDeck1.side);
+                    = js_Pass("command", "show_deck", "deckName", showDeck1.deckName, "main_side_?",  Boolean.toString( showDeck1.side));
 
             if (response.get("type").equals("error")) System.out.println(response.get("message"));
 
             else {
                 Gson gson = new Gson();
-                ShowDeckJson Deck = gson.fromJson(response.get("message"), ShowDeckJson.class);
+                ShowDeckJson Deck = gson.fromJson((JsonElement) response.get("message"), ShowDeckJson.class);
                 showDeck(Deck);
             }
-        } else if (showDeck1.cards != null && showDeck1.deckName != null && showDeck1.side == null) {
+        } else if (Boolean.toString(showDeck1.cards) != null && showDeck1.deckName != null && Boolean.toString(showDeck1.side) == null) {
             JSONObject response
                     = js_Pass("command", "show_deck_all");
             if (response.get("type").equals("error")) System.out.println(response.get("message"));
 
             else {
                 Gson gson = new Gson();
-                ShowAllDecksJson allDecks = gson.fromJson(response.get("message"), ShowAllDecksJson.class);
+                ShowAllDecksJson allDecks = gson.fromJson((JsonElement) response.get("message"), ShowAllDecksJson.class);
                 showAllDecks(allDecks);
             }
 
@@ -940,12 +985,12 @@ public class Menu {
 
         if (duelNewGame1.secondPlayerUsername != null) {
 
-            if (duelNewGame1.ai != null) System.out.println("invalid command");
+            if ( Boolean.toString(duelNewGame1.ai )!= null) System.out.println("invalid command");
 
             else {
                 Integer round = duelNewGame1.round;
                 JSONObject response
-                        = js_Pass("command", "duel_new_game", "Opponent", duelNewGame1.secondPlayerUsername, "round", (String) duelNewGame1.round, "opponent_type", "sec_player");
+                        = js_Pass("command", "duel_new_game", "Opponent", duelNewGame1.secondPlayerUsername, "round", Integer.toString( duelNewGame1.round), "opponent_type", "sec_player");
 
                 if (response
                         .get("type").equals("error")) System.out.println(response
@@ -957,12 +1002,12 @@ public class Menu {
                     duelBoardMenu();
                 }
             }
-        } else if (duelNewGame1.ai == null) System.out.println("invalid command");
+        } else if ( Boolean.toString(duelNewGame1.ai) == null) System.out.println("invalid command");
 
         else {
             Integer round = duelNewGame1.round;
             JSONObject response
-                    = js_Pass("command", "duel_new_game", "Opponent", duelNewGame1.ai, "round", duelNewGame1.round, "opponent_type", "ai");
+                    = js_Pass("command", "duel_new_game", "Opponent",  Boolean.toString(duelNewGame1.ai), "round", Integer.toString(duelNewGame1.round), "opponent_type", "ai");
 
             if (response
                     .get("type").equals("error")) System.out.println(response
@@ -1006,47 +1051,170 @@ public class Menu {
         Zone zone = new Zone();
         Zone zone1 = (Zone) zone.run(command);
 
-        if (zone1.monster != null) {
-            if (zone1.spell != null) System.out.println("invalid command");
-            else if (zone1.hand != null) System.out.println("invalid command");
-            else if (zone1.field != null) System.out.println("invalid command");
+        if (Integer.toString(zone1.monster) != null) {
+            if (Integer.toString(zone1.spell) != null) System.out.println("invalid command");
+            else if (Integer.toString(zone1.hand) != null) System.out.println("invalid command");
+            else if (Boolean.toString(zone1.field) != null) System.out.println("invalid command");
             else {
                 JSONObject response
-                        = js_Pass("command", "select_card", "zone", "monster_zone", "place", zone1.monster, "side", zone1.opponent);
+                        = js_Pass("command", "select_card", "zone", "monster_zone", "place", Integer.toString(zone1.monster), "side",Boolean.toString( zone1.opponent));
                 System.out.println(response
                         .get("message"));
             }
-        } else if (zone1.spell != null) {
-            if (zone1.hand != null) System.out.println("invalid command");
-            else if (zone1.field != null) System.out.println("invalid command");
+        } else if (Integer.toString(zone1.spell )!= null) {
+            if (Integer.toString(zone1.hand) != null) System.out.println("invalid command");
+            else if (Boolean.toString(zone1.field) != null) System.out.println("invalid command");
             else {
 
                 JSONObject response
-                        = js_Pass("command", "select_card", "zone", "spell_zone", "place", zone1.spell, "side", zone1.opponent);
+                        = js_Pass("command", "select_card", "zone", "spell_zone", "place", Integer.toString(zone1.spell), "side",Boolean.toString( zone1.opponent));
                 System.out.println(response
                         .get("message"));
             }
-        } else if (zone1.hand != null) {
-            if (zone1.field != null) System.out.println("invalid command");
+        } else if (Integer.toString(zone1.hand )!= null) {
+            if (Boolean.toString(zone1.field )!= null) System.out.println("invalid command");
             else {
                 JSONObject response
-                        = js_Pass("command", "select_card", "zone", "hand_zone", "place", zone1.hand);
+                        = js_Pass("command", "select_card", "zone", "hand_zone", "place",Integer.toString( zone1.hand));
                 System.out.println(response
                         .get("message"));
             }
-        } else if (zone1.field != null) {
+        } else if (Boolean.toString(zone1.field) != null) {
 
             JSONObject response
-                    = js_Pass("command", "select_card", "zone", "field_zone", "place", "side", zone1.opponent);
+                    = js_Pass("command", "select_card", "zone", "field_zone", "place", "side",Boolean.toString( zone1.opponent));
             System.out.println(response
                     .get("message"));
         } else System.out.println("invalid command");
 
     }
 
+    public void printBoard(BoardJson boardJson) {
+        ArrayList<Integer> iterator = new ArrayList<>();
+        iterator.add(5);
+        iterator.add(3);
+        iterator.add(1);
+        iterator.add(2);
+        iterator.add(4);
+        ArrayList<Integer> iterator1 = new ArrayList<>();
+        iterator1.add(4);
+        iterator1.add(2);
+        iterator1.add(1);
+        iterator1.add(3);
+        iterator1.add(5);
+
+        System.out.println(boardJson.getActivePlayer().getNickName() + ":" + boardJson.getActivePlayer().getLife());
+        System.out.print("\t\t");
+
+        //print c for in hand cards with for loop
+        // print DN zone for in deck card numbers     System.out.println(boardJson.getActivePlayer().);
+
+        for (int number : iterator) {      //spell zone
+            for (int j = 1; j <= 5; j++) {
+                if (number == j) {
+                    if (boardJson.getActivePlayer().getSpellZone()[j] == null) System.out.println("E");
+
+                    else if (boardJson.getActivePlayer().getSpellZone()[j].getStatus() == Status.SET)
+                        System.out.print("H");
+                    else System.out.println("O");
+                }
+                System.out.print("\t");
+            }
+        }
+
+        System.out.println();                 //ina chera address nadaran??!!!
+
+        for (int number1 : iterator) {//monster zone
+
+            for (int j = 1; j <= 5; j++) {
+
+                if (number1 == j) {
+                    if (boardJson.getActivePlayer().getMonsterZone()[j] == null) System.out.println("E");
+
+                    else if (boardJson.getActivePlayer().getMonsterZone()[j].getMode() == Mode.DEFENSE) {
+                        if (boardJson.getActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
+                            System.out.println("DH");
+                        else System.out.println("DO");
+
+                    } else if (boardJson.getActivePlayer().getMonsterZone()[j].getMode() == Mode.ATTACK) {
+                        if (boardJson.getActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
+                            System.out.println("OH");
+                        else System.out.println("OO");
+
+                    }
+                }
+            }
+            System.out.print("\t");
+        }
+        System.out.println();
+
+        //print gy and fz
+        String fieldZone;
+        if (boardJson.getActivePlayer().getFieldZone() == null) fieldZone = "E";
+        else fieldZone = "O";
+        System.out.println(boardJson.getActivePlayer().getGraveyardSize() + "\t\t\t\t\t\t" + fieldZone);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println("-------------------------------------------------------");
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        //opponent
+        String fieldZone1 = null;
+        if (boardJson.getInActivePlayer().getFieldZone() == null) fieldZone = "E";
+        else fieldZone1 = "O";
+        System.out.println(fieldZone1 + "\t\t\t\t\t\t" + boardJson.getInActivePlayer().getGraveyardSize());
+
+        //monster zone
+
+        for (int number2 : iterator1) {//monster zone
+
+            for (int j = 1; j <= 5; j++) {
+
+                if (number2 == j) {
+                    if (boardJson.getInActivePlayer().getMonsterZone()[j] == null) System.out.println("E");
+
+                    else if (boardJson.getInActivePlayer().getMonsterZone()[j].getMode() == Mode.DEFENSE) {
+                        if (boardJson.getInActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
+                            System.out.println("DH");
+                        else System.out.println("DO");
+
+                    } else if (boardJson.getInActivePlayer().getMonsterZone()[j].getMode() == Mode.ATTACK) {
+                        if (boardJson.getInActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
+                            System.out.println("OH");
+                        else System.out.println("OO");
+
+                    }
+                }
+            }
+            System.out.print("\t");
+        }
+        System.out.println();
+
+        for (int number3 : iterator1) {      //spell zone
+            for (int j = 1; j <= 5; j++) {
+                if (number3 == j) {
+                    if (boardJson.getInActivePlayer().getSpellZone()[j] == null)
+                        System.out.println("E");
+
+                    else if (boardJson.getInActivePlayer().getSpellZone()[j].getStatus() == Status.SET)
+                        System.out.print("H");
+                    else System.out.println("O");
+                }
+                System.out.print("\t");
+            }
+        }
+
+        System.out.println();
+
+        //Dn in hands
+        System.out.println(boardJson.getInActivePlayer().getNickName() + ":" + boardJson.getInActivePlayer().getLife());
+    }
+
+
 }
 
-//and much more
-//attack cmmands
+
 //ghorbani ha
-//dastoorate bade phase

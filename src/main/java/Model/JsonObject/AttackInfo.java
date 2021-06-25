@@ -19,4 +19,28 @@ public class AttackInfo {
         this.targetMode = targetMode;
         this.attakerAtk = attakerAtk;
     }
+
+    public Status getTargetStatus() {
+        return this.targetStatus;
+    }
+
+    public Mode getTargetMode() {
+        return this.targetMode;
+    }
+
+    public int getAttakerAtk() {
+        return this.attakerAtk;
+    }
+
+    public int getTargetAtk() {
+        return this.targetAtk;
+    }
+
+    public int getTargetDef() {
+        return this.targetDef;
+    }
+
+    public String getTargetMonsterName() {
+        return this.targetMonsterName;
+    }
 }
