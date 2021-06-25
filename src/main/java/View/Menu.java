@@ -1097,39 +1097,46 @@ public class Menu {
 
     public void printBoard(BoardJson boardJson) {
         ArrayList<Integer> iterator = new ArrayList<>();
-        iterator.add(5);
-        iterator.add(3);
-        iterator.add(1);
-        iterator.add(2);
-        iterator.add(4);
+        iterator.add(5); iterator.add(3);iterator.add(1);iterator.add(2); iterator.add(4);
+
         ArrayList<Integer> iterator1 = new ArrayList<>();
-        iterator1.add(4);
-        iterator1.add(2);
-        iterator1.add(1);
-        iterator1.add(3);
-        iterator1.add(5);
+        iterator1.add(4); iterator1.add(2);iterator1.add(1);iterator1.add(3);iterator1.add(5);
+
+
+
+
 
         System.out.println(boardJson.getActivePlayer().getNickName() + ":" + boardJson.getActivePlayer().getLife());
         System.out.print("\t\t");
+        System.out.println();System.out.println();
+
 
         //print c for in hand cards with for loop
-        // print DN zone for in deck card numbers     System.out.println(boardJson.getActivePlayer().);
+        for (int i=1;i<=boardJson.getActivePlayer().getHandSize();i++){
+            System.out.print("\tC");
+        }
+        System.out.println();System.out.println();
 
+        System.out.println(boardJson.getActivePlayer().getDeckSize());
+
+        System.out.print("\t");
         for (int number : iterator) {      //spell zone
             for (int j = 1; j <= 5; j++) {
                 if (number == j) {
+
                     if (boardJson.getActivePlayer().getSpellZone()[j] == null) System.out.println("E");
 
-                    else if (boardJson.getActivePlayer().getSpellZone()[j].getStatus() == Status.SET)
-                        System.out.print("H");
+                    else if (boardJson.getActivePlayer().getSpellZone()[j].getStatus() == Status.SET) System.out.print("H");
+
                     else System.out.println("O");
                 }
                 System.out.print("\t");
             }
         }
 
-        System.out.println();                 //ina chera address nadaran??!!!
-
+        System.out.println();
+        System.out.println();
+        System.out.print("\t");
         for (int number1 : iterator) {//monster zone
 
             for (int j = 1; j <= 5; j++) {
@@ -1153,36 +1160,32 @@ public class Menu {
             System.out.print("\t");
         }
         System.out.println();
+        System.out.println();
 
         //print gy and fz
         String fieldZone;
         if (boardJson.getActivePlayer().getFieldZone() == null) fieldZone = "E";
         else fieldZone = "O";
         System.out.println(boardJson.getActivePlayer().getGraveyardSize() + "\t\t\t\t\t\t" + fieldZone);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println("-------------------------------------------------------");
-        System.out.println();
-        System.out.println();
-        System.out.println();
+        System.out.println("\n\n\n-------------------------------------------------------\n\n\n");
 
         //opponent
         String fieldZone1 = null;
         if (boardJson.getInActivePlayer().getFieldZone() == null) fieldZone = "E";
         else fieldZone1 = "O";
         System.out.println(fieldZone1 + "\t\t\t\t\t\t" + boardJson.getInActivePlayer().getGraveyardSize());
-
+        System.out.println();
         //monster zone
 
         for (int number2 : iterator1) {//monster zone
-
+            System.out.println("\t");
             for (int j = 1; j <= 5; j++) {
 
                 if (number2 == j) {
                     if (boardJson.getInActivePlayer().getMonsterZone()[j] == null) System.out.println("E");
 
                     else if (boardJson.getInActivePlayer().getMonsterZone()[j].getMode() == Mode.DEFENSE) {
+
                         if (boardJson.getInActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
                             System.out.println("DH");
                         else System.out.println("DO");
@@ -1198,7 +1201,7 @@ public class Menu {
             System.out.print("\t");
         }
         System.out.println();
-
+        System.out.println();
         for (int number3 : iterator1) {      //spell zone
             for (int j = 1; j <= 5; j++) {
                 if (number3 == j) {
@@ -1214,8 +1217,16 @@ public class Menu {
         }
 
         System.out.println();
-
+        System.out.println();
         //Dn in hands
+        System.out.println(boardJson.getInActivePlayer().getDeckSize());
+        System.out.println();
+        System.out.println();
+        for (int i = 1; i <= boardJson.getInActivePlayer().getHandSize(); i++) {
+            System.out.print("\tC");
+        }
+
+
         System.out.println(boardJson.getInActivePlayer().getNickName() + ":" + boardJson.getInActivePlayer().getLife());
     }
 
