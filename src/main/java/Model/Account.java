@@ -1,22 +1,16 @@
 package Model;
 
 import java.util.*;
-import Model.Game.Card.*;
 
 public class Account{
-    public static ArrayList<Account> accounts;
     private String username;
     private String password;
     private String nickname;
     private int score;
     private int money;
-    private ArrayList<Card> purchasedCards;
+    private ArrayList<String> purchasedCardsNames;
     private ArrayList<Deck> decks;
     private Deck activeDeck;
-
-    static{
-        accounts = new ArrayList<Account>();
-    }
 
     public Account(String username, String password, String nickname){
         setUsername(username);
@@ -24,9 +18,8 @@ public class Account{
         setNickname(nickname);
         setScore(0);
         setMoney(10000);
-        purchasedCards = new ArrayList<Card>();
+        purchasedCardsNames = new ArrayList<String>();
         decks = new ArrayList<Deck>();
-        accounts.add(this);
     }
 
     public void setUsername(String username) {
@@ -81,23 +74,23 @@ public class Account{
         this.money -= money;
     }
 
-    public void addToPurchasedCard(Card card){
-        purchasedCards.add(card);
+    public void addToPurchasedCard(String cardName){
+        purchasedCardsNames.add(cardName);
     }
 
-    public ArrayList<Card> getPurchasedCards() {
-        return purchasedCards;
+    public ArrayList<String> getpurchasedCardsNames() {
+        return purchasedCardsNames;
     }
 
-    public boolean hasCard(Card card){
-       return purchasedCards.contains(card);
+    public boolean hasCard(String cardName){
+       return purchasedCardsNames.contains(cardName);
     }
 
-    public void addToDecks(Deck deck){
+    public void addTodecks(Deck deck){
         decks.add(deck);
     }
 
-    public ArrayList<Deck> getDecks() {
+    public ArrayList<Deck> getdecks() {
         return decks;
     }
 
@@ -112,22 +105,11 @@ public class Account{
         return null;
     }
 
-    public void setActiveDeck(Deck activeDeck) {
+    public void setactiveDeck(Deck activeDeck) {
         this.activeDeck = activeDeck;
     }
 
-    public Deck getActiveDeck() {
+    public Deck getactiveDeck() {
         return activeDeck;
-    }
-
-    public static ArrayList<Account> getAccounts() {
-        return accounts;
-    }
-
-    public static Account getAccountByUsername(String username){
-        for(Account account : accounts){
-            if(account.getUsername().equals(username)) return account;
-        }
-        return null;
     }
 }

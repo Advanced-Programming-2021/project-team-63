@@ -1,17 +1,18 @@
 package Model.JsonObject;
 
 
+import Model.Game.Card.MonsterCard.MonsterCard;
 
 public class MonsterJson {
     private String name;
+    private String description;
+    private int price;
     private int level;
     private String attribute;
     private String monsterType;
     private String cardType;
     private int atk;
     private int def;
-    private String description;
-    private int price;
 
 
     public void setName(String name) {

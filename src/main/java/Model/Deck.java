@@ -1,17 +1,16 @@
 package Model;
 
 import java.util.*;
-import Model.Game.Card.*;
 
 public class Deck {
     private String name;
-    private ArrayList<Card> mainDeck;
-    private ArrayList<Card> sideDeck;
+    private ArrayList<String> mainDeck;
+    private ArrayList<String> sideDeck;
 
     public Deck(String name){
         setName(name);
-        mainDeck = new ArrayList<Card>();
-        sideDeck = new ArrayList<Card>();
+        mainDeck = new ArrayList<String>();
+        sideDeck = new ArrayList<String>();
     }
 
     public void setName(String name) {
@@ -22,15 +21,15 @@ public class Deck {
         return name;
     }
 
-    public void addCardToMainDeck(Card card){
-        mainDeck.add(card);
+    public void addCardToMainDeck(String cardName){
+        mainDeck.add(cardName);
     }
 
-    public void removeCardFromMainDeck(Card card){
-        mainDeck.remove(card);
+    public void removeCardFromMainDeck(String cardName){
+        mainDeck.remove(cardName);
     }
 
-    public ArrayList<Card> getMainDeck() {
+    public ArrayList<String> getMainDeck() {
         return mainDeck;
     }
 
@@ -38,15 +37,15 @@ public class Deck {
         return mainDeck.size();
     }
 
-    public void addCardToSideDeck(Card card){
-        sideDeck.add(card);
+    public void addCardToSideDeck(String cardName){
+        sideDeck.add(cardName);
     }
 
-    public void removeCardFromSideDeck(Card card){
-        sideDeck.remove(card);
+    public void removeCardFromSideDeck(String cardName){
+        sideDeck.remove(cardName);
     }
 
-    public ArrayList<Card> getSideDeck() {
+    public ArrayList<String> getSideDeck() {
         return sideDeck;
     }
 
@@ -59,13 +58,13 @@ public class Deck {
         else return false;
     }
 
-    public int cardCount(Card card){
+    public int cardCount(String cardName){
         int count = 0;
-        for(Card c : mainDeck){
-            if(c.getName().equals(card.getName())) count++;
+        for(String c : mainDeck){
+            if(c.equals(cardName)) count++;
         }
-        for(Card c : sideDeck){
-            if(c.getName().equals(card.getName())) count++;
+        for(String c : sideDeck){
+            if(c.equals(cardName)) count++;
         }
         return count;
     }

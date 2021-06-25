@@ -1,8 +1,8 @@
 package Model.Game;
 
 import java.util.*;
-//import Model.Game.Card.*;
-//import Model.Game.Card.MonsterCard.*;
+import Model.Game.Card.GameLogType;
+import com.google.gson.Gson;
 
 public class Game {
     private int id;
@@ -14,18 +14,21 @@ public class Game {
     private int rounds;
     private static int counter;
     private static ArrayList<Game> games;
+    private ArrayList<String> gameLog;
 
     static{
         counter = 1;
         games = new ArrayList<Game>();
     }
 
-    public Game(Player player1 , Player player2){
+    public Game(Player player1 , Player player2,int rounds){
         setId(counter);
         setPlayer1(player1);
         setPlayer2(player2);
+        setRounds(rounds);
         setActivePlayer(getRandomPlayer());
         setPhase(Phase.BATTLE_PHASE);
+        gameLog = new ArrayList<>();
     }
 
     public void setActivePlayer(Player activePlayer) {
@@ -77,7 +80,6 @@ public class Game {
         }
     }
 
-    
 
     public static Game getGameByID(int id){
         for(Game game : games){
@@ -110,6 +112,14 @@ public class Game {
         return player2;
     }
 
+    public void setRounds(int rounds) {
+        this.rounds = rounds;
+    }
+
+    public int getRounds() {
+        return rounds;
+    }
+
     public void setPhase(Phase phase) {
         this.phase = phase;
     }
@@ -123,5 +133,56 @@ public class Game {
         int randomPlayerNumber = rand.nextInt(2)+1;
         if(randomPlayerNumber==1) return player1;
         else return player2;
+    }
+
+    public ArrayList<String> getGameLog(){
+        return this.gameLog;
+    }
+
+
+
+    public void addToGameLog(String log){
+        gameLog.add(log);
+        //ToDo: check effects
+    }
+
+    public void addToGameLog(GameLogInfo log){
+        addToGameLog(new Gson().toJson(log));
+    }
+
+    public void addToGameLog(GameLogType type, int mainCardIdentity){
+        GameLogInfo gameLogInfo = new GameLogInfo(type,mainCardIdentity);
+        addToGameLog(gameLogInfo);
+    }
+
+    public void addNextPhaseLog(Phase nowPhase) {
+        GameLogInfo gameLogInfo = new GameLogInfo();
+        gameLogInfo.setType(GameLogType.NEXT_PHASE);
+        gameLogInfo.setNowPhase(nowPhase);
+        addToGameLog(gameLogInfo);
+    }
+
+    public void addSummonMonsterLog(int cardIdentity) {
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.SUMMON_MONSTER,cardIdentity);
+        addToGameLog(gameLogInfo);
+    }
+
+    public void addSummonMonsterWith1Tribute(int cardIdentity, int victimIdentity) {
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.SUMMON_MONSTER,cardIdentity);
+        gameLogInfo.getTributes().add(victimIdentity);
+        addToGameLog(gameLogInfo);
+    }
+
+    public void addSummonMonsterWith2Tributes(int cardIdentity, int victim1Identity, int victim2Identity) {
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.SUMMON_MONSTER,cardIdentity);
+        gameLogInfo.getTributes().add(victim1Identity);
+        gameLogInfo.getTributes().add(victim2Identity);
+        addToGameLog(gameLogInfo);
+    }
+
+    public void addAttackLog(int cardIdentity, int targetIdentity) {
+        GameLogInfo gameLogInfo = new GameLogInfo(GameLogType.ATTACK,cardIdentity);
+        gameLogInfo.setTargetCard(targetIdentity);
+        addToGameLog(gameLogInfo);
     }
 }
