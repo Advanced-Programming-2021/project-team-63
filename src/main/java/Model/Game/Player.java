@@ -146,7 +146,6 @@ public class Player {
         Random rand = new Random();
         int randomIndex = rand.nextInt(cards.size());
         Card randomCard = cards.get(randomIndex);
-        cards.remove(randomIndex);
         return randomCard;
     }
 

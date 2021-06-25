@@ -182,7 +182,4 @@ public class Game {
         gameLogInfo.setTargetCard(targetIdentity);
         addToGameLog(gameLogInfo);
     }
-
-
-
 }

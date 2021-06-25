@@ -1,0 +1,24 @@
+package Model.Game.Card.SpellCard.Spell;
+
+import org.json.*;
+import Model.Game.*;
+import Model.Game.Card.MonsterCard.*;
+
+public class SolemnWarning implements Spell{
+    public void activate(Game game){
+        String string = game.getGameLog().get(game.getGameLog().size()-1);
+        JSONObject log = new JSONObject(string);
+        if(log.get("type").equals("SUMMON_MONSTER")){
+            int code = log.getInt("mainCard");
+            MonsterCard monsterCard = new MonsterCard();
+            for (int i = 0; i < 5; i++) {
+                if(game.getActivePlayer().getField().getMonsterZone()[i].hashCode() == code) monsterCard = game.getActivePlayer().getField().getMonsterZone()[i];
+            }
+            if(game.getInactivePlayer().getLp()>2000){
+                game.getInactivePlayer().decreaseLp(2000);
+                game.getActivePlayer().getField().killMonsterCard(monsterCard, game);
+            }
+        }
+    }
+    public void activate(Game game,String CardName){}
+}

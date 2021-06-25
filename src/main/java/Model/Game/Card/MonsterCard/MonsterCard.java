@@ -38,12 +38,28 @@ public class MonsterCard extends Card{
         return atk;
     }
 
+    public void increaseAtk(int amount){
+        atk += amount;
+    }
+
+    public void decreaseAtk(int amount){
+        atk -= amount;
+    }
+
     public void setDef(int def) {
         this.def = def;
     }
 
     public int getDef() {
         return def;
+    }
+
+    public void increaseDef(int amount){
+        def += amount;
+    }
+
+    public void decreaseDef(int amount){
+        def -= amount;
     }
 
     public void setAttribute(Attribute attribute) {

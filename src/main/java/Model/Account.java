@@ -1,7 +1,6 @@
 package Model;
 
 import java.util.*;
-import Model.Game.Card.*;
 
 public class Account{
     private String username;
