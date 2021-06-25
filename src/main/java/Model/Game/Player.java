@@ -1,5 +1,6 @@
 package Model.Game;
 
+import java.io.*;
 import java.util.*;
 import Model.*;
 import Model.Game.Card.*;
@@ -11,7 +12,8 @@ public class Player {
     private String nickname;
     private Field field;
     private int lp;
-    private Deck deck;
+    private ArrayList<Card> mainDeck;
+    private ArrayList<Card> sideDeck;
     private ArrayList<Card> cards;
     private ArrayList<Card> hand;
 
@@ -23,7 +25,8 @@ public class Player {
         setNickname(account.getNickname());
         setField(new Field());
         setLp(8000);
-        setDeck(account.getActiveDeck());
+        setMainDeck(account.getactiveDeck().getMainDeck());
+        setSideDeck(account.getactiveDeck().getSideDeck());
         setHand(new ArrayList<Card>());
         setSelectedCard(null);
     }
@@ -57,12 +60,50 @@ public class Player {
         this.lp -= amount;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
+    public void setMainDeck(ArrayList<String> mainDeckNames) {
+        boolean isMonster = false;
+        String line = ""; 
+        for(String name : mainDeckNames){ 
+            try{  
+                BufferedReader reader = new BufferedReader(new FileReader("\\src\\main\\java\\Database\\Monster.csv"));  
+                while ((line = reader.readLine()) != null){  
+                    String[] card = line.split(",");
+                    if(card[0].equals(name)){
+                        isMonster = true;
+                        if(card[4].equals("Normal")) mainDeck.add(new MonsterCard());
+                        else if(card[4].equals("Ritual")) mainDeck.add(new RitualMonsterCard());
+                        else mainDeck.add(new EffectiveMonsterCard());
+                    }
+                }
+                reader.close(); 
+            }catch (IOException e){  
+            }
+            if(!isMonster){ 
+                try{   
+                    BufferedReader reader = new BufferedReader(new FileReader("\\src\\main\\java\\Database\\SpellTrap.csv"));  
+                    while ((line = reader.readLine()) != null){  
+                        String[] card = line.split(",");
+                        if(card[0].equals(name)){
+                            mainDeck.add(new SpellCard());
+                        }
+                    }
+                    reader.close(); 
+                }catch (IOException e){  
+                }
+            }
+        }
     }
 
-    public Deck getDeck() {
-        return deck;
+    public void setSideDeck(ArrayList<String> sideDeckNames){
+
+    }
+
+    public ArrayList<Card> getMainDeck() {
+        return mainDeck;
+    }
+
+    public ArrayList<Card> getSideDeck() {
+        return sideDeck;
     }
 
     public void setCards(ArrayList<Card> cards) {
@@ -109,11 +150,11 @@ public class Player {
         return randomCard;
     }
 
-    public String draw(){
+    public Card draw(){
         Card card = this.getRandomCard();
         this.removeFromCards(card);
         this.addToHand(card);
-        return card.getName();
+        return card;
     }
 
     public void summon(MonsterCard monsterCard){
@@ -124,8 +165,8 @@ public class Player {
         setMonsterSummon(true);
     }
 
-    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard){
-        this.getField().killMonsterCard(sacrificeCard);
+    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard,Game game){
+        this.getField().killMonsterCard(sacrificeCard, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SUMMON);
         monsterCard.setMode(Mode.ATTACK);
@@ -133,9 +174,9 @@ public class Player {
         setMonsterSummon(true);
     }
 
-    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2){
-        this.getField().killMonsterCard(sacrificeCard1);
-        this.getField().killMonsterCard(sacrificeCard2);
+    public void tributeSummon(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2, Game game){
+        this.getField().killMonsterCard(sacrificeCard1, game);
+        this.getField().killMonsterCard(sacrificeCard2, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SUMMON);
         monsterCard.setMode(Mode.ATTACK);
@@ -151,17 +192,17 @@ public class Player {
         setMonsterSet(true);
     }
 
-    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard){
-        this.getField().killMonsterCard(sacrificeCard);
+    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard, Game game){
+        this.getField().killMonsterCard(sacrificeCard, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SET);
         monsterCard.setMode(Mode.DEFENSE);
         this.getField().addToMonsterZone(monsterCard);
     }
 
-    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2){
-        this.getField().killMonsterCard(sacrificeCard1);
-        this.getField().killMonsterCard(sacrificeCard2);
+    public void tributeSet(MonsterCard monsterCard,MonsterCard sacrificeCard1,MonsterCard sacrificeCard2,Game game){
+        this.getField().killMonsterCard(sacrificeCard1, game);
+        this.getField().killMonsterCard(sacrificeCard2, game);
         this.removeFromHand(monsterCard);
         monsterCard.setStatus(Status.SET);
         monsterCard.setMode(Mode.DEFENSE);
@@ -213,13 +254,15 @@ public class Player {
         spellCard.getSpell().activate(game);
     }
 
-    public void ritualSummon(RitualMonsterCard ritualMonsterCard,ArrayList<MonsterCard> sacrificeCards,Mode mode){
+    public void ritualSummon(RitualMonsterCard ritualMonsterCard,ArrayList<MonsterCard> sacrificeCards,Mode mode,Game game){
         for(MonsterCard sacrifiseCard : sacrificeCards){
-            this.getField().killMonsterCard(sacrifiseCard);
+            this.getField().killMonsterCard(sacrifiseCard, game);
         }
         summon(ritualMonsterCard);
         changeMode(ritualMonsterCard, mode);
     }
+
+
 
     public boolean containCard(Card card){
         if(hand.contains(card))

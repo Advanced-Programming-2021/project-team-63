@@ -63,6 +63,7 @@ public class MonsterCard extends Card{
     }
 
 
+
     public void addToTypes(Type type){
         types.add(type);
     }
@@ -100,22 +101,22 @@ public class MonsterCard extends Card{
         if(targetCard.getMode().equals(Mode.ATTACK)){
             powerDiff = atk - targetCard.getAtk();
             if(powerDiff>0){
-                game.getActivePlayer().getField().killMonsterCard(targetCard);
+                game.getActivePlayer().getField().killMonsterCard(targetCard,game);
                 game.getInactivePlayer().decreaseLp(powerDiff);
             }
             else if(powerDiff<0){
-                game.getActivePlayer().getField().killMonsterCard(this);
+                game.getActivePlayer().getField().killMonsterCard(this, game);
                 game.getActivePlayer().decreaseLp(-powerDiff);
             }
             else{
-                game.getActivePlayer().getField().killMonsterCard(this);
-                game.getInactivePlayer().getField().killMonsterCard(targetCard);
+                game.getActivePlayer().getField().killMonsterCard(this, game);
+                game.getInactivePlayer().getField().killMonsterCard(targetCard, game);
             }
         }
         else{
             powerDiff = atk - targetCard.getDef();
             if(powerDiff>0){
-                game.getInactivePlayer().getField().killMonsterCard(targetCard);
+                game.getInactivePlayer().getField().killMonsterCard(targetCard, game);
             }
             else if(powerDiff<0){
                 game.getActivePlayer().decreaseLp(-powerDiff);
