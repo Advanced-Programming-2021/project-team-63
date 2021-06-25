@@ -269,6 +269,12 @@ public class ProgramController {
         return new ApiMessage(ApiMessage.successful,"card successfully purchased");
     }
 
+    public ApiMessage increaseMoney(int amount) throws Exception {
+        loggedInUser.increaseMoney(amount);
+        changeUserInfoInDataBase(loggedInUser);
+        return new ApiMessage(ApiMessage.successful,null);
+    }
+
     public ApiMessage showShopCards() throws Exception {
         ArrayList<CardGeneralInfo> ans = new ArrayList<>();
 

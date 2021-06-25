@@ -30,11 +30,8 @@ public class Main{
         System.out.println(p.addCardToDeck("Trap Hole","batmanDeck",false).getMessage());
         System.out.println(p.removeCardFromDeck("Trap Hole","batmanDeck",false).getMessage());
         System.out.println(p.showDeck("batmanDeck",false).getMessage());*/
-        System.out.println(GameLogType.ACTIVE_EFFECT.name());
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logType", GameLogType.SELECT_CARD);
-        jsonObject.put("cardIdentity", 123);
-        System.out.println(jsonObject.toString());
+        Boolean a= null;
+        System.out.println(Boolean.toString(a));
 
     }
 }
