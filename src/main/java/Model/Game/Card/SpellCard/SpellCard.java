@@ -1,6 +1,7 @@
 package Model.Game.Card.SpellCard;
 
-import Model.Game.Card.Card;
+import Model.Game.*;
+import Model.Game.Card.*;
 import Model.Game.Card.SpellCard.Spell.*;
 
 public class SpellCard extends Card{
@@ -16,6 +17,12 @@ public class SpellCard extends Card{
         setSpellCategory(spellCategory);
         setIcon(icon);
         setSpell(name);
+    }
+
+    public void activate(Game game,String cardName){
+        this.getSpell().activate(game);
+        this.getSpell().activate(game, cardName);
+        if(!(this.getIcon().equals(Icon.EQUIP) || this.getIcon().equals(Icon.CONTINUOUS))) game.getActivePlayer().getField().killSpellCard(this);
     }
 
     public void setSpell(Spell spell) {

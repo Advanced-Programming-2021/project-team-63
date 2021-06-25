@@ -17,6 +17,7 @@ import Model.Game.Game;
 import Model.Game.Card.Card;
 import Model.Game.GameLogInfo;
 import Model.Game.Phase;
+import Model.Game.Player;
 import Model.JsonObject.*;
 import com.google.gson.Gson;
 
@@ -31,9 +32,9 @@ public class GameController{
     }
 
     public ApiMessage createGame(AccountJson player1, AccountJson player2, int rounds) throws Exception {
-        Deck player1Deck = getDeckFromDeckJson(player1.getActiveDeck());
-        Deck player2Deck = getDeckFromDeckJson(player2.getActiveDeck());
-        //game = new Game(player1.getNickname(), player1Deck, player2.getNickname(), player2Deck);
+        Player playerOne = new Player(player1.getNickname(),cardJsonToString(player1.getActiveDeck().getMainDeck()),cardJsonToString(player1.getActiveDeck().getSideDeck()));
+        Player playerTwo = new Player(player2.getNickname(),cardJsonToString(player2.getActiveDeck().getMainDeck()),cardJsonToString(player2.getActiveDeck().getSideDeck()));
+        game = new Game(playerOne, playerTwo, rounds);
         return new ApiMessage(ApiMessage.successful,"duel was created successfully.");
     }
 
@@ -389,23 +390,16 @@ public class GameController{
         return new ApiMessage(ApiMessage.successful, new Gson().toJson(game.getPhase()));
     }
 
-    private Deck getDeckFromDeckJson(DeckJson deck) {
-        Deck ans = new Deck(deck.getName());
-        for (CardJson card : deck.getMainDeck()) {
-        //    ans.addCardToMainDeck(getCardFromCardJson(card));
-        }
-        for (CardJson card : deck.getSideDeck()) {
-        //    ans.addCardToSideDeck(getCardFromCardJson(card));
-        }
-        return ans;
-    }
-
-    private Card getCardFromCardJson(CardJson card) {
-        return new MonsterCard();//chert
-    }
-
     private CardGeneralInfo getCardGeneralInfoFromCard(Card card){
         return new CardGeneralInfo(card.getName(),card.getDescription());
+    }
+
+    public ArrayList<String> cardJsonToString(ArrayList<CardJson> deck){
+        ArrayList<String> arrayList = new ArrayList<String>();
+        for(CardJson card : deck){
+            arrayList.add(card.getName());
+        }
+        return arrayList;
     }
 
 }

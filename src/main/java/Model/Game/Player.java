@@ -2,7 +2,6 @@ package Model.Game;
 
 import java.io.*;
 import java.util.*;
-import Model.*;
 import Model.Game.Card.*;
 import Model.Game.Card.MonsterCard.*;
 import Model.Game.Card.SpellCard.*;
@@ -21,12 +20,12 @@ public class Player {
     private boolean isMonsterSet;
     private Card selectedCard;
 
-    public Player(Account account){
-        setNickname(account.getNickname());
+    public Player(String nickName,ArrayList<String> mainDeck,ArrayList<String> sideDeck){
+        setNickname(nickName);
         setField(new Field());
         setLp(8000);
-        setMainDeck(account.getactiveDeck().getMainDeck());
-        setSideDeck(account.getactiveDeck().getSideDeck());
+        setMainDeck(mainDeck);
+        setSideDeck(sideDeck);
         setHand(new ArrayList<Card>());
         setSelectedCard(null);
     }
