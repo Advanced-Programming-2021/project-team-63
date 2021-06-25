@@ -385,6 +385,10 @@ public class GameController{
         return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }
 
+    private ApiMessage getPhase() throws Exception {
+        return new ApiMessage(ApiMessage.successful, new Gson().toJson(game.getPhase()));
+    }
+
     private Deck getDeckFromDeckJson(DeckJson deck) {
         Deck ans = new Deck(deck.getName());
         for (CardJson card : deck.getMainDeck()) {
