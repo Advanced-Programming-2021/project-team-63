@@ -4,19 +4,24 @@ import Model.Game.*;
 import Model.Game.Card.MonsterCard.*;
 
 public class Umiiruka implements Spell{
+    private boolean wasActivated = false;
+
     public void activate(Game game) {
-        MonsterCard monsterCard = new MonsterCard();
-        for (int i = 0; i < 5; i++) {
-            monsterCard = game.getPlayer1().getField().getMonsterZone()[i];
-            if(monsterCard.getTypes().contains(Type.AQUA) || monsterCard.getTypes().contains(Type.SEA_SERPENT)){
-                monsterCard.increaseAtk(500);
-                monsterCard.decreaseDef(400);
+        if(!wasActivated){
+            MonsterCard monsterCard = new MonsterCard();
+            for (int i = 0; i < 5; i++) {
+                monsterCard = game.getPlayer1().getField().getMonsterZone()[i];
+                if(monsterCard.getTypes().contains(Type.AQUA) || monsterCard.getTypes().contains(Type.SEA_SERPENT)){
+                    monsterCard.increaseAtk(500);
+                    monsterCard.decreaseDef(400);
+                }
+                monsterCard = game.getPlayer2().getField().getMonsterZone()[i];
+                if(monsterCard.getTypes().contains(Type.AQUA) || monsterCard.getTypes().contains(Type.SEA_SERPENT)){
+                    monsterCard.increaseAtk(500);
+                    monsterCard.decreaseDef(400);
+                }
             }
-            monsterCard = game.getPlayer2().getField().getMonsterZone()[i];
-            if(monsterCard.getTypes().contains(Type.AQUA) || monsterCard.getTypes().contains(Type.SEA_SERPENT)){
-                monsterCard.increaseAtk(500);
-                monsterCard.decreaseDef(400);
-            }
+            wasActivated = true;
         }    
     }
     

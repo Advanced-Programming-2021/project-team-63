@@ -5,13 +5,21 @@ import Model.Game.Card.*;
 import Model.Game.Card.MonsterCard.*;
 
 public class MonsterReborn implements Spell{
+    private boolean wasActivated = false;
+
     public void activate(Game game){}
+
     public void activate(Game game,String cardName){
-        MonsterCard monsterCard = new MonsterCard();
-        for(Card card : game.getActivePlayer().getField().getGraveyard()){
-            if(card.getName().equals(cardName) && card.getCategory().equals(Category.MONSTER)) monsterCard = (MonsterCard)card;
+        if(!wasActivated){
+            MonsterCard monsterCard = new MonsterCard();
+            for(Card card : game.getActivePlayer().getField().getGraveyard()){
+                if(card.getName().equals(cardName) && card.getCategory().equals(Category.MONSTER)) monsterCard = (MonsterCard)card;
+            }
+            game.getActivePlayer().getField().getGraveyard().remove(monsterCard);
+            game.getActivePlayer().getField().addToMonsterZone(monsterCard);
+            wasActivated = true;
         }
-        game.getActivePlayer().getField().getGraveyard().remove(monsterCard);
-        game.getActivePlayer().getField().addToMonsterZone(monsterCard);
     }
+
+    public void deactivate(Game game){}
 }

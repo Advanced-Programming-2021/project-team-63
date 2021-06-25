@@ -5,13 +5,19 @@ import Model.Game.Card.*;
 import Model.Game.Card.SpellCard.*;
 
 public class Terraforming {
+    private boolean wasActivated = false;
+
     public void activate(Game game){}
+
     public void activate(Game game,String cardName){
-        SpellCard spellCard = new SpellCard();
-        for(Card card : game.getActivePlayer().getMainDeck()){
-            if(card.getName().equals(cardName) && card.getCategory().equals(Category.SPELL)) spellCard = (SpellCard)card;
+        if(!wasActivated){
+            SpellCard spellCard = new SpellCard();
+            for(Card card : game.getActivePlayer().getMainDeck()){
+                if(card.getName().equals(cardName) && card.getCategory().equals(Category.SPELL)) spellCard = (SpellCard)card;
+            }
+            game.getActivePlayer().getMainDeck().remove(spellCard);
+            game.getActivePlayer().addToHand(spellCard);
+            wasActivated = true;
         }
-        game.getActivePlayer().getMainDeck().remove(spellCard);
-        game.getActivePlayer().addToHand(spellCard);
     }
 }
