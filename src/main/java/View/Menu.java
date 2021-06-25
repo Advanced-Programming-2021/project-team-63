@@ -14,7 +14,6 @@ import com.beust.jcommander.ParameterException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import javafx.scene.control.Label;
 import org.json.JSONException;
 import org.json.JSONObject;
 
