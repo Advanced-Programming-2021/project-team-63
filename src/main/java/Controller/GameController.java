@@ -33,7 +33,7 @@ public class GameController{
     public ApiMessage createGame(AccountJson player1, AccountJson player2, int rounds) throws Exception {
         Deck player1Deck = getDeckFromDeckJson(player1.getActiveDeck());
         Deck player2Deck = getDeckFromDeckJson(player2.getActiveDeck());
-        //game = new Game(player1.getNickname(), player1Deck, player2.getNickname(), player2Deck);
+        //  game = new Game(player1.getNickname(), player1Deck, player2.getNickname(), player2Deck);
         return new ApiMessage(ApiMessage.successful,"duel was created successfully.");
     }
 

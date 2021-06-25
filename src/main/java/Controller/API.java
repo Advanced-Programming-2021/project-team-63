@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.ApiMessage;
+import Model.Game.Card.MonsterCard.Mode;
 import Model.Game.CardAddress;
 import org.json.JSONObject;
 
@@ -122,10 +123,15 @@ public class API {
 
         }
         if(commandType.equals("set_card")){
-            //what
+            return new JSONObject(gameController.summonMonster());
         }
         if(commandType.equals("set_position")){
-
+            Mode monsterMode = null;
+            if(((String) request.get("position")).equals("attack"))
+                monsterMode = Mode.ATTACK;
+            else
+                monsterMode = Mode.DEFENSE;
+            return new JSONObject(gameController.changeMonsterMode(monsterMode));
         }
         if(commandType.equals("select_card")){
             String zone = (String) request.get("zone");
