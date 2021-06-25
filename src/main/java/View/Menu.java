@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -171,7 +172,8 @@ public class Menu {
                     int startwith = commandMatch(command, "^\\s*profile change").end() + 1;
                     changeProfile(command.substring(startwith));
 
-                } else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("profile");
+                }
+                else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("profile");
 
                 else if (command.equals("menu exit")) return;
 
@@ -452,10 +454,13 @@ public class Menu {
                 else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("duel");
 
                 else if (commandMatch(command, "summon") != null) {
-                    JSONObject response
-                            = js_Pass("command", "summon_card");
-                    System.out.println(response
-                            .get("message"));
+                    JSONObject response = js_Pass("command", "summon_card");
+                    String tributeNumber= (String) response.get("message");
+
+                    if (commandMatch(command, "^{\"tribute\"$") != null) getTribute(tributeNumber);
+                    else System.out.println(response.get("message"));
+
+
 
                 } else if (commandMatch(command, "flip-summmon") != null) {
                     JSONObject response
@@ -591,6 +596,8 @@ public class Menu {
         }
 
     }
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////aid functions
@@ -1023,7 +1030,7 @@ public class Menu {
     }
 
     public void set(String command) throws Exception {
-        int startwith = commandMatch(command, "^\\s*select").end() + 1;
+        int startwith = commandMatch(command, "^\\s*set").end() + 1;
 
         if (command.substring(startwith).isEmpty()) {
             JSONObject response
@@ -1210,6 +1217,37 @@ public class Menu {
 
         //Dn in hands
         System.out.println(boardJson.getInActivePlayer().getNickName() + ":" + boardJson.getInActivePlayer().getLife());
+    }
+
+
+    private void getTribute(String tributeNumber) throws Exception {
+        JSONObject jsonObject = null;
+       do {
+
+           if (tributeNumber.equals("{\"tribute\":1}")) {
+
+               System.out.println("you have to tribute 1 card...enter the address");
+               String command1 = scan.nextLine();
+                jsonObject= js_Pass("command", "tribute", "number","1", "address1", command1);
+
+               System.out.println(jsonObject.get("message"));
+
+           }
+           else  if (tributeNumber.equals("{\"tribute\":2}")) {
+
+               System.out.println("you have to tribute 2 card...enter the addresses with enter");
+               String command1 = scan.nextLine();
+               String command2 = scan.nextLine();
+               jsonObject= js_Pass("command", "tribute", "number","2", "address1", command1, "address2", command2);
+               System.out.println(jsonObject.get("message"));
+           }
+
+           else if (tributeNumber.equals("cancel")) break;;
+
+       }while(jsonObject.get("message").equals("error"));
+
+       return;
+
     }
 
 
