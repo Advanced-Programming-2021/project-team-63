@@ -1,12 +1,4 @@
 package View.CommandLines;//package com.company;
-import java.io.IOException;
-import java.io.InputStream;
-
-
-import opennlp.tools.sentdetect.SentenceDetector;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
-
 import com.beust.jcommander.*;
 
 public class AddCardToDeck extends CommandLine {
