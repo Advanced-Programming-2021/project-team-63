@@ -34,7 +34,7 @@ public class Menu {
 
 ///////////////////////////////////////////////////////////////  login menu  //////////////////////////////////////////////////
 
-    public void loginMenu() throws JSONException {
+    public void loginMenu() throws Exception {
 
         while (true) {
 
@@ -74,7 +74,7 @@ public class Menu {
 ///////////////////////////////////////////////////////////////   main menu  ////////////////////////////////////////////////////////////
 
 
-    public void mainMenu() {
+    public void mainMenu() throws Exception {
 
         while (true) {
 
@@ -118,7 +118,7 @@ public class Menu {
 //////////////////////////////////////////////////////////// scoreboard menu ////////////////////////////////////////////////////////
 
 
-    public void scoreboardMenu() throws JSONException {
+    public void scoreboardMenu() throws Exception {
 
         while (true) {
 
@@ -159,7 +159,7 @@ public class Menu {
 //////////////////////////////////////////////////////////  profile menu  ///////////////////////////////////////////////
 
 
-    public void profileMenue() {
+    public void profileMenue() throws Exception {
 
         while (true) {
             try {
@@ -194,7 +194,7 @@ public class Menu {
 ///////////////////////////////////////////////////////////////////////   shop menu  ///////////////////////////////////////////////////
 
 
-    public void shopMenu() {
+    public void shopMenu() throws Exception {
 
         while (true) {
 
@@ -250,7 +250,7 @@ public class Menu {
     }
 /////////////////////////////////////////////////////////////////  deck menu  ////////////////////////////////////////////////////////
 
-    public void deckMenu() {
+    public void deckMenu() throws Exception {
 
         while (true) {
 
@@ -336,7 +336,7 @@ public class Menu {
     }
 
     ////////////////////////////////////////////////////////////  import/export menu  //////////////////////////////////////////////////
-    public void importExportMenu() {
+    public void importExportMenu() throws Exception {
         //import card [card name]
         //export card [card name]
 
@@ -388,7 +388,7 @@ public class Menu {
 /////////////////////////////////////////////////////////////  duel menu  ///////////////////////////////////////////////
 
 
-    public void duelMenu() {
+    public void duelMenu() throws Exception {
 
         while (true) {
 
@@ -420,7 +420,7 @@ public class Menu {
     //////////////////////////////////////////////////duelBoardMenu//////////////////////////////////////////////////////
 
 
-    public void duelBoardMenu() throws JSONException {
+    public void duelBoardMenu() throws Exception {
         while (true) {
 
             try {
@@ -821,7 +821,7 @@ public class Menu {
         }
     }
 
-    public void registerLogin(String command) throws JSONException {
+    public void registerLogin(String command) throws Exception {
         UserCreate userCreate = new UserCreate();
         UserCreate userCreate1 = (UserCreate) userCreate.run(command);
         ///////validating//////
@@ -836,7 +836,7 @@ public class Menu {
 
     }
 
-    public boolean loginLogin(String command) throws JSONException {
+    public boolean loginLogin(String command) throws Exception {
         UserLogin userlogin = new UserLogin();
         UserLogin userLogin1 = (UserLogin) userlogin.run(command);
         ///////validating//////
@@ -856,7 +856,7 @@ public class Menu {
 
     }
 
-    public void changeProfile(String command) throws JSONException {
+    public void changeProfile(String command) throws Exception {
         ChangeNickname changeNickname = new ChangeNickname();
         ChangeNickname changeNickname1 = (ChangeNickname) changeNickname.run(command);
 
@@ -909,7 +909,7 @@ public class Menu {
     public void checkStatus() {
     }
 
-    public void removeCardOfDeck(String command) throws JSONException {
+    public void removeCardOfDeck(String command) throws Exception {
         AddCardToDeck addCardToDeck = new AddCardToDeck();
         AddCardToDeck addCardToDeck1 = (AddCardToDeck) addCardToDeck.run(command);
 
@@ -927,7 +927,7 @@ public class Menu {
         }
     }
 
-    public void addCardToDeck(String command) throws JSONException {
+    public void addCardToDeck(String command) throws Exception {
         AddCardToDeck addCardToDeck = new AddCardToDeck();
         AddCardToDeck addCardToDeck1 = (AddCardToDeck) addCardToDeck.run(command);
 
@@ -945,7 +945,7 @@ public class Menu {
         }
     }
 
-    public void showDeck(String command) throws JSONException {
+    public void showDeck(String command) throws Exception {
 
         ShowDeck showDeck = new ShowDeck();
         ShowDeck showDeck1 = (ShowDeck) showDeck.run(command);
@@ -978,7 +978,7 @@ public class Menu {
 
     }
 
-    public void startDuel(String command) throws JSONException {
+    public void startDuel(String command) throws Exception {
 
         DuelNewGame duelNewGame = new DuelNewGame();
         DuelNewGame duelNewGame1 = (DuelNewGame) duelNewGame.run(command);
@@ -1023,7 +1023,7 @@ public class Menu {
 
     }
 
-    public void set(String command) throws JSONException {
+    public void set(String command) throws Exception {
         int startwith = commandMatch(command, "^\\s*select").end() + 1;
 
         if (command.substring(startwith).isEmpty()) {
@@ -1047,7 +1047,7 @@ public class Menu {
 
     }
 
-    public void selectCard(String command) throws JSONException {
+    public void selectCard(String command) throws Exception {
         Zone zone = new Zone();
         Zone zone1 = (Zone) zone.run(command);
 
