@@ -73,9 +73,6 @@ public class API {
         if(commandType.equals("show_graveyard")){
             return new JSONObject(gameController.getGraveyard());
         }
-        if(commandType.equals("back_graveyard")){
-            //what to do
-        }
         if(commandType.equals("increase_money")){
             return new JSONObject(programController.increaseMoney( Integer.parseInt( request.get("amount").toString())));
         }
@@ -129,7 +126,8 @@ public class API {
             //ai
         }
         if(commandType.equals("set_winner")){
-
+            String nickname = (String) request.get("who?");
+            gameController.isRoundOver();
         }
         if(commandType.equals("set_card")){
             return new JSONObject(gameController.summonMonster());
@@ -144,6 +142,18 @@ public class API {
         }
         if(commandType.equals("add_card_to_hand")){
             return new JSONObject(gameController.addCardFromDeckToHand());
+        }
+        if(commandType.equals("tribute")){
+            int numberOfTribute = (int) request.get("number");
+            if(numberOfTribute == 1){
+                int address1 = (int) request.get("address1");
+                return new JSONObject(gameController.getTributeForSummonMonster(address1));
+            }
+            else{
+                int address1 = (int) request.get("address1");
+                int address2 = (int) request.get("address2");
+                return new JSONObject(gameController.getTributesForSummonMonster(address1,address2));
+            }
         }
         if(commandType.equals("select_card")){
             String zone = (String) request.get("zone");

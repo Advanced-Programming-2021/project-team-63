@@ -1356,7 +1356,6 @@ if (quantity==0){
         System.out.println(boardJson.getInActivePlayer().getNickName() + ":" + boardJson.getInActivePlayer().getLife());
     }
 
-
     private void getTribute(String tributeNumber) throws Exception {
         JSONObject jsonObject = null;
        do {
@@ -1371,7 +1370,6 @@ if (quantity==0){
 
            }
            else  if (tributeNumber.equals("{\"tribute\":2}")) {
-
                System.out.println("you have to tribute 2 card...enter the addresses with enter");
                String command1 = scan.nextLine();
                String command2 = scan.nextLine();
@@ -1379,7 +1377,7 @@ if (quantity==0){
                System.out.println(jsonObject.get("message"));
            }
 
-           else if (tributeNumber.equals("cancel")) break;;
+           else if (tributeNumber.equals("cancel")) break;
 
        }while(jsonObject.get("message").equals("error"));
 

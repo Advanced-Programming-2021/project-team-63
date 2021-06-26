@@ -377,19 +377,7 @@ public class GameController{
         return new ApiMessage(ApiMessage.successful,"set successfully");
     }
 
-    public void specialSummonMonster(){
-
-    }
-
     public void ritualSummonMonster(){
-
-    }
-
-    public void changeStatusMonster(){
-
-    }
-
-    public void setSpellOrTrapForOpponent(){
     }
 
     public ApiMessage getBoard() throws  Exception {
