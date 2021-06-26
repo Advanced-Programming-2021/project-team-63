@@ -609,17 +609,24 @@ public class Menu {
                 } else if (commandMatch(command, "^\\s*attack direct\\s*$") != null) {
 
 
-                    JSONObject response
-                            = js_Pass("command", "attack_direct");
-                    System.out.println(response
-                            .get("message"));
+                    JSONObject response = js_Pass("command", "attack_direct");
+                    if (response.get("type").equals("error")) System.out.println(response.get("message"));
+                    else{
+                        if (response.get("isOver")!= null){
+                            System.out.println("the winner is :"+response.get("winner"));
+                            return;
+                        }
+                        else{
+                            System.out.println(response.get("message"));
+                        }
 
+                    }
                 } else if (commandMatch(command, "^\\s*surrender\\s*$") != null) {
 
-                    JSONObject response
-                            = js_Pass("command", "surrender");
-                    System.out.println(response
-                            .get("message"));
+                    JSONObject response = js_Pass("command", "surrender");
+                    System.out.println(response.get("message"));
+
+
 
                 }
 ////////////////////////////////////////////////////////////////////////////////////active efect

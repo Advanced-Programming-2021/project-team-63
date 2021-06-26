@@ -310,9 +310,7 @@ public class GameController{
             winner = game.getActivePlayer();
             return endRound(looser,winner);
         }
-        JSONObject ans = new JSONObject();
-        ans.put("isOver",false);
-        return new ApiMessage(ApiMessage.successful,ans.toString());
+        return null;
     }
 
     private ApiMessage endRound(Player looser, Player winner) throws Exception {
