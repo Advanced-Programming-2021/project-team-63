@@ -30,11 +30,17 @@ public class Menu {
     public String command;
     public JSONObject request_JSON = new JSONObject();
     public JSONObject response;
+    public static boolean ID=true;
 
 
 ///////////////////////////////////////////////////////////////  login menu  //////////////////////////////////////////////////
 
     public void loginMenu() throws Exception {
+
+        if (ID){
+            System.out.println("its login menu");
+            ID=false;
+        }
 
         while (true) {
 
@@ -54,9 +60,15 @@ public class Menu {
                 } else if (commandMatch(command, "^\\s*user login") != null) {
 
                     int startwith = commandMatch(command, "^\\s*user login").end() + 1;
-                    if (loginLogin(command.substring(startwith)) == true) mainMenu();
+                    if (loginLogin(command.substring(startwith)) == true){
+                        ID=true;
+                        mainMenu();
+                    }
 
-                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) {
+                    System.out.println("till next time! ;D");
+                    return;
+                }
 
                 else System.out.println("invalid command");
 
@@ -75,6 +87,10 @@ public class Menu {
 
 
     public void mainMenu() throws Exception {
+        if (ID){
+            System.out.println("its main menu");
+            ID=false;
+        }
 
         while (true) {
 
@@ -87,19 +103,46 @@ public class Menu {
 
                     String menuName = commandMatch(command, "menu enter (.+)").group(1);
 
-                    if (commandMatch(menuName, "scoreboard") != null) scoreboardMenu();
-                    else if (commandMatch(menuName, "profile") == null) profileMenue();
-                    else if (commandMatch(menuName, "deck") != null) deckMenu();
-                    else if (commandMatch(menuName, "duel") != null) duelMenu();
-                    else if (commandMatch(menuName, "import/export") != null) importExportMenu();
-                    else if (commandMatch(menuName, "shop") != null) shopMenu();
+                    if (commandMatch(menuName, "scoreboard") != null) {
+                        ID=true;
+                        scoreboardMenu();
+                    }
+                    else if (commandMatch(menuName, "profile") != null) {
+                        ID=true;
+                        profileMenue();
+                    }
+                    else if (commandMatch(menuName, "deck") != null){
+                        ID=true;
+                        deckMenu();
+                    }
+                    else if (commandMatch(menuName, "duel") != null) {
+                        ID=true;
+                        duelMenu();
+                    }
+                    else if (commandMatch(menuName, "import/export") != null) {
+                        ID=true;
+                        importExportMenu();
+                    }
+                    else if (commandMatch(menuName, "shop") != null) {
+                        ID=true;
+                        shopMenu();
+                    }
+                    else System.out.println("no such menu exists!");
 
                 }
                 else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("main");
 
-                else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) {
+                    ID=true;
+                    System.out.println("user logged out successfully!");
+                    return;
+                }
 
-                else if (commandMatch(command, "^\\s*user logout\\s*$") != null) return;
+                else if (commandMatch(command, "^\\s*user logout\\s*$") != null){
+                    ID=true;
+                    System.out.println("user logged out successfully!");
+                    return;
+                }
 
                 else System.out.println("invalid command");
 
@@ -120,10 +163,15 @@ public class Menu {
 
     public void scoreboardMenu() throws Exception {
 
+        if (ID){
+            System.out.println("its scoreboard menu");
+            ID=false;
+        }
+
         while (true) {
 
             try {
-
+                command = scan.nextLine();
 
                 if (commandMatch(command, "^\\s*scoreboard show\\s*$") != null) {
 
@@ -139,10 +187,14 @@ public class Menu {
                         showScoreboard(usersArray);
 
                     }
+
                 } else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null)
                     System.out.println("scoreboard");
 
-                else if (command.equals("menu exit")) return;
+                else if (command.equals("menu exit")){
+                    ID=true;
+                    return;
+                }
 
                 else System.out.println("invalid command");
 
@@ -161,6 +213,11 @@ public class Menu {
 
     public void profileMenue() throws Exception {
 
+        if (ID){
+            System.out.println("its profile menu");
+            ID=false;
+        }
+
         while (true) {
             try {
                 command = scan.nextLine();
@@ -175,7 +232,10 @@ public class Menu {
                 }
                 else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("profile");
 
-                else if (command.equals("menu exit")) return;
+                else if (command.equals("menu exit")){
+                    ID=true;
+                    return;
+                }
 
                 else System.out.println("invalid command");
 
@@ -192,10 +252,15 @@ public class Menu {
     }
 
 
-///////////////////////////////////////////////////////////////////////   shop menu  ///////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////   shop menu  ///////////////////////////////////////////////////
 
 
     public void shopMenu() throws Exception {
+
+        if (ID){
+            System.out.println("its shop menu");
+            ID=false;
+        }
 
         while (true) {
 
@@ -236,7 +301,10 @@ public class Menu {
 
                     }
 
-                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) {
+                    ID=true;
+                    return;
+                }
                 else System.out.println("invalid command");
 
             } catch (ParameterException c) {
@@ -252,6 +320,11 @@ public class Menu {
 /////////////////////////////////////////////////////////////////  deck menu  ////////////////////////////////////////////////////////
 
     public void deckMenu() throws Exception {
+
+        if (ID){
+            System.out.println("its deck menu");
+            ID=false;
+        }
 
         while (true) {
 
@@ -323,7 +396,10 @@ public class Menu {
 
                     int startwith = commandMatch(command, "^\\s*deck show").end() + 1;
                     showDeck(command.substring(startwith));
-                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) {
+                    ID=true;
+                    return;
+                }
                 else System.out.println("invalid command");
 
             } catch (ParameterException c) {
@@ -617,12 +693,12 @@ public class Menu {
 
 
     public JSONObject js_Pass(String... args) throws Exception {
-        for (int i = 0; i <= args.length - 2; i = +2) {
+        for (int i = 0; i <= args.length - 2; i += 2) {
             request_JSON.put(args[i], args[i + 1]);
         }
 
         JSONObject response = request.run(request_JSON);
-        clearJSON_OBJ(request_JSON);
+        request_JSON=new JSONObject();
         return response;
     }
 
@@ -634,12 +710,14 @@ public class Menu {
 
     public void showScoreboard(ArrayList<ScoreboardInfo> scoreboardInfos) {
 
-        //LinkedHashMap<Integer,ScoreboardInfo> finalList=new LinkedHashMap<>();
+
         LinkedList<ScoreboardInfo> scoreList = new LinkedList<>(scoreboardInfos);
         List<ScoreboardInfo> interChange = new ArrayList<>();
         int quantity = scoreboardInfos.size();
 
-
+if (quantity==0){
+    System.out.println("none");return;
+}
         for (int i = 0; i <= quantity - 2; i++) {
             for (int j = i + 1; i <= quantity - 1; i++) {
 
@@ -651,11 +729,12 @@ public class Menu {
 
                 } else if ((scoreList.get(i).score == scoreList.get(j).score)) {
 
-                    if (scoreList.get(i).nickname.compareTo(scoreList.get(j).nickname) < 0)
+                    if (scoreList.get(i).nickname.compareTo(scoreList.get(j).nickname) < 0) {
                         interChange.add(scoreList.get(j));
-                    scoreList.set(j, scoreList.get(i));
-                    scoreList.set(i, interChange.get(0));
-                    interChange.clear();
+                        scoreList.set(j, scoreList.get(i));
+                        scoreList.set(i, interChange.get(0));
+                        interChange.clear();
+                    }
 
                 }
 
@@ -886,7 +965,7 @@ public class Menu {
                 }
             }
 
-        } else if (changeNickname1.password) {
+        } else if (changeNickname1.password ) {
 
 
             if (changeNickname1.current == null) System.out.println("invalid command");
@@ -991,7 +1070,7 @@ public class Menu {
 
         if (duelNewGame1.secondPlayerUsername != null) {
 
-            if ( Boolean.toString(duelNewGame1.ai )!= null) System.out.println("invalid command");
+            if ( Boolean.toString(duelNewGame1.ai )!= null) System.out.println("invalid command1");
 
             else {
                 Integer round = duelNewGame1.round;
@@ -1008,7 +1087,7 @@ public class Menu {
                     duelBoardMenu();
                 }
             }
-        } else if ( Boolean.toString(duelNewGame1.ai) == null) System.out.println("invalid command");
+        } else if ( Boolean.toString(duelNewGame1.ai) == null) System.out.println("invalid command2");
 
         else {
             Integer round = duelNewGame1.round;

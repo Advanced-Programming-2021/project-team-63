@@ -1,1 +1,1 @@
-[]
+[{"username":"\u003cusernamee\u003e","password":"\u003cpassworde\u003e","nickname":"\u003cnicknamee\u003e","score":0,"money":100000,"purchasedCards":[],"decks":[]},{"username":"\u003cusername\u003e","password":"\u003cpassword\u003e","nickname":"\u003cnicknameee\u003e","score":0,"money":100000,"purchasedCards":[],"decks":[]},{"username":"\u003cusernameeeeee\u003e","password":"\u003cpassword\u003e","nickname":"\u003cnicknameeeeee\u003e","score":0,"money":100000,"purchasedCards":[],"decks":[]}]
