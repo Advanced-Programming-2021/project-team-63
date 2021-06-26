@@ -487,7 +487,7 @@ public class Menu {
 
 
                     int startwith = commandMatch(command, "^\\s*duel").end() + 1;
-                   if (startDuel(command.substring(startwith)) duelBoardMenu();
+                   if (startDuel(command.substring(startwith))) duelBoardMenu();
 
                 } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) {
                     ID=true;
