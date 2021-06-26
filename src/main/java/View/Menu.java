@@ -35,12 +35,14 @@ public class Menu {
 
     public void loginMenu() throws Exception {
 
-        if (ID){
-            System.out.println("its login menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+                System.out.println("its login menu");
+                ID=false;
+            }
 
             try {
                 command = scan.nextLine();
@@ -85,12 +87,15 @@ public class Menu {
 
 
     public void mainMenu() throws Exception {
-        if (ID){
-            System.out.println("its main menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+
+            if (ID){
+                System.out.println("its main menu");
+                ID=false;
+            }
 
             try {
                 command = scan.nextLine();
@@ -128,12 +133,15 @@ public class Menu {
                     else System.out.println("no such menu exists!");
 
                 }
+
                 else if (commandMatch(command, "^\\s*menu show-current\\s*$") != null) System.out.println("main");
 
                 else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) {
+
                     ID=true;
                     System.out.println("user logged out successfully!");
                     return;
+
                 }
 
                 else if (commandMatch(command, "^\\s*user logout\\s*$") != null){
@@ -161,12 +169,14 @@ public class Menu {
 
     public void scoreboardMenu() throws Exception {
 
-        if (ID){
-            System.out.println("its scoreboard menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+                System.out.println("its scoreboard menu");
+                ID=false;
+            }
 
             try {
                 command = scan.nextLine();
@@ -211,12 +221,16 @@ public class Menu {
 
     public void profileMenue() throws Exception {
 
-        if (ID){
-            System.out.println("its profile menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+
+                System.out.println("its profile menu");
+                ID=false;
+            }
+
             try {
                 command = scan.nextLine();
 
@@ -255,12 +269,15 @@ public class Menu {
 
     public void shopMenu() throws Exception {
 
-        if (ID){
-            System.out.println("its shop menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+
+                System.out.println("its shop menu");
+                ID=false;
+            }
 
             try {
                 command = scan.nextLine();
@@ -319,12 +336,14 @@ public class Menu {
 
     public void deckMenu() throws Exception {
 
-        if (ID){
-            System.out.println("its deck menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+                System.out.println("its deck menu");
+                ID=false;
+            }
 
             try {
                 command = scan.nextLine();
@@ -413,12 +432,15 @@ public class Menu {
     ////////////////////////////////////////////////////////////  import/export menu  //////////////////////////////////////////////////
     public void importExportMenu() throws Exception {
 
-        if (ID){
-            System.out.println("its import/export menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+                System.out.println("its import/export menu");
+                ID=false;
+            }
+
             try {
 
                 if (commandMatch(command, "^\\s*menu show-current\\s*$") != null)
@@ -471,12 +493,14 @@ public class Menu {
 
     public void duelMenu() throws Exception {
 
-        if (ID){
-            System.out.println("its duel menu");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+                System.out.println("its duel menu");
+                ID=false;
+            }
 
             try {
                 command = scan.nextLine();
@@ -511,12 +535,14 @@ public class Menu {
 
     public void duelBoardMenu() throws Exception {
 
-        if (ID){
-            System.out.println("its game board! start playing");
-            ID=false;
-        }
+
 
         while (true) {
+
+            if (ID){
+                System.out.println("its game board! start playing");
+                ID=false;
+            }
 
             try {
 
