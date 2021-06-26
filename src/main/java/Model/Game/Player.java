@@ -23,6 +23,7 @@ public class Player {
 
     public Player(String nickName,ArrayList<String> mainDeck,ArrayList<String> sideDeck,int bestLpInWin){
         this.mainDeck = new ArrayList<>();
+        this.sideDeck = new ArrayList<>();
         setNickname(nickName);
         setField(new Field());
         setLp(8000);
@@ -107,7 +108,38 @@ public class Player {
     }
 
     public void setSideDeck(ArrayList<String> sideDeckNames){
-
+        boolean isMonster = false;
+        String line = "";
+        for(String name : sideDeckNames){
+            try{
+                BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\Database\\Monster.csv"));
+                while ((line = reader.readLine()) != null){
+                    String[] card = line.split(",");
+                    if(card[0].equals(name)){
+                        isMonster = true;
+                        if(card[4].equals("Normal")) sideDeck.add(new MonsterCard(card[0],card[7],"0",card[1],card[5],card[6],card[3],card[4]));
+                        else if(card[4].equals("Ritual")) sideDeck.add(new RitualMonsterCard(card[0],card[7],"0",card[1],card[5],card[6],card[3],card[4]));
+                        else sideDeck.add(new EffectiveMonsterCard(card[0],card[7],"0",card[1],card[5],card[6],card[3],card[4]));
+                    }
+                }
+                reader.close();
+            }catch (IOException e){
+                System.out.println("OHHH noo");
+            }
+            if(!isMonster){
+                try{
+                    BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\Database\\SpellTrap.csv"));
+                    while ((line = reader.readLine()) != null){
+                        String[] card = line.split(",");
+                        if(card[0].equals(name)){
+                            sideDeck.add(new SpellCard(card[0],card[3],"0",card[1],card[2]));
+                        }
+                    }
+                    reader.close();
+                }catch (IOException e){
+                }
+            }
+        }
     }
 
     public ArrayList<Card> getMainDeck() {

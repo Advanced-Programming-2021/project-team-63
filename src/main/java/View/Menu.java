@@ -221,13 +221,8 @@ public class Menu {
 
 
     public void profileMenue() throws Exception {
-
-
-
         while (true) {
-
             if (ID){
-
                 System.out.println("its profile menu");
                 ID=false;
             }
@@ -269,9 +264,6 @@ public class Menu {
 
 
     public void shopMenu() throws Exception {
-
-
-
         while (true) {
 
             if (ID){
@@ -335,9 +327,6 @@ public class Menu {
 /////////////////////////////////////////////////////////////////  deck menu  ////////////////////////////////////////////////////////
 
     public void deckMenu() throws Exception {
-
-
-
         while (true) {
 
             if (ID){
@@ -1128,8 +1117,6 @@ if (quantity==0){
             }
 
         } else System.out.println("invalid command");
-
-
     }
 
     public boolean startDuel(String command) throws Exception {
@@ -1396,8 +1383,6 @@ if (quantity==0){
     public  void showSelectedCard(CardGeneralInfo card){
 
     }
-
-
 }
 
 

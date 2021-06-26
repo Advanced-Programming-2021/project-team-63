@@ -1,11 +1,7 @@
 package Controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import Model.Account;
 import Model.ApiMessage;
-import Model.Deck;
 import Model.Game.Card.Category;
 import Model.Game.Card.GameLogType;
 import Model.Game.Card.MonsterCard.Mode;
@@ -17,7 +13,6 @@ import Model.Game.Card.Status;
 import Model.Game.CardAddress;
 import Model.Game.Game;
 import Model.Game.Card.Card;
-import Model.Game.GameLogInfo;
 import Model.Game.Phase;
 import Model.Game.Player;
 import Model.JsonObject.*;
@@ -95,7 +90,6 @@ public class GameController{
 
     public ApiMessage nextPhase() throws Exception {
         game.nextPhase();
-        //ToDo: clear old data
         game.addNextPhaseLog(game.getPhase());
         return new ApiMessage(ApiMessage.successful,new Gson().toJson(game.getPhase()));
     }
@@ -115,7 +109,7 @@ public class GameController{
 
         var selectedCard = (MonsterCard)game.getActivePlayer().getSelectedCard();
 
-        if(selectedCard.getMonsterCategory() == MonsterCategory.RITUAL)//:?
+        if(selectedCard.getMonsterCategory() == MonsterCategory.RITUAL)
             return new ApiMessage(ApiMessage.error,"you can’t summon this card");
 
         if(game.getPhase() != Phase.MAIN_PHASE_1 && game.getPhase() != Phase.MAIN_PHASE_2)
@@ -157,7 +151,6 @@ public class GameController{
         if(victimMonster == null)
             return new ApiMessage(ApiMessage.error,"there no monsters one this address");
 
-        //ToDo: aya tartib dastoor mohem ast?
         game.getActivePlayer().tributeSummon(selectedCard , victimMonster, game);
         game.addSummonMonsterWith1Tribute(selectedCard.hashCode(),victimMonster.hashCode());
         return new ApiMessage(ApiMessage.successful,"summoned successfully");
@@ -200,7 +193,6 @@ public class GameController{
         game.getActivePlayer().setMonster((MonsterCard) game.getActivePlayer().getSelectedCard());
         game.addToGameLog(GameLogType.SET_MONSTER,game.getActivePlayer().getSelectedCard().hashCode());
         return new ApiMessage(ApiMessage.successful,"set successfully");
-        //bedoone ghorbani amal kardim chon duck nagofte va namjoo gofte irad nadare
     }
 
     public ApiMessage changeMonsterMode(Mode newMode) throws Exception {
@@ -257,7 +249,7 @@ public class GameController{
         var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
 
         if(selectedCard.getMode() != Mode.ATTACK)
-            return new ApiMessage(ApiMessage.error,"you can’t attack with this card");//khodam gozashtam
+            return new ApiMessage(ApiMessage.error,"you can’t attack with this card");
 
         if(game.getPhase() != Phase.BATTLE_PHASE)
             return new ApiMessage(ApiMessage.error,"you can’t do this action in this phase");
@@ -273,6 +265,9 @@ public class GameController{
 
         game.addAttackLog(selectedCard.hashCode(),targetMonster.hashCode());
         var ans = game.getActivePlayer().attack(game , selectedCard , targetMonster);
+        var attemptToEndRound = isRoundOver();
+        if(attemptToEndRound != null)
+            return attemptToEndRound;
         return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
     }
 
@@ -292,10 +287,13 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"this card already attacked");
 
         if(game.getInactivePlayer().getField().getCntFreeCellsInMonsterZone() != 0 || selectedCard.getMode() != Mode.ATTACK)
-            return new ApiMessage(ApiMessage.error,"you can’t attack the opponent directly");//ToDo: be har dalil yani chi
+            return new ApiMessage(ApiMessage.error,"you can’t attack the opponent directly");
 
         game.addToGameLog(GameLogType.DIRECT_ATTACK,selectedCard.hashCode());
         game.getActivePlayer().directAttack(game,selectedCard);
+        var attemptToEndRound = isRoundOver();
+        if(attemptToEndRound != null)
+            return attemptToEndRound;
         return new ApiMessage(ApiMessage.successful,"{\"damage\"=" + selectedCard.getAtk() + "}");
     }
 
@@ -336,11 +334,10 @@ public class GameController{
         if(game.getActivePlayer().getSelectedCard() == null)
             return new ApiMessage(ApiMessage.error,"no card is selected yet");
 
-        if(game.getActivePlayer().getSelectedCard().getCategory() != Category.SPELL)//trap chi pas
+        if(game.getActivePlayer().getSelectedCard().getCategory() != Category.SPELL)
             return new ApiMessage(ApiMessage.error,"activate effect is only for spell cards.");
 
-        //hand.contain chi pas
-        if(game.getPhase() != Phase.MAIN_PHASE_1)//namotmaen
+        if(game.getPhase() != Phase.MAIN_PHASE_1)
             return new ApiMessage(ApiMessage.error,"you can’t activate an effect on this turn");
 
         var selectedCard = (SpellCard) game.getActivePlayer().getSelectedCard();
@@ -350,10 +347,8 @@ public class GameController{
 
         if(game.getActivePlayer().getField().getCntFreeCellsInSpellZone() == 0 &&
                 game.getActivePlayer().getField().isSpellZoneContains(selectedCard) &&
-                selectedCard.getIcon() != Icon.FIELD)//if in hand
+                selectedCard.getIcon() != Icon.FIELD)
             return new ApiMessage(ApiMessage.error,"spell card zone is full");
-
-        //sharayeti ke natoonim faal konim chi
 
         game.addToGameLog(GameLogType.ACTIVE_EFFECT,selectedCard.hashCode());
         if(selectedCard.getIcon() == Icon.FIELD){
@@ -363,7 +358,7 @@ public class GameController{
             game.getActivePlayer().activateSpell(game,selectedCard);
         }
         return new ApiMessage(ApiMessage.successful,"spell activated");
-    } //pore shak
+    }
 
     public ApiMessage setSpellAndTrap() throws Exception {
         if(game.getActivePlayer().getSelectedCard() == null)
@@ -381,7 +376,7 @@ public class GameController{
 
         game.addToGameLog(GameLogType.SET_SPELL,game.getActivePlayer().getSelectedCard().hashCode());
         game.getActivePlayer().setSpell((SpellCard) game.getActivePlayer().getSelectedCard());
-        return new ApiMessage(ApiMessage.successful,"set successfully");//farghe spell & trap
+        return new ApiMessage(ApiMessage.successful,"set successfully");
     }
 
     public void specialSummonMonster(){
@@ -443,6 +438,4 @@ public class GameController{
         }
         return arrayList;
     }
-
-
 }
