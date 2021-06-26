@@ -1,7 +1,9 @@
 package Controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import Model.Account;
 import Model.ApiMessage;
 import Model.Deck;
 import Model.Game.Card.Category;
@@ -20,20 +22,22 @@ import Model.Game.Phase;
 import Model.Game.Player;
 import Model.JsonObject.*;
 import com.google.gson.Gson;
+import org.json.JSONObject;
 
 public class GameController{
     private static boolean justOneObject = false;
     private Game game ;
+    private ProgramController programController;
 
-    public GameController(){
+    public GameController(ProgramController programController){
         assert !justOneObject;
         justOneObject = true;
         game = null;
     }
 
     public ApiMessage createGame(AccountJson player1, AccountJson player2, int rounds) throws Exception {
-        Player playerOne = new Player(player1.getNickname(),cardJsonToString(player1.getActiveDeck().getMainDeck()),cardJsonToString(player1.getActiveDeck().getSideDeck()));
-        Player playerTwo = new Player(player2.getNickname(),cardJsonToString(player2.getActiveDeck().getMainDeck()),cardJsonToString(player2.getActiveDeck().getSideDeck()));
+        Player playerOne = new Player(player1.getNickname(),cardJsonToString(player1.getActiveDeck().getMainDeck()),cardJsonToString(player1.getActiveDeck().getSideDeck()),0);
+        Player playerTwo = new Player(player2.getNickname(),cardJsonToString(player2.getActiveDeck().getMainDeck()),cardJsonToString(player2.getActiveDeck().getSideDeck()),0);
         game = new Game(playerOne, playerTwo, rounds);
         return new ApiMessage(ApiMessage.successful,"duel was created successfully.");
     }
@@ -295,6 +299,39 @@ public class GameController{
         return new ApiMessage(ApiMessage.successful,"{\"damage\"=" + selectedCard.getAtk() + "}");
     }
 
+    public ApiMessage isRoundOver() throws Exception {
+        Player looser;
+        Player winner;
+        if(game.getActivePlayer().getLp() <= 0){
+            looser = game.getActivePlayer();
+            winner = game.getInactivePlayer();
+            return endRound(looser,winner);
+        }
+        if(game.getInactivePlayer().getLp() <= 0){
+            looser = game.getInactivePlayer();
+            winner = game.getActivePlayer();
+            return endRound(looser,winner);
+        }
+        JSONObject ans = new JSONObject();
+        ans.put("isOver",false);
+        return new ApiMessage(ApiMessage.successful,ans.toString());
+    }
+
+    private ApiMessage endRound(Player looser, Player winner) throws Exception {
+        JSONObject ans = new JSONObject();
+        ans.put("isOver",true);
+        AccountJson looserAccount = programController.getUserInfoByNickname(looser.getNickname());
+        AccountJson winnerAccount = programController.getUserInfoByNickname(winner.getNickname());
+        ans.put("winner",winnerAccount.getUsername());
+        winnerAccount.increaseMoney(1000+winner.getLp());
+        winnerAccount.increaseScore(1000);
+        looserAccount.increaseMoney(100);
+        programController.changeUserInfoInDataBase(looserAccount);
+        programController.changeUserInfoInDataBase(winnerAccount);
+        game = null;
+        return new ApiMessage(ApiMessage.successful,ans.toString());
+    }
+
     public ApiMessage activateEffect() throws Exception {
         if(game.getActivePlayer().getSelectedCard() == null)
             return new ApiMessage(ApiMessage.error,"no card is selected yet");
@@ -382,8 +419,13 @@ public class GameController{
         game.getActivePlayer().getSelectedCard().getStatus() == Status.SET)
             return new ApiMessage(ApiMessage.error,"card is not visible");
 
-        var ans = getCardGeneralInfoFromCard(game.getActivePlayer().getSelectedCard());
-        return new ApiMessage(ApiMessage.successful,new Gson().toJson(ans));
+        JSONObject ans = new JSONObject();
+        ans.put("mainInfo",new Gson().toJson(getCardGeneralInfoFromCard(game.getActivePlayer().getSelectedCard())));
+        if(game.getActivePlayer().getSelectedCard().getCategory() == Category.MONSTER){
+            ans.put("attack",((MonsterCard) game.getActivePlayer().getSelectedCard()).getAtk());
+            ans.put("defense",((MonsterCard) game.getActivePlayer().getSelectedCard()).getDef());
+        }
+        return new ApiMessage(ApiMessage.successful,ans.toString());
     }
 
     private ApiMessage getPhase() throws Exception {
@@ -401,5 +443,6 @@ public class GameController{
         }
         return arrayList;
     }
+
 
 }

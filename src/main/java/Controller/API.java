@@ -14,8 +14,8 @@ public class API {
     public API(){
         assert !justOneObject;
         justOneObject = true;
-        gameController = new GameController();
         programController = new ProgramController();
+        gameController = new GameController(programController);
     }
 
     public JSONObject run(JSONObject request) throws Exception {

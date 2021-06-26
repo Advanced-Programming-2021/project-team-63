@@ -18,9 +18,10 @@ public class Player {
     private boolean canRitualSummon;
     private boolean isMonsterSummon;
     private boolean isMonsterSet;
+    private int bestLpInWin;
     private Card selectedCard;
 
-    public Player(String nickName,ArrayList<String> mainDeck,ArrayList<String> sideDeck){
+    public Player(String nickName,ArrayList<String> mainDeck,ArrayList<String> sideDeck,int bestLpInWin){
         setNickname(nickName);
         setField(new Field());
         setLp(8000);
@@ -28,6 +29,7 @@ public class Player {
         setSideDeck(sideDeck);
         setHand(new ArrayList<Card>());
         setSelectedCard(null);
+        this.bestLpInWin = bestLpInWin;
     }
 
     public void setCanRitualSummon(boolean canRitualSummon) {
