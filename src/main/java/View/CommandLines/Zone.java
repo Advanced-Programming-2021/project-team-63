@@ -2,7 +2,10 @@ package View.CommandLines;
 
 import com.beust.jcommander.Parameter;
 
-public class Zone extends CommandLine{
+public class Zone extends CommandLine {
+
+
+
     @Parameter(names ={"--opponent","-o"}, description = "your account name to login",arity=0)
     public boolean opponent;
     @Parameter(names ={"--monster","-m"}, description = "your current pass",arity=1,required = false)

@@ -1208,19 +1208,19 @@ if (quantity==0){
         Zone zone = new Zone();
         Zone zone1 = (Zone) zone.run(command);
 
-        if (Integer.toString(zone1.monster) != null) {
-            if (Integer.toString(zone1.spell) != null) System.out.println("invalid command");
-            else if (Integer.toString(zone1.hand) != null) System.out.println("invalid command");
-            else if (Boolean.toString(zone1.field) != null) System.out.println("invalid command");
+        if (zone1.monster != 0) {
+            if (zone1.spell != 0) System.out.println("invalid command");
+            else if (zone1.hand != 0) System.out.println("invalid command");
+            else if (zone1.field) System.out.println("invalid command");
             else {
                 JSONObject response
                         = js_Pass("command", "select_card", "zone", "monster_zone", "place", Integer.toString(zone1.monster), "side",Boolean.toString( zone1.opponent));
                 System.out.println(response
                         .get("message"));
             }
-        } else if (Integer.toString(zone1.spell )!= null) {
-            if (Integer.toString(zone1.hand) != null) System.out.println("invalid command");
-            else if (Boolean.toString(zone1.field) != null) System.out.println("invalid command");
+        } else if (zone1.spell != 0) {
+            if (zone1.hand != 0) System.out.println("invalid command");
+            else if ( zone1.field ) System.out.println("invalid command");
             else {
 
                 JSONObject response
@@ -1228,15 +1228,15 @@ if (quantity==0){
                 System.out.println(response
                         .get("message"));
             }
-        } else if (Integer.toString(zone1.hand )!= null) {
-            if (Boolean.toString(zone1.field )!= null) System.out.println("invalid command");
+        } else if (zone1.hand!=0) {
+            if (zone1.field ) System.out.println("invalid command");
             else {
                 JSONObject response
                         = js_Pass("command", "select_card", "zone", "hand_zone", "place",Integer.toString( zone1.hand));
                 System.out.println(response
                         .get("message"));
             }
-        } else if (Boolean.toString(zone1.field) != null) {
+        } else if (zone1.field) {
 
             JSONObject response
                     = js_Pass("command", "select_card", "zone", "field_zone", "place", "side",Boolean.toString( zone1.opponent));
