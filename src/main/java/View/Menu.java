@@ -2,7 +2,6 @@ package View;
 
 
 import Controller.API;
-import Model.Game.Card.Card;
 import Model.Game.Card.MonsterCard.Mode;
 import Model.Game.Card.Status;
 import Model.Game.Phase;
@@ -17,7 +16,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.swing.*;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -414,8 +412,11 @@ public class Menu {
 
     ////////////////////////////////////////////////////////////  import/export menu  //////////////////////////////////////////////////
     public void importExportMenu() throws Exception {
-        //import card [card name]
-        //export card [card name]
+
+        if (ID){
+            System.out.println("its import/export menu");
+            ID=false;
+        }
 
         while (true) {
             try {
@@ -447,7 +448,10 @@ public class Menu {
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-                else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                else if (commandMatch(command, "^\\s*menu exit\\s*$") != null){
+                    ID=true;
+                    return;
+                }
 
                 else System.out.println("invalid command");
 
@@ -467,6 +471,11 @@ public class Menu {
 
     public void duelMenu() throws Exception {
 
+        if (ID){
+            System.out.println("its duel menu");
+            ID=false;
+        }
+
         while (true) {
 
             try {
@@ -478,9 +487,12 @@ public class Menu {
 
 
                     int startwith = commandMatch(command, "^\\s*duel").end() + 1;
-                    startDuel(command.substring(startwith));
+                   if (startDuel(command.substring(startwith)) duelBoardMenu();
 
-                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                } else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) {
+                    ID=true;
+                    return;
+                }
                 else System.out.println("invalid command");
 
 
@@ -498,6 +510,12 @@ public class Menu {
 
 
     public void duelBoardMenu() throws Exception {
+
+        if (ID){
+            System.out.println("its game board! start playing");
+            ID=false;
+        }
+
         while (true) {
 
             try {
@@ -637,7 +655,10 @@ public class Menu {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-                else if (commandMatch(command, "^\\s*menu exit\\s*$") != null) return;
+                else if (commandMatch(command, "^\\s*menu exit\\s*$") != null){
+                    ID=true;
+                    return;
+                }
                 else System.out.println("invalid command");
 
                 if (true) {
@@ -1063,7 +1084,7 @@ if (quantity==0){
 
     }
 
-    public void startDuel(String command) throws Exception {
+    public boolean startDuel(String command) throws Exception {
 
         DuelNewGame duelNewGame = new DuelNewGame();
         DuelNewGame duelNewGame1 = (DuelNewGame) duelNewGame.run(command);
@@ -1074,38 +1095,33 @@ if (quantity==0){
 
             else {
                 Integer round = duelNewGame1.round;
-                JSONObject response
-                        = js_Pass("command", "duel_new_game", "Opponent", duelNewGame1.secondPlayerUsername, "round", Integer.toString( duelNewGame1.round), "opponent_type", "sec_player");
+                JSONObject response = js_Pass("command", "duel_new_game", "Opponent", duelNewGame1.secondPlayerUsername,
+                        "round", Integer.toString( duelNewGame1.round), "opponent_type", "sec_player");
 
-                if (response
-                        .get("type").equals("error")) System.out.println(response
-                        .get("message"));
+                if (response.get("type").equals("error")) System.out.println(response.get("message"));
 
                 else {
-                    System.out.println(response
-                            .get("message"));
-                    duelBoardMenu();
+                    System.out.println(response.get("message"));
+                   return true;
                 }
             }
         } else if ( Boolean.toString(duelNewGame1.ai) == null) System.out.println("invalid command2");
 
         else {
             Integer round = duelNewGame1.round;
-            JSONObject response
-                    = js_Pass("command", "duel_new_game", "Opponent",  Boolean.toString(duelNewGame1.ai), "round", Integer.toString(duelNewGame1.round), "opponent_type", "ai");
+            JSONObject response = js_Pass("command", "duel_new_game", "Opponent",  Boolean.toString(duelNewGame1.ai),
+                    "round", Integer.toString(duelNewGame1.round), "opponent_type", "ai");
 
-            if (response
-                    .get("type").equals("error")) System.out.println(response
-                    .get("message"));
+            if (response.get("type").equals("error")) System.out.println(response.get("message"));
 
             else {
-                System.out.println(response
-                        .get("message"));
+                System.out.println(response.get("message"));
                 duelBoardMenu();
             }
         }
 
 
+        return false;
     }
 
     public void set(String command) throws Exception {
