@@ -2,6 +2,8 @@ package Model.Game;
 
 import java.util.*;
 import Model.Game.Card.GameLogType;
+import Model.Game.Card.MonsterCard.MonsterCard;
+import Model.Game.Card.SpellCard.SpellCard;
 import com.google.gson.Gson;
 
 public class Game {
@@ -16,12 +18,13 @@ public class Game {
     private static ArrayList<Game> games;
     private ArrayList<String> gameLog;
 
+
     static{
         counter = 1;
         games = new ArrayList<Game>();
     }
 
-    public Game(Player player1 , Player player2,int rounds){
+    public Game(Player player1, Player player2, int round){
         setId(counter);
         setPlayer1(player1);
         setPlayer2(player2);
@@ -143,7 +146,17 @@ public class Game {
 
     public void addToGameLog(String log){
         gameLog.add(log);
-        //ToDo: check effects
+        checkEffects(activePlayer);
+        checkEffects(inactivePlayer);
+    }
+
+    private void checkEffects(Player player) {
+        if(player.getField().getFieldZone()!=null)
+            player.getField().getFieldZone().activate(this,null);
+        for (SpellCard spellCard : player.getField().getSpellZone()) {
+            if(spellCard != null)
+                spellCard.activate(this, null);
+        }
     }
 
     public void addToGameLog(GameLogInfo log){

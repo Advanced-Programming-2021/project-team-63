@@ -104,4 +104,6 @@ public class AccountJson {
     public void increaseMoney(int value) {
         this.money += value;
     }
+
+    public void increaseScore(int value) { this.score += value;}
 }

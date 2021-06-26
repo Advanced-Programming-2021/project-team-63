@@ -336,7 +336,7 @@ public class ProgramController {
         }
     }
 
-    private void changeUserInfoInDataBase(AccountJson newUserInfo) throws IOException {
+    public void changeUserInfoInDataBase(AccountJson newUserInfo) throws IOException {
         ArrayList<AccountJson> users = getUsersInfo();
         FileWriter fileWriter = new FileWriter(usersInfoPath);
         for(int i = 0 ; i < users.size() ; i++){
@@ -425,6 +425,15 @@ public class ProgramController {
         ArrayList<AccountJson> users = getUsersInfo();
         for (AccountJson user : users) {
             if(user.getUsername().equals(username))
+                return user;
+        }
+        return null;
+    }
+
+    public AccountJson getUserInfoByNickname(String nickname) throws IOException {
+        ArrayList<AccountJson> users = getUsersInfo();
+        for (AccountJson user : users) {
+            if(user.getNickname().equals(nickname))
                 return user;
         }
         return null;
