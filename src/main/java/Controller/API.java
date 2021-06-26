@@ -24,10 +24,16 @@ public class API {
         if(commandType.equals("show_scorboard")){
             return new JSONObject(programController.showScoreboard());
         }
+        if(commandType.equals("next_phase")) {
+            return new JSONObject(gameController.nextPhase());
+        }
         if(commandType.equals("buyCard")){
             return new JSONObject(programController.buyCard((String) request.get("cardName")));
         }
-        if(commandType.equals("shop_show_all")){
+        if(commandType.equals("get_phase")){
+            return new JSONObject(gameController.getPhase());
+        }
+        if(commandType.equals("shop_show_all")) {
             return new JSONObject(programController.showShopCards());
         }
         if(commandType.equals("crate_deck")){

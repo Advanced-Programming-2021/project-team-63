@@ -151,6 +151,8 @@ public class Game {
     }
 
     private void checkEffects(Player player) {
+        System.out.println(player.getField());
+        System.out.println(player);
         if(player.getField().getFieldZone()!=null)
             player.getField().getFieldZone().activate(this,null);
         for (SpellCard spellCard : player.getField().getSpellZone()) {

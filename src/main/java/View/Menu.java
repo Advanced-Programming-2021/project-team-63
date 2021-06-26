@@ -553,7 +553,7 @@ public class Menu {
                 if (commandMatch(command, "^\\s*next phase") != null) {
                     JSONObject response = js_Pass("command", "next_phase");
                     Gson gson1 = new Gson();
-                    Phase phase = gson1.fromJson((String) response.get("message"), Phase.class);
+                    Phase phase = gson1.fromJson( response.get("message").toString(), Phase.class);
                     System.out.println("Phase: "+ phase.name());
 
                     if (phase==Phase.DRAW_PHASE){
@@ -614,8 +614,8 @@ public class Menu {
 
 
 
-                } else if (commandMatch(command, "^\\s*attack (\\u+)\\s*$") != null) {
-                    String place = commandMatch(command, "^\\s*attack (\\u+)\\s*$").group(1);
+                } else if (commandMatch(command, "^\\s*attack (\\d+)\\s*$") != null) {
+                    String place = commandMatch(command, "^\\s*attack (\\d+)\\s*$").group(1);
                     JSONObject response
                             = js_Pass("command", "attack", "place", place);
                     System.out.println(response
@@ -674,9 +674,9 @@ public class Menu {
                 }
 
 ///////////////////////////////////////////////////////////////////////////////////cheats
-                else if (commandMatch(command, "^\\s*increase money (\\u+)\\s*$") != null) {
+                else if (commandMatch(command, "^\\s*increase money (\\d+)\\s*$") != null) {
 
-                    String money = commandMatch(command, "^\\s*increase money (\\u+)\\s*$").group(1);
+                    String money = commandMatch(command, "^\\s*increase money (\\d+)\\s*$").group(1);
                     JSONObject response = js_Pass("command", "increase_money", "amount", money);
                     System.out.println(response.get("message"));
 
@@ -702,12 +702,12 @@ public class Menu {
 
                     Gson gson1 = new Gson();
 
-                    Phase phase = gson1.fromJson((String) response.get("message"), Phase.class);
+                    Phase phase = gson1.fromJson( response.get("message").toString(), Phase.class);
                     if (phase == Phase.MAIN_PHASE_1) {
                         JSONObject response1 = js_Pass("command", "get_board");
                         Gson gson = new Gson();
 
-                        BoardJson boardJson = gson.fromJson((String) response.get("message"), BoardJson.class);
+                        BoardJson boardJson = gson.fromJson( response.get("message").toString(), BoardJson.class);
 
                         printBoard(boardJson);
 
@@ -1147,7 +1147,7 @@ if (quantity==0){
 
         if (duelNewGame1.secondPlayerUsername != null) {
 
-            if ( Boolean.toString(duelNewGame1.ai )!= null) System.out.println("invalid command1");
+            if ( duelNewGame1.ai) System.out.println("invalid command");
 
             else {
                 Integer round = duelNewGame1.round;
@@ -1161,7 +1161,7 @@ if (quantity==0){
                    return true;
                 }
             }
-        } else if ( Boolean.toString(duelNewGame1.ai) == null) System.out.println("invalid command2");
+        } else if ( ! duelNewGame1.ai) System.out.println("invalid command");
 
         else {
             Integer round = duelNewGame1.round;

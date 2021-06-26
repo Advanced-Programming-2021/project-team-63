@@ -428,7 +428,7 @@ public class GameController{
         return new ApiMessage(ApiMessage.successful,ans.toString());
     }
 
-    private ApiMessage getPhase() throws Exception {
+    public ApiMessage getPhase() throws Exception {
         return new ApiMessage(ApiMessage.successful, new Gson().toJson(game.getPhase()));
     }
 

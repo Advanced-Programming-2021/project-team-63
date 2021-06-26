@@ -4,7 +4,7 @@ import com.beust.jcommander.Parameter;
 
 public class DuelNewGame extends CommandLine {
 
-    @Parameter(names ={"--rounds","-r"}, description = "the deck where you want to add card to",arity=1)
+    @Parameter(names ={"--rounds","-r"}, description = "the deck where you want to add card to",arity=1,required = true)
     public int round;
     @Parameter(names ={"--second-player","-sp"}, description = "card name which you want to add",arity=1,required = false)
     public String secondPlayerUsername;
