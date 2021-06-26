@@ -26,6 +26,7 @@ public class MonsterCard extends Card{
         setAtk(Integer.parseInt(atk));
         setDef(Integer.parseInt(def));
         setAttribute(attribute);
+        types = new ArrayList<>();
         types.add(stringToType(type));
     }
 

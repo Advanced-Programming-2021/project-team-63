@@ -82,6 +82,9 @@ public class API {
         if(commandType.equals("set_winner")){
             //what to do
         }
+        if(commandType.equals("get_board")){
+            return new JSONObject(gameController.getBoard());
+        }
         if(commandType.equals("crate_new_user")){
             String username = (String) request.get("username");
             String password = (String) request.get("password");
@@ -138,6 +141,9 @@ public class API {
             else
                 monsterMode = Mode.DEFENSE;
             return new JSONObject(gameController.changeMonsterMode(monsterMode));
+        }
+        if(commandType.equals("add_card_to_hand")){
+            return new JSONObject(gameController.addCardFromDeckToHand());
         }
         if(commandType.equals("select_card")){
             String zone = (String) request.get("zone");

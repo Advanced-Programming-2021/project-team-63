@@ -19,7 +19,7 @@ public class FieldJson {
 
 
     public FieldJson(Player player){
-        this.deckSize = player.getMainDeck().size();
+        this.deckSize = player.getCards().size();
         this.handSize = player.getHand().size();
         this.nickName = player.getNickname();
         this.life = player.getLp();

@@ -8,7 +8,7 @@ import Model.Game.Card.MonsterCard.*;
 public class Field {
     private MonsterCard monsterZone[] = new MonsterCard[5];
     private SpellCard spellZone[] = new SpellCard[5];
-    private ArrayList<Card> graveyard;
+    private ArrayList<Card> graveyard = new ArrayList<>();
     private SpellCard fieldZone;
 
     public MonsterCard[] getMonsterZone() {

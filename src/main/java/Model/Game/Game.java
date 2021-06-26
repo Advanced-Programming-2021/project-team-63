@@ -30,6 +30,9 @@ public class Game {
         setPlayer2(player2);
         setRounds(rounds);
         setActivePlayer(getRandomPlayer());
+        setInactivePlayer(player1);
+        if(activePlayer == inactivePlayer)
+            setInactivePlayer(player2);
         setPhase(Phase.BATTLE_PHASE);
         gameLog = new ArrayList<>();
     }
@@ -151,8 +154,6 @@ public class Game {
     }
 
     private void checkEffects(Player player) {
-        System.out.println(player.getField());
-        System.out.println(player);
         if(player.getField().getFieldZone()!=null)
             player.getField().getFieldZone().activate(this,null);
         for (SpellCard spellCard : player.getField().getSpellZone()) {

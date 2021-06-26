@@ -495,8 +495,6 @@ public class Menu {
 
     public void duelMenu() throws Exception {
 
-
-
         while (true) {
 
             if (ID){
@@ -563,8 +561,6 @@ public class Menu {
                     else if (phase==Phase.END_PHASE){
                        // System.out.println("its "+);                                                 //bayad esme harif ro dashte basham
                     }
-
-
                 }
 
 
@@ -706,12 +702,8 @@ public class Menu {
                     if (phase == Phase.MAIN_PHASE_1) {
                         JSONObject response1 = js_Pass("command", "get_board");
                         Gson gson = new Gson();
-
-                        BoardJson boardJson = gson.fromJson( response.get("message").toString(), BoardJson.class);
-
+                        BoardJson boardJson = gson.fromJson(response1.get("message").toString(), BoardJson.class);
                         printBoard(boardJson);
-
-
                     }
 
                 }
@@ -1261,43 +1253,41 @@ if (quantity==0){
         iterator1.add(5);
 
         System.out.println(boardJson.getActivePlayer().getNickName() + ":" + boardJson.getActivePlayer().getLife());
-        System.out.print("\t\t");
-
         //print c for in hand cards with for loop
+        for(int i = 0 ; i < boardJson.getActivePlayer().getHandSize() ; i++){
+            System.out.print("\tc");
+        }
+        System.out.println();
         // print DN zone for in deck card numbers     System.out.println(boardJson.getActivePlayer().);
-
+        System.out.println(boardJson.getActivePlayer().getDeckSize());
+        System.out.print("\t");
         for (int number : iterator) {      //spell zone
             for (int j = 1; j <= 5; j++) {
                 if (number == j) {
-                    if (boardJson.getActivePlayer().getSpellZone()[j] == null) System.out.println("E");
-
-                    else if (boardJson.getActivePlayer().getSpellZone()[j].getStatus() == Status.SET)
+                    if (boardJson.getActivePlayer().getSpellZone()[j-1] == null) System.out.print("E");
+                    else if (boardJson.getActivePlayer().getSpellZone()[j-1].getStatus() == Status.SET)
                         System.out.print("H");
-                    else System.out.println("O");
+                    else System.out.print("O");
                 }
-                System.out.print("\t");
             }
+            System.out.print("\t");
         }
-
-        System.out.println();                 //ina chera address nadaran??!!!
-
+        System.out.println();
+        System.out.print("\t");
         for (int number1 : iterator) {//monster zone
-
             for (int j = 1; j <= 5; j++) {
-
                 if (number1 == j) {
-                    if (boardJson.getActivePlayer().getMonsterZone()[j] == null) System.out.println("E");
+                    if (boardJson.getActivePlayer().getMonsterZone()[j-1] == null) System.out.print("E");
 
-                    else if (boardJson.getActivePlayer().getMonsterZone()[j].getMode() == Mode.DEFENSE) {
-                        if (boardJson.getActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
-                            System.out.println("DH");
-                        else System.out.println("DO");
+                    else if (boardJson.getActivePlayer().getMonsterZone()[j-1].getMode() == Mode.DEFENSE) {
+                        if (boardJson.getActivePlayer().getMonsterZone()[j-1].getStatus() == Status.SET)
+                            System.out.print("DH");
+                        else System.out.print("DO");
 
-                    } else if (boardJson.getActivePlayer().getMonsterZone()[j].getMode() == Mode.ATTACK) {
-                        if (boardJson.getActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
-                            System.out.println("OH");
-                        else System.out.println("OO");
-
+                    } else if (boardJson.getActivePlayer().getMonsterZone()[j-1].getMode() == Mode.ATTACK) {
+                        if (boardJson.getActivePlayer().getMonsterZone()[j-1].getStatus() == Status.SET)
+                            System.out.print("OH");
+                        else System.out.print("OO");
                     }
                 }
             }
@@ -1310,38 +1300,35 @@ if (quantity==0){
         if (boardJson.getActivePlayer().getFieldZone() == null) fieldZone = "E";
         else fieldZone = "O";
         System.out.println(boardJson.getActivePlayer().getGraveyardSize() + "\t\t\t\t\t\t" + fieldZone);
+
         System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println("-------------------------------------------------------");
-        System.out.println();
-        System.out.println();
+        System.out.println("----------------------------------------");
         System.out.println();
 
         //opponent
         String fieldZone1 = null;
-        if (boardJson.getInActivePlayer().getFieldZone() == null) fieldZone = "E";
+        if (boardJson.getInActivePlayer().getFieldZone() == null) fieldZone1 = "E";
         else fieldZone1 = "O";
         System.out.println(fieldZone1 + "\t\t\t\t\t\t" + boardJson.getInActivePlayer().getGraveyardSize());
 
         //monster zone
-
+        System.out.print("\t");
         for (int number2 : iterator1) {//monster zone
 
             for (int j = 1; j <= 5; j++) {
 
                 if (number2 == j) {
-                    if (boardJson.getInActivePlayer().getMonsterZone()[j] == null) System.out.println("E");
+                    if (boardJson.getInActivePlayer().getMonsterZone()[j-1] == null) System.out.print("E");
 
-                    else if (boardJson.getInActivePlayer().getMonsterZone()[j].getMode() == Mode.DEFENSE) {
-                        if (boardJson.getInActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
-                            System.out.println("DH");
-                        else System.out.println("DO");
+                    else if (boardJson.getInActivePlayer().getMonsterZone()[j-1].getMode() == Mode.DEFENSE) {
+                        if (boardJson.getInActivePlayer().getMonsterZone()[j-1].getStatus() == Status.SET)
+                            System.out.print("DH");
+                        else System.out.print("DO");
 
-                    } else if (boardJson.getInActivePlayer().getMonsterZone()[j].getMode() == Mode.ATTACK) {
-                        if (boardJson.getInActivePlayer().getMonsterZone()[j].getStatus() == Status.SET)
-                            System.out.println("OH");
-                        else System.out.println("OO");
+                    } else if (boardJson.getInActivePlayer().getMonsterZone()[j-1].getMode() == Mode.ATTACK) {
+                        if (boardJson.getInActivePlayer().getMonsterZone()[j-1].getStatus() == Status.SET)
+                            System.out.print("OH");
+                        else System.out.print("OO");
 
                     }
                 }
@@ -1349,23 +1336,28 @@ if (quantity==0){
             System.out.print("\t");
         }
         System.out.println();
-
+        System.out.print("\t");
         for (int number3 : iterator1) {      //spell zone
             for (int j = 1; j <= 5; j++) {
                 if (number3 == j) {
-                    if (boardJson.getInActivePlayer().getSpellZone()[j] == null)
-                        System.out.println("E");
+                    if (boardJson.getInActivePlayer().getSpellZone()[j-1] == null)
+                        System.out.print("E");
 
-                    else if (boardJson.getInActivePlayer().getSpellZone()[j].getStatus() == Status.SET)
+                    else if (boardJson.getInActivePlayer().getSpellZone()[j-1].getStatus() == Status.SET)
                         System.out.print("H");
-                    else System.out.println("O");
+                    else System.out.print("O");
                 }
-                System.out.print("\t");
             }
+            System.out.print("\t");
         }
-
         System.out.println();
-
+        System.out.println(boardJson.getActivePlayer().getDeckSize());
+        System.out.println();
+        for(int i = 0 ; i < boardJson.getActivePlayer().getHandSize() ; i++){
+            System.out.print("\tc");
+        }
+        System.out.println();
+        // print DN zone for in deck card numbers     System.out.println(boardJson.getActivePlayer().);
         //Dn in hands
         System.out.println(boardJson.getInActivePlayer().getNickName() + ":" + boardJson.getInActivePlayer().getLife());
     }

@@ -22,11 +22,14 @@ public class Player {
     private Card selectedCard;
 
     public Player(String nickName,ArrayList<String> mainDeck,ArrayList<String> sideDeck,int bestLpInWin){
+        this.mainDeck = new ArrayList<>();
         setNickname(nickName);
         setField(new Field());
         setLp(8000);
         setMainDeck(mainDeck);
         setSideDeck(sideDeck);
+        System.out.println(this.mainDeck);
+        setCards(this.mainDeck);
         setHand(new ArrayList<Card>());
         setSelectedCard(null);
         this.bestLpInWin = bestLpInWin;
@@ -72,8 +75,8 @@ public class Player {
         boolean isMonster = false;
         String line = ""; 
         for(String name : mainDeckNames){ 
-            try{  
-                BufferedReader reader = new BufferedReader(new FileReader("\\src\\main\\java\\Database\\Monster.csv"));  
+            try{
+                BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\Database\\Monster.csv"));
                 while ((line = reader.readLine()) != null){  
                     String[] card = line.split(",");
                     if(card[0].equals(name)){
@@ -84,11 +87,12 @@ public class Player {
                     }
                 }
                 reader.close(); 
-            }catch (IOException e){  
+            }catch (IOException e){
+                System.out.println("OHHH noo");
             }
             if(!isMonster){ 
                 try{   
-                    BufferedReader reader = new BufferedReader(new FileReader("\\src\\main\\java\\Database\\SpellTrap.csv"));  
+                    BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\Database\\SpellTrap.csv"));
                     while ((line = reader.readLine()) != null){  
                         String[] card = line.split(",");
                         if(card[0].equals(name)){
