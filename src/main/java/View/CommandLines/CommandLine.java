@@ -9,7 +9,7 @@ public class CommandLine
 
 
     public Object run(String b) throws ParameterException {
-        String[] a=b.split(" ");
+        String[] a=b.split("[\\s]+");
 
         JCommander.newBuilder()
                 .addObject(this)

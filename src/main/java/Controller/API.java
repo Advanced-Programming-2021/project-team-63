@@ -71,7 +71,7 @@ public class API {
             //what to do
         }
         if(commandType.equals("increase_money")){
-            return new JSONObject(programController.increaseMoney((int) request.get("amount")));
+            return new JSONObject(programController.increaseMoney( Integer.parseInt( request.get("amount").toString())));
         }
         if(commandType.equals("set_winner")){
             //what to do
@@ -96,18 +96,18 @@ public class API {
         if(commandType.equals("add_card_deck")){
             String deckName = (String) request.get("deckName");
             String cardName = (String) request.get("cardName");
-            boolean isSideDeck = !((boolean) request.get("main_side_?"));
+            boolean isSideDeck = !(Boolean.parseBoolean( request.get("main_side_?").toString()));
             return new JSONObject(programController.addCardToDeck(cardName,deckName,isSideDeck));
         }
         if(commandType.equals("remove_card_deck")){
             String deckName = (String) request.get("deckName");
             String cardName = (String) request.get("cardName");
-            boolean isSideDeck = !((boolean) request.get("main_side_?"));
+            boolean isSideDeck = !(Boolean.parseBoolean( request.get("main_side_?").toString()));
             return new JSONObject(programController.removeCardFromDeck(cardName,deckName,isSideDeck));
         }
         if(commandType.equals("show_deck")){
             String deckName = (String) request.get("deckName");
-            boolean isSideDeck = !((boolean) request.get("main_side_?"));
+            boolean isSideDeck = !(Boolean.parseBoolean( request.get("main_side_?").toString()));
             return new JSONObject(programController.showDeck(deckName,isSideDeck));
         }
         if(commandType.equals("show_deck_all")){
@@ -115,7 +115,7 @@ public class API {
         }
         if(commandType.equals("duel_new_game")){
             String opponent = (String) request.get("Opponent");
-            int rounds = (int) request.get("round");
+            int rounds = Integer.parseInt( request.get("round").toString());
             return new JSONObject(programController.createDuel(opponent,rounds,gameController));
             //ai
         }
@@ -141,7 +141,7 @@ public class API {
                     selectedCardAddress = CardAddress.MONSTER_ZONE;
                     break;
                 case "spell_zone":
-                    if(!((boolean) request.get("side")))
+                    if(!(Boolean.parseBoolean( request.get("side").toString())))
                         selectedCardAddress = CardAddress.SPELL_ZONE;
                     else
                         selectedCardAddress = CardAddress.OPPONENT_SPELL_ZONE;
@@ -150,13 +150,13 @@ public class API {
                     selectedCardAddress = CardAddress.HAND;
                     break;
                 case "field_zone":
-                    if(!((boolean) request.get("side")))
+                    if(!(Boolean.parseBoolean( request.get("side").toString())))
                         selectedCardAddress = CardAddress.FIELD_ZONE;
                     else
                         selectedCardAddress = CardAddress.OPPONENT_FIELD_ZONE;
                     break;
             }
-            return new JSONObject(gameController.selectCard(selectedCardAddress,(int) request.get("place")));
+            return new JSONObject(gameController.selectCard(selectedCardAddress, Integer.parseInt( request.get("place").toString())));
         }
         return null;
     }

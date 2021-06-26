@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Menu {
 
@@ -292,13 +293,7 @@ public class Menu {
                     JSONObject response
                             = js_Pass("command", "buyCard", "cardName", cardName.group(1));
 
-                    if (response
-                            .get("type").equals("error")) System.out.println(response
-                            .get("message"));
-
-                    else {
-                        showAllShopCards((ArrayList<CardGeneralInfo>) response.get("message"));
-                    }
+                    System.out.println(response.get("message"));
 
 
                 } else if (commandMatch(command, "^\\s*(?:shop show --all)|(?:shop show -a)") != null) {
@@ -312,7 +307,12 @@ public class Menu {
                             .get("message"));
                     else {
 
-                        showAllShopCards((ArrayList<CardGeneralInfo>) response.get("message"));
+                        Gson gson = new Gson();
+
+                        Type cardListType = new TypeToken<ArrayList<CardGeneralInfo>>() {}.getType();
+
+                        ArrayList<CardGeneralInfo> cardsArray = gson.fromJson((String) response.get("message"), cardListType);
+                       showAllShopCards(cardsArray);
 
                     }
 
@@ -371,7 +371,7 @@ public class Menu {
 
                     System.out.println(response.get("message"));
 
-                } else if (commandMatch(command, "^\\s*deck delete (.+)\\s*$") != null) {
+                } else if (commandMatch(command, "^\\s*deck set-activate (.+)\\s*$") != null) {
 
                     //validating
                     Matcher deckName = commandMatch(command, "^\\s*deck set-activate (.+)\\s*$");
@@ -396,16 +396,18 @@ public class Menu {
 
                 } else if (commandMatch(command, "^\\s*(?:deck show --all)|(?:deck show -a)") != null) {
 
-                    JSONObject response
-                            = js_Pass("command", "show_deck_all");
+                    JSONObject response = js_Pass("command", "show_deck_all");
 
-                    if (response
-                            .get("type").equals("error")) System.out.println(response
+                    if (response.get("type").equals("error")) System.out.println(response
                             .get("message"));
 
                     else {
-                        System.out.println(response
-                                .get("message"));
+
+                        Gson gson = new Gson();
+
+                        ShowAllDecksJson cardsArray = gson.fromJson((String) response.get("message"), ShowAllDecksJson.class);
+
+                        showAllDecks(cardsArray);
                     }
 
 
@@ -600,10 +602,18 @@ public class Menu {
 
                 } else if (commandMatch(command, "^\\s*((?:card show --selected)|(?:card show -s))\\s*$") != null) {        //?????
 
-                    JSONObject response
-                            = js_Pass("command", "show_selected_card");
-                    System.out.println(response
-                            .get("message"));
+                    JSONObject response = js_Pass("command", "show_selected_card");
+                    if (response.get("type").equals("error")) System.out.println(response.get("message"));
+                    else{
+                        Gson gson = new Gson();
+                        CardGeneralInfo card = gson.fromJson((JsonElement) response.get("message"), CardGeneralInfo.class);
+                        showSelectedCard(card);
+                    }
+
+
+
+
+
                 } else if (commandMatch(command, "^\\s*attack (\\u+)\\s*$") != null) {
                     String place = commandMatch(command, "^\\s*attack (\\u+)\\s*$").group(1);
                     JSONObject response
@@ -800,13 +810,13 @@ if (quantity==0){
 
 
             if (i == 1) {
-                System.out.println(i + " \t\t\t " + user.nickname + " \t\t\t " + user.score);
+                System.out.println(i + "- " + user.nickname + ": " + user.score);
                 j++;
             } else if (user.score == priorScore) {
-                System.out.println(i + "\t\t\t  " + user.nickname + " \t\t\t " + user.score);
+                System.out.println(i + "-  " + user.nickname + ": " + user.score);
                 j++;
             } else {
-                System.out.println(j + " \t\t\t " + user.nickname + "\t\t\t  " + user.score);
+                System.out.println(j + "- " + user.nickname + ":  " + user.score);
                 i = j;
                 j++;
             }
@@ -821,10 +831,15 @@ if (quantity==0){
 
     public void showAllShopCards(ArrayList<CardGeneralInfo> cards) {
 
-        for (CardGeneralInfo card :
-                cards) {
+        LinkedList<CardGeneralInfo> orderdCardList = new LinkedList<>(cards);
 
-            System.out.println(card.getName() + ":" + card.getDescription());
+        orderdCardList.sort(Comparator.comparing(CardGeneralInfo::getName));
+
+
+        for (CardGeneralInfo card :
+                orderdCardList) {
+
+            System.out.println(card.getName() + ":" + card.getPrice());
 
 
         }
@@ -840,9 +855,9 @@ if (quantity==0){
         }
         System.out.println("Other decks:");
 
-        for (DeckGeneralInfo object1 :
-                object.decks) {
+        for (DeckGeneralInfo object1 : object.decks) {
             System.out.println(object1.name + ":" + " main deck " + object1.mainDeckSize + "," + "side deck " + object1.sideDeckSize);
+            System.out.println();
 
         }
 
@@ -1045,9 +1060,17 @@ if (quantity==0){
         AddCardToDeck addCardToDeck = new AddCardToDeck();
         AddCardToDeck addCardToDeck1 = (AddCardToDeck) addCardToDeck.run(command);
 
+        StringBuilder sb = new StringBuilder();
+        String cardName;
+        for (String nameSpell:addCardToDeck1.cardName){
+            sb.append(nameSpell);
+            sb.append(" ");
+        }
+
+        cardName = sb.toString().trim();
 
         JSONObject response
-                = js_Pass("command", "remove_card_deck", "deckName", addCardToDeck1.deckName, "cardName", addCardToDeck1.cardName, "main_side_?",  Boolean.toString(addCardToDeck1.side));
+                = js_Pass("command", "remove_card_deck", "deckName", addCardToDeck1.deckName, "cardName",cardName , "main_side_?",  Boolean.toString(addCardToDeck1.side));
 
         if (response
                 .get("type").equals("error")) System.out.println(response
@@ -1063,13 +1086,20 @@ if (quantity==0){
         AddCardToDeck addCardToDeck = new AddCardToDeck();
         AddCardToDeck addCardToDeck1 = (AddCardToDeck) addCardToDeck.run(command);
 
+        StringBuilder sb = new StringBuilder();
+        String cardName;
+        for (String nameSpell:addCardToDeck1.cardName){
+        sb.append(nameSpell);
+        sb.append(" ");
+        }
 
-        JSONObject response
-                = js_Pass("command", "add_card_deck", "deckName", addCardToDeck1.deckName, "cardName", addCardToDeck1.cardName, "main_side_?",  Boolean.toString(addCardToDeck1.side));
+        cardName = sb.toString().trim();
 
-        if (response
-                .get("type").equals("error")) System.out.println(response
-                .get("message"));
+
+        JSONObject response = js_Pass("command", "add_card_deck", "deckName",
+                addCardToDeck1.deckName, "cardName",cardName , "main_side_?",  Boolean.toString(addCardToDeck1.side));
+
+        if (response.get("type").equals("error")) System.out.println(response.get("message"));
 
         else {
             System.out.println(response
@@ -1368,6 +1398,10 @@ if (quantity==0){
        }while(jsonObject.get("message").equals("error"));
 
        return;
+
+    }
+
+    public  void showSelectedCard(CardGeneralInfo card){
 
     }
 

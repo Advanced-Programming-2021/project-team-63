@@ -17,7 +17,7 @@ public class Account{
         setPassword(password);
         setNickname(nickname);
         setScore(0);
-        setMoney(10000);
+        setMoney(100000);
         purchasedCardsNames = new ArrayList<String>();
         decks = new ArrayList<Deck>();
     }

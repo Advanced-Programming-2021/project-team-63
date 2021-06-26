@@ -20,7 +20,7 @@ public class AccountJson {
         this.money = 0;
         purchasedCards = new ArrayList<>();
         decks = new ArrayList<>();
-        activeDeckName = null;
+        activeDeckName = "";
     }
 
     public ArrayList<CardJson> getPurchasedCards(){

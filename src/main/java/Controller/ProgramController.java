@@ -119,7 +119,7 @@ public class ProgramController {
 
         else{
             if(loggedInUser.getActiveDeckName().equals(deck.getName()))
-                loggedInUser.setActiveDeckName(null);
+                loggedInUser.setActiveDeckName("");
             loggedInUser.deleteDeck(deck);
             changeUserInfoInDataBase(loggedInUser);
             return new ApiMessage(ApiMessage.successful,"deck deleted successfully");
