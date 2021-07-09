@@ -18,6 +18,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
+
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,8 +34,8 @@ public class LoginMenu extends Application {
     public JSONObject request_JSON = new JSONObject();
     public JSONObject response;
     public static boolean ID = true;
-    MainMenu mainMenu = new MainMenu();
-    public static Stage primaryStage;
+    sample.View.Graphic.MainMenu mainMenu;
+    // public static Stage primaryStage;
 
 
     @Override
@@ -44,15 +47,19 @@ public class LoginMenu extends Application {
         StackPane root2 = new StackPane();
         root.setCenter(root2);
         root2.setAlignment(Pos.CENTER);
-        primaryStage.setTitle("Hello World");
-        Scene scene = new Scene(root, 950, 950);
+        primaryStage.setTitle("yu-gy-oh");
+        Scene scene = new Scene(root, 800, 600);
 
 
         //set background image
 
-        Image backgroundPath = new Image(getClass().getResource("../resources/pacmanbaackg.jpg").toExternalForm());
-        BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false);
-        root.setBackground(new Background(new BackgroundImage(backgroundPath,
+
+        InputStream stream = new FileInputStream("C:\\Users\\Lenovo\\Desktop\\Phase2_MGH\\src\\main\\resources" +
+                "\\Database\\Assets\\Textures\\Campaign_11_HelpBG1.dds.png");
+        Image backGroundImage = new Image(stream);
+        BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false,
+                false, true, false);
+        root.setBackground(new Background(new BackgroundImage(backGroundImage,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -91,7 +98,7 @@ public class LoginMenu extends Application {
 
         Label nickLable = new Label("Your Nickname");      // username box
         TextField nickText = new TextField();
-        userText.setMaxWidth(250);
+        nickText.setMaxWidth(250);
 
         Label passLable = new Label("Your Password");       //password box
         PasswordField passtext = new PasswordField();
@@ -118,6 +125,7 @@ public class LoginMenu extends Application {
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                /*
                 JSONObject response = null;
                 try {
                     response = js_Pass("command", "crate_new_user", "username", userText.getText(),
@@ -125,10 +133,12 @@ public class LoginMenu extends Application {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                 */
                 userText.clear();
                 nickText.clear();
                 passtext.clear();
-                onTMessaeg.setText(response.get("message").toString());
+            //    onTMessaeg.setText(response.get("message").toString());
 
             }
 
@@ -140,6 +150,7 @@ public class LoginMenu extends Application {
         signUpButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                /*
 
                 JSONObject response = null;
                 try {
@@ -149,13 +160,16 @@ public class LoginMenu extends Application {
                 }
                 onTMessaeg.setText(response.get("message").toString());
                 if (!response.get("type").toString().equals("error")) {
+
+                 */
+                mainMenu=new MainMenu(userText.getText(),nickText.getText());
                     mainMenu.setPriorMenu(new LoginMenu());
                     try {
                         mainMenu.start(primaryStage);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
+                //}
 //d
             }
         });
@@ -175,7 +189,8 @@ public class LoginMenu extends Application {
         backbutton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //d
+                return;
+
             }
 
         });

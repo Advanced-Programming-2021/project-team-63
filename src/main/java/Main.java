@@ -1,3 +1,5 @@
+package sample;
+
 import View.Graphic.LoginMenu;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -10,18 +12,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+
 import javafx.stage.Stage;
 
-import javax.print.attribute.standard.Media;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class Main extends Application {
 
-    static Stage primaryStage;
+    public static Stage primaryStage;
     GridPane grid = new GridPane();
     Button button = new Button("start");
     LoginMenu loginMenu=new LoginMenu();
+  //  public Stage primaryStage;
 
 
 
@@ -35,27 +39,37 @@ public class Main extends Application {
 
 
         BorderPane root = new BorderPane();
-        primaryStage.setTitle("PAC-MAN");
-        primaryStage.getIcons().add(new Image(getClass().getResource("resources/logo.png").toExternalForm()));
-        Scene scene = new Scene(root, 948, 533.333);
+        primaryStage.setTitle("yo-gy-oh");
+       // primaryStage.getIcons().add(new Image(getClass().getResource("resources/logo.png").toExternalForm()));
+        Scene scene = new Scene(root, 800, 600);
 
-        Image backGroundImage = new Image(getClass().getResource("resources/pacmanbaackg.jpg").toExternalForm());
+
+        InputStream stream = new FileInputStream("C:\\Users\\Lenovo\\Desktop\\Phase2_MGH\\src\\main\\resources" +
+                "\\Database\\Assets\\Textures\\Campaign_11_HelpBG1.dds.png");
+        Image backGroundImage = new Image(stream);
         BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false,
                 false, true, false);
-        InputStream startGifPath = new FileInputStream("D:\\untitled11\\src\\sample\\resources\\pacgif2.gif");
-
-        Image startGifImage = new Image(startGifPath);
-        ImageView StartGifImageView = new ImageView();
-
-
-        // set background for scene
-
-
         root.setBackground(new Background(new BackgroundImage(backGroundImage,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 bSize)));
+
+
+
+
+
+        InputStream startGifPath = new FileInputStream("C:\\Users\\Lenovo\\Desktop\\Phase2_MGH\\src\\main\\resources\\Database\\" +
+                "Assets\\Logos\\_images_text_yugioh.dds2.png");
+
+        Image startGifImage = new Image(startGifPath);
+        ImageView StartGifImageView = new ImageView();
+
+
+
+
+        // set background for scene
+
 
         primaryStage.setScene(scene);
 
@@ -63,14 +77,15 @@ public class Main extends Application {
 
 
         StartGifImageView.setImage(startGifImage);
-        StartGifImageView.setFitHeight(300);
-        StartGifImageView.setFitWidth(400);
+        StartGifImageView.setFitHeight(150);
+        StartGifImageView.setFitWidth(200);
         root.setCenter(StartGifImageView);
 
         /// set start button
 
 
-        InputStream startButtonPicPath = new FileInputStream("D:\\untitled11\\src\\sample\\resources\\start.png");
+        InputStream startButtonPicPath = new FileInputStream("C:\\Users\\Lenovo\\Desktop\\Phase2_MGH\\src\\" +
+                "main\\resources\\Database\\Assets\\start.png");
 
         Image startButtonImage = new Image(startButtonPicPath);
         ImageView startButtonImageView = new ImageView(startButtonImage);
@@ -121,16 +136,10 @@ public class Main extends Application {
 
         //set initialize media
 
-       /* Media media = new Media(getClass().getResource("resources/pacman_beginning.wav").toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(2);
-
-        mediaPlayer.play();
-
-        */
 
 
 
 
     }
+
 }
