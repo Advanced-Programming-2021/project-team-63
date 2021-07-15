@@ -564,7 +564,7 @@ public class Menu {
                     JSONObject response = js_Pass("command", "summon_card");
                     String tributeNumber= (String) response.get("message");
 
-                    if (commandMatch(command, "^{\"tribute\"$") != null) getTribute(tributeNumber);
+                    if (commandMatch(tributeNumber, "^\\{\"tribute\":\\d\\}$") != null) getTribute(tributeNumber);
                     else System.out.println(response.get("message"));
 
 
@@ -612,7 +612,7 @@ public class Menu {
                     JSONObject response = js_Pass("command", "attack_direct");
                     if (response.get("type").equals("error")) System.out.println(response.get("message"));
                     else{
-                        if (response.get("isOver")!= null){
+                        if (response.has("isOver")){
                             System.out.println("the winner is :"+response.get("winner"));
                             return;
                         }
@@ -699,10 +699,13 @@ public class Menu {
                         JSONObject response1 = js_Pass("command", "get_board");
                         Gson gson = new Gson();
                         BoardJson boardJson = gson.fromJson(response1.get("message").toString(), BoardJson.class);
-                        printBoard(boardJson);
                     }
 
                 }
+                JSONObject response1 = js_Pass("command", "get_board");
+                Gson gson = new Gson();
+                BoardJson boardJson = gson.fromJson(response1.get("message").toString(), BoardJson.class);
+                printBoard(boardJson);
 
 
 
@@ -1345,9 +1348,9 @@ if (quantity==0){
             System.out.print("\t");
         }
         System.out.println();
-        System.out.println(boardJson.getActivePlayer().getDeckSize());
+        System.out.println(boardJson.getInActivePlayer().getDeckSize());
         System.out.println();
-        for(int i = 0 ; i < boardJson.getActivePlayer().getHandSize() ; i++){
+        for(int i = 0 ; i < boardJson.getInActivePlayer().getHandSize() ; i++){
             System.out.print("\tc");
         }
         System.out.println();
@@ -1358,31 +1361,30 @@ if (quantity==0){
 
     private void getTribute(String tributeNumber) throws Exception {
         JSONObject jsonObject = null;
-       do {
+       //do {
 
            if (tributeNumber.equals("{\"tribute\":1}")) {
 
                System.out.println("you have to tribute 1 card...enter the address");
                String command1 = scan.nextLine();
-                jsonObject= js_Pass("command", "tribute", "number","1", "address1", command1);
-
-               System.out.println(jsonObject.get("message"));
-
+               if(!command1.equals("cancel")) {
+                   jsonObject = js_Pass("command", "tribute", "number", "1", "address1", command1);
+                   System.out.println(jsonObject.get("message"));
+               }
            }
            else  if (tributeNumber.equals("{\"tribute\":2}")) {
                System.out.println("you have to tribute 2 card...enter the addresses with enter");
                String command1 = scan.nextLine();
                String command2 = scan.nextLine();
-               jsonObject= js_Pass("command", "tribute", "number","2", "address1", command1, "address2", command2);
-               System.out.println(jsonObject.get("message"));
+               if(!command1.equals("cancel") && !command2.equals("cancel")) {
+                   jsonObject = js_Pass("command", "tribute", "number", "2", "address1", command1, "address2", command2);
+                   System.out.println(jsonObject.get("message"));
+               }
            }
 
-           else if (tributeNumber.equals("cancel")) break;
+           //else if (tributeNumber.equals("cancel")) break;
 
-       }while(jsonObject.get("message").equals("error"));
-
-       return;
-
+       //}while(jsonObject.get("message").equals("error"));
     }
 
     public  void showSelectedCard(CardGeneralInfo card){

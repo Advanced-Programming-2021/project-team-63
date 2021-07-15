@@ -21,6 +21,8 @@ public class GameLogInfo {
     public GameLogInfo(GameLogType type, int mainCard){
         this.type = type;
         this.mainCard = mainCard;
+        this.tributes = new ArrayList<>();
+        this.anotherData = new HashMap<>();
     }
 
     public GameLogType getType() {

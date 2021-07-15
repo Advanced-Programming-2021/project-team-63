@@ -33,7 +33,10 @@ public class Field {
 
     public void addToMonsterZone(MonsterCard monsterCard){
         for (int index = 0; index < 5; index++) {
-            if(monsterZone[index]==null) monsterZone[index] = monsterCard;
+            if(monsterZone[index]==null){
+                monsterZone[index] = monsterCard;
+                return;
+            }
         }
     }
 

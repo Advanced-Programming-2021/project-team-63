@@ -30,6 +30,10 @@ public class MonsterCard extends Card{
         types.add(stringToType(type));
     }
 
+    public void setIsMonsterAttackInTurn(boolean isMonsterAttackInTurn){
+        this.isMonsterAttackInTurn = isMonsterAttackInTurn;
+    }
+
     public void setLevel(int level) {
         this.level = level;
     }
@@ -125,7 +129,7 @@ public class MonsterCard extends Card{
         if(targetCard.getMode().equals(Mode.ATTACK)){
             powerDiff = atk - targetCard.getAtk();
             if(powerDiff>0){
-                game.getActivePlayer().getField().killMonsterCard(targetCard,game);
+                game.getInactivePlayer().getField().killMonsterCard(targetCard,game);
                 game.getInactivePlayer().decreaseLp(powerDiff);
             }
             else if(powerDiff<0){

@@ -57,6 +57,16 @@ public class Game {
         Player tmp = getActivePlayer() ;
         setActivePlayer(getInactivePlayer());
         setInactivePlayer(tmp);
+        player1.setIsMonsterSummon(false);
+        player1.setIsMonsterSet(false);
+        player2.setIsMonsterSummon(false);
+        player2.setIsMonsterSet(false);
+        for(MonsterCard monsterCard : player1.getField().getMonsterZone()){
+            if(monsterCard != null) monsterCard.setIsMonsterAttackInTurn(false);
+        }
+        for(MonsterCard monsterCard : player2.getField().getMonsterZone()){
+            if(monsterCard != null) monsterCard.setIsMonsterAttackInTurn(false);
+        }
     }
 
     public void nextPhase(){

@@ -61,7 +61,7 @@ public class API {
             return new JSONObject(gameController.getSelectedCard());
         }
         if(commandType.equals("attack")){
-            return new JSONObject(gameController.attack((Integer) request.get("place")));
+            return new JSONObject(gameController.attack(request.getInt("place")));
         }
         if(commandType.equals("attack_direct")){
             return new JSONObject(gameController.directAttack());
@@ -144,14 +144,14 @@ public class API {
             return new JSONObject(gameController.addCardFromDeckToHand());
         }
         if(commandType.equals("tribute")){
-            int numberOfTribute = (int) request.get("number");
+            int numberOfTribute = request.getInt("number");
             if(numberOfTribute == 1){
-                int address1 = (int) request.get("address1");
+                int address1 = request.getInt("address1");
                 return new JSONObject(gameController.getTributeForSummonMonster(address1));
             }
             else{
-                int address1 = (int) request.get("address1");
-                int address2 = (int) request.get("address2");
+                int address1 = request.getInt("address1");
+                int address2 = request.getInt("address2");
                 return new JSONObject(gameController.getTributesForSummonMonster(address1,address2));
             }
         }

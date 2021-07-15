@@ -36,6 +36,14 @@ public class Player {
         this.bestLpInWin = bestLpInWin;
     }
 
+    public void setIsMonsterSummon(boolean isMonsterSummon){
+        this.isMonsterSummon = isMonsterSummon;
+    }
+
+    public void setIsMonsterSet(boolean isMonsterSet){
+        this.isMonsterSet = isMonsterSet;
+    }
+
     public void setCanRitualSummon(boolean canRitualSummon) {
         this.canRitualSummon = canRitualSummon;
     }
@@ -75,7 +83,8 @@ public class Player {
     public void setMainDeck(ArrayList<String> mainDeckNames) {
         boolean isMonster = false;
         String line = ""; 
-        for(String name : mainDeckNames){ 
+        for(String name : mainDeckNames){
+            isMonster = false;
             try{
                 BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\Database\\Monster.csv"));
                 while ((line = reader.readLine()) != null){  
@@ -89,19 +98,20 @@ public class Player {
                 }
                 reader.close(); 
             }catch (IOException e){
-                System.out.println("OHHH noo");
+                System.out.println(e.toString());
             }
-            if(!isMonster){ 
-                try{   
+            if(!isMonster) {
+                try {
                     BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\Database\\SpellTrap.csv"));
-                    while ((line = reader.readLine()) != null){  
+                    while ((line = reader.readLine()) != null) {
                         String[] card = line.split(",");
-                        if(card[0].equals(name)){
-                            mainDeck.add(new SpellCard(card[0],card[3],"0",card[1],card[2]));
+                        if (card[0].equals(name)) {
+                            mainDeck.add(new SpellCard(card[0], card[3], "0", card[1], card[2]));
                         }
                     }
-                    reader.close(); 
-                }catch (IOException e){  
+                    reader.close();
+                } catch (IOException e) {
+                    System.out.println(e.toString());
                 }
             }
         }
@@ -111,6 +121,7 @@ public class Player {
         boolean isMonster = false;
         String line = "";
         for(String name : sideDeckNames){
+            isMonster = false;
             try{
                 BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\Database\\Monster.csv"));
                 while ((line = reader.readLine()) != null){
@@ -124,7 +135,7 @@ public class Player {
                 }
                 reader.close();
             }catch (IOException e){
-                System.out.println("OHHH noo");
+                System.out.println(e.toString());
             }
             if(!isMonster){
                 try{
@@ -137,6 +148,7 @@ public class Player {
                     }
                     reader.close();
                 }catch (IOException e){
+                    System.out.println(e.toString());
                 }
             }
         }
@@ -188,6 +200,7 @@ public class Player {
 
     public Card getRandomCard(){
         Random rand = new Random();
+        if(cards.size()==0) return  null;
         int randomIndex = rand.nextInt(cards.size());
         Card randomCard = cards.get(randomIndex);
         return randomCard;
@@ -316,7 +329,7 @@ public class Player {
             return true;
         if(field.getGraveyard().contains(card))
             return true;
-        if(field.getFieldZone() == card)
+        if(field.getFieldZone().equals(card))
             return true;
         return false;
     }

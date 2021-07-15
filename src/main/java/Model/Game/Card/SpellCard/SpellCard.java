@@ -14,6 +14,7 @@ public class SpellCard extends Card{
         setName(name);
         setDescription(description);
         setNumber(number);
+        setCategory(Category.SPELL);
         setSpellCategory(spellCategory);
         setIcon(icon);
         setSpell(name);

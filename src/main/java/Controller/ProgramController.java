@@ -314,6 +314,8 @@ public class ProgramController {
             return new ApiMessage(ApiMessage.error,player2.getUsername()+"’s deck is invalid");
         }
 
+        if(player2.getUsername().equals(loggedInUser.getUsername())) return new ApiMessage(ApiMessage.error,"you can't duel with yourself ;)");
+
         if(rounds != 1 && rounds != 3){
             return new ApiMessage(ApiMessage.error,"number of rounds is not supported");
         }

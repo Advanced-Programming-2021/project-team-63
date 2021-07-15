@@ -41,19 +41,19 @@ public class GameController{
         Card selectedCard;
         switch (address){
             case SPELL_ZONE:
-                if(5 <= id)
+                if(5 < id)
                     return new ApiMessage(ApiMessage.error,"invalid selection");
-                selectedCard = game.getActivePlayer().getField().getSpellZone()[id];
+                selectedCard = game.getActivePlayer().getField().getSpellZone()[id-1];
                 break;
             case MONSTER_ZONE:
-                if(game.getActivePlayer().getField().getMonsterZone().length <= id)
+                if(game.getActivePlayer().getField().getMonsterZone().length < id)
                     return new ApiMessage(ApiMessage.error,"invalid selection");
-                selectedCard = game.getActivePlayer().getField().getMonsterZone()[id];
+                selectedCard = game.getActivePlayer().getField().getMonsterZone()[id-1];
                 break;
             case OPPONENT_SPELL_ZONE:
-                if(game.getActivePlayer().getField().getSpellZone().length <= id)
+                if(game.getActivePlayer().getField().getSpellZone().length < id)
                     return new ApiMessage(ApiMessage.error,"invalid selection");
-                selectedCard = game.getInactivePlayer().getField().getSpellZone()[id];
+                selectedCard = game.getInactivePlayer().getField().getSpellZone()[id-1];
                 break;
             case FIELD_ZONE:
                 assert id==0;
@@ -65,9 +65,9 @@ public class GameController{
                 break;
             case HAND:
                 var hand = game.getActivePlayer().getHand();
-                if(hand.size() <= id)
+                if(hand.size() < id)
                     return new ApiMessage(ApiMessage.error,"invalid selection");
-                selectedCard = hand.get(id);
+                selectedCard = hand.get(id - 1);
                 break;
             default:
                 return new ApiMessage(ApiMessage.error,"invalid selection");
@@ -96,8 +96,11 @@ public class GameController{
 
     public ApiMessage addCardFromDeckToHand() throws Exception {
         var card = game.getActivePlayer().draw();
-        game.addToGameLog(GameLogType.ADD_CARD_TO_HAND,card.hashCode());
-        return new ApiMessage(ApiMessage.successful,"new card added to the hand : " + card.getName());
+        if(card !=null) {
+            game.addToGameLog(GameLogType.ADD_CARD_TO_HAND,card.hashCode());
+            return new ApiMessage(ApiMessage.successful,"new card added to the hand : " + card.getName());
+        }
+        return  new ApiMessage(ApiMessage.error,"no card left to draw");
     }
 
     public ApiMessage summonMonster() throws Exception {
@@ -106,6 +109,9 @@ public class GameController{
 
         if(!game.getActivePlayer().getHand().contains(game.getActivePlayer().getSelectedCard()))
             return new ApiMessage(ApiMessage.error,"you can’t summon this card");
+
+        if(!game.getActivePlayer().getSelectedCard().getCategory().equals(Category.MONSTER))
+            return new ApiMessage(ApiMessage.error,"you can't summon this card");
 
         var selectedCard = (MonsterCard)game.getActivePlayer().getSelectedCard();
 
@@ -146,7 +152,7 @@ public class GameController{
 
     public ApiMessage getTributeForSummonMonster(int victimMonsterCellId) throws Exception {
         var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
-        var victimMonster = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId];
+        var victimMonster = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId-1];
 
         if(victimMonster == null)
             return new ApiMessage(ApiMessage.error,"there no monsters one this address");
@@ -158,8 +164,8 @@ public class GameController{
 
     public ApiMessage getTributesForSummonMonster(int victimMonsterCellId1, int victimMonsterCellId2) throws Exception {
         var selectedCard = (MonsterCard) game.getActivePlayer().getSelectedCard();
-        var victimMonster1 = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId1];
-        var victimMonster2 = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId2];
+        var victimMonster1 = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId1-1];
+        var victimMonster2 = game.getActivePlayer().getField().getMonsterZone()[victimMonsterCellId2-1];
 
         if(victimMonster1 == null || victimMonster2 == null)
             return new ApiMessage(ApiMessage.error,"there is no monster on one of these addresses");
@@ -258,7 +264,7 @@ public class GameController{
             return new ApiMessage(ApiMessage.error,"this card already attacked");
 
 
-        var targetMonster = game.getInactivePlayer().getField().getMonsterZone()[targetMonsterCellId];
+        var targetMonster = game.getInactivePlayer().getField().getMonsterZone()[targetMonsterCellId-1];
 
         if(targetMonster == null)
             return new ApiMessage(ApiMessage.error,"there is no card to attack here");
@@ -286,7 +292,7 @@ public class GameController{
         if(selectedCard.isMonsterAttackInTurn())
             return new ApiMessage(ApiMessage.error,"this card already attacked");
 
-        if(game.getInactivePlayer().getField().getCntFreeCellsInMonsterZone() != 0 || selectedCard.getMode() != Mode.ATTACK)
+        if(game.getInactivePlayer().getField().getCntFreeCellsInMonsterZone() != 5 || selectedCard.getMode() != Mode.ATTACK)
             return new ApiMessage(ApiMessage.error,"you can’t attack the opponent directly");
 
         game.addToGameLog(GameLogType.DIRECT_ATTACK,selectedCard.hashCode());
@@ -300,14 +306,14 @@ public class GameController{
     public ApiMessage isRoundOver() throws Exception {
         Player looser;
         Player winner;
-        if(game.getActivePlayer().getLp() <= 0){
-            looser = game.getActivePlayer();
-            winner = game.getInactivePlayer();
+        if(game.getPlayer1().getLp() <= 0){
+            looser = game.getPlayer1();
+            winner = game.getPlayer2();
             return endRound(looser,winner);
         }
-        if(game.getInactivePlayer().getLp() <= 0){
-            looser = game.getInactivePlayer();
-            winner = game.getActivePlayer();
+        if(game.getPlayer2().getLp() <= 0){
+            looser = game.getPlayer2();
+            winner = game.getPlayer1();
             return endRound(looser,winner);
         }
         return null;
