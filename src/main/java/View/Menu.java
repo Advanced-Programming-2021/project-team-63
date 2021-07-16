@@ -855,6 +855,22 @@ if (quantity==0){
 
     }
 
+    public void showPurchaisedCards(ArrayList<CardGeneralInfo> cards){
+
+        LinkedList<CardGeneralInfo> orderdCardList = new LinkedList<>(cards);
+
+        orderdCardList.sort(Comparator.comparing(CardGeneralInfo::getName));
+
+
+        for (CardGeneralInfo card : orderdCardList) {
+
+            System.out.println(card.getName() + ":" + card.getDescription());
+
+        }
+
+
+    }
+
     public void showDeck(ShowDeckJson object) {
         System.out.println("Deck: " + object.getName());
         if (object.isSideDeck()) System.out.println("Side deck:");
@@ -1103,7 +1119,7 @@ if (quantity==0){
         ShowDeck showDeck = new ShowDeck();
         ShowDeck showDeck1 = (ShowDeck) showDeck.run(command);
 
-        if (Boolean.toString(showDeck1.cards) == null && showDeck1.deckName != null) {
+        if (showDeck1.cards==false && showDeck1.deckName != null) {
 
             JSONObject response
                     = js_Pass("command", "show_deck", "deckName", showDeck1.deckName, "main_side_?",  Boolean.toString( showDeck1.side));
@@ -1115,15 +1131,18 @@ if (quantity==0){
                 ShowDeckJson Deck = gson.fromJson((JsonElement) response.get("message"), ShowDeckJson.class);
                 showDeck(Deck);
             }
-        } else if (Boolean.toString(showDeck1.cards) != null && showDeck1.deckName != null && Boolean.toString(showDeck1.side) == null) {
+        } else if (showDeck1.cards != false && showDeck1.deckName == null ) {
             JSONObject response
                     = js_Pass("command", "show_deck_all");
             if (response.get("type").equals("error")) System.out.println(response.get("message"));
 
             else {
                 Gson gson = new Gson();
-                ShowAllDecksJson allDecks = gson.fromJson((JsonElement) response.get("message"), ShowAllDecksJson.class);
-                showAllDecks(allDecks);
+
+                Type cardListType = new TypeToken<ArrayList<CardGeneralInfo>>() {}.getType();
+
+                ArrayList<CardGeneralInfo> cardsArray = gson.fromJson((String) response.get("message"), cardListType);
+                showPurchaisedCards(cardsArray);
             }
 
         } else System.out.println("invalid command");
