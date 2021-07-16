@@ -1189,9 +1189,9 @@ if (quantity==0){
     }
 
     public void set(String command) throws Exception {
-        int startwith = commandMatch(command, "^\\s*set").end() + 1;
+        int startwith = commandMatch(command, "^\\s*set").end() ;
 
-        if (command.substring(startwith).isEmpty()) {
+        if (commandMatch(command,"^\\s*set$")!=null) {
             JSONObject response
                     = js_Pass("command", "set_card");
             System.out.println(response
@@ -1201,7 +1201,7 @@ if (quantity==0){
         } else {
 
             Set set = new Set();
-            Set set1 = (Set) set.run(command.substring(startwith));
+            Set set1 = (Set) set.run(command.substring(startwith+1));
             JSONObject response
                     = js_Pass("command", "set_position", "position", set1.position);
             System.out.println(response
