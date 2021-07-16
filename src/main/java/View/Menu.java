@@ -433,6 +433,7 @@ public class Menu {
             }
 
             try {
+                command = scan.nextLine();
 
                 if (commandMatch(command, "^\\s*menu show-current\\s*$") != null)
                     System.out.println("import/export menu");
@@ -451,6 +452,8 @@ public class Menu {
 
 
                     Matcher cardName = commandMatch(command, "^\\s*export card (.+)\\s*$");
+
+                    cardName.find();
 
                     JSONObject response
                             = js_Pass("command", "export_card", "card_name ", cardName.group(1));
@@ -624,7 +627,7 @@ public class Menu {
                 } else if (commandMatch(command, "^\\s*surrender\\s*$") != null) {
 
                     JSONObject response = js_Pass("command", "surrender");
-                    System.out.println(response.get("message"));
+                    //System.out.println(response.get("message"));
 
 
 
@@ -759,61 +762,70 @@ public class Menu {
     public void showScoreboard(ArrayList<ScoreboardInfo> scoreboardInfos) {
 
 
-        LinkedList<ScoreboardInfo> scoreList = new LinkedList<>(scoreboardInfos);
-        List<ScoreboardInfo> interChange = new ArrayList<>();
-        int quantity = scoreboardInfos.size();
-
-if (quantity==0){
-    System.out.println("none");return;
-}
-        for (int i = 0; i <= quantity - 2; i++) {
-            for (int j = i + 1; i <= quantity - 1; i++) {
-
-                if (scoreList.get(i).score < scoreList.get(j).score) {
-                    interChange.add(scoreboardInfos.get(j));
-                    scoreList.set(j, scoreList.get(i));
-                    scoreList.set(i, interChange.get(0));
-                    interChange.clear();
-
-                } else if ((scoreList.get(i).score == scoreList.get(j).score)) {
-
-                    if (scoreList.get(i).nickname.compareTo(scoreList.get(j).nickname) < 0) {
-                        interChange.add(scoreList.get(j));
-                        scoreList.set(j, scoreList.get(i));
-                        scoreList.set(i, interChange.get(0));
-                        interChange.clear();
-                    }
-
-                }
-
-
-            }
-
-
-        }
-
-
-        int priorScore = 0;
-        int i = 1, j = 1;
-        for (ScoreboardInfo user :
-                scoreList) {
-            String scoreLine;
+//        LinkedList<ScoreboardInfo> scoreList = new LinkedList<>(scoreboardInfos);
+//        List<ScoreboardInfo> interChange = new ArrayList<>();
+//        int quantity = scoreboardInfos.size();
+//
+//        if (quantity==0){
+//            System.out.println("none");return;
+//        }
+//        for (int i = 0; i <= quantity - 2; i++) {
+//            for (int j = i + 1; i <= quantity - 1; i++) {
+//
+//                if (scoreList.get(i).score < scoreList.get(j).score) {
+//                    interChange.add(scoreboardInfos.get(j));
+//                    scoreList.set(j, scoreList.get(i));
+//                    scoreList.set(i, interChange.get(0));
+//                    interChange.clear();
+//
+//                } else if ((scoreList.get(i).score == scoreList.get(j).score)) {
+//
+//                    if (scoreList.get(i).nickname.compareTo(scoreList.get(j).nickname) < 0) {
+//                        interChange.add(scoreList.get(j));
+//                        scoreList.set(j, scoreList.get(i));
+//                        scoreList.set(i, interChange.get(0));
+//                        interChange.clear();
+//                    }
+//
+//                }
+//
+//
+//            }
+//
+//
+//        }
 
 
-            if (i == 1) {
-                System.out.println(i + "- " + user.nickname + ": " + user.score);
-                j++;
-            } else if (user.score == priorScore) {
-                System.out.println(i + "-  " + user.nickname + ": " + user.score);
-                j++;
-            } else {
-                System.out.println(j + "- " + user.nickname + ":  " + user.score);
-                i = j;
-                j++;
-            }
-            priorScore = user.score;
-
-
+//        int priorScore = 0;
+//        int i = 1, j = 1;
+//        for (ScoreboardInfo user :
+//                scoreList) {
+//            String scoreLine;
+//
+//
+//            if (i == 1) {
+//                System.out.println(i + "- " + user.nickname + ": " + user.score);
+//                j++;
+//            } else if (user.score == priorScore) {
+//                System.out.println(i + "-  " + user.nickname + ": " + user.score);
+//                j++;
+//            } else {
+//                System.out.println(j + "- " + user.nickname + ":  " + user.score);
+//                i = j;
+//                j++;
+//            }
+//            priorScore = user.score;
+//
+//
+//        }
+        int rank = 1;
+        int prvScore = 0;
+        scoreboardInfos.sort(Comparator.comparing(ScoreboardInfo::getNickname));
+        scoreboardInfos.sort(Comparator.comparing(ScoreboardInfo::getScore));
+        for(ScoreboardInfo scoreboardInfo : scoreboardInfos){
+            if(scoreboardInfo.getScore() < prvScore) rank++;
+            System.out.println(rank + "-" + scoreboardInfo.getNickname() + ":" + scoreboardInfo.getScore());
+            prvScore = scoreboardInfo.getScore();
         }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -849,22 +861,6 @@ if (quantity==0){
         for (DeckGeneralInfo object1 : object.decks) {
             System.out.println(object1.name + ":" + " main deck " + object1.mainDeckSize + "," + "side deck " + object1.sideDeckSize);
             System.out.println();
-
-        }
-
-
-    }
-
-    public void showPurchaisedCards(ArrayList<CardGeneralInfo> cards){
-
-        LinkedList<CardGeneralInfo> orderdCardList = new LinkedList<>(cards);
-
-        orderdCardList.sort(Comparator.comparing(CardGeneralInfo::getName));
-
-
-        for (CardGeneralInfo card : orderdCardList) {
-
-            System.out.println(card.getName() + ":" + card.getDescription());
 
         }
 
@@ -1119,7 +1115,7 @@ if (quantity==0){
         ShowDeck showDeck = new ShowDeck();
         ShowDeck showDeck1 = (ShowDeck) showDeck.run(command);
 
-        if (showDeck1.cards==false && showDeck1.deckName != null) {
+        if (/*Boolean.toString(showDeck1.cards) != null &&*/ showDeck1.deckName != null) {
 
             JSONObject response
                     = js_Pass("command", "show_deck", "deckName", showDeck1.deckName, "main_side_?",  Boolean.toString( showDeck1.side));
@@ -1131,18 +1127,15 @@ if (quantity==0){
                 ShowDeckJson Deck = gson.fromJson((JsonElement) response.get("message"), ShowDeckJson.class);
                 showDeck(Deck);
             }
-        } else if (showDeck1.cards != false && showDeck1.deckName == null ) {
+        } else if (/*Boolean.toString(showDeck1.cards) != null && showDeck1.deckName != null &&*/ Boolean.toString(showDeck1.side) == null) {
             JSONObject response
                     = js_Pass("command", "show_deck_all");
             if (response.get("type").equals("error")) System.out.println(response.get("message"));
 
             else {
                 Gson gson = new Gson();
-
-                Type cardListType = new TypeToken<ArrayList<CardGeneralInfo>>() {}.getType();
-
-                ArrayList<CardGeneralInfo> cardsArray = gson.fromJson((String) response.get("message"), cardListType);
-                showPurchaisedCards(cardsArray);
+                ShowAllDecksJson allDecks = gson.fromJson((JsonElement) response.get("message"), ShowAllDecksJson.class);
+                showAllDecks(allDecks);
             }
 
         } else System.out.println("invalid command");
@@ -1189,9 +1182,9 @@ if (quantity==0){
     }
 
     public void set(String command) throws Exception {
-        int startwith = commandMatch(command, "^\\s*set").end() ;
+        int startwith = commandMatch(command, "^\\s*set").end() + 1;
 
-        if (commandMatch(command,"^\\s*set$")!=null) {
+        if (command.substring(startwith).isEmpty()) {
             JSONObject response
                     = js_Pass("command", "set_card");
             System.out.println(response
@@ -1201,7 +1194,7 @@ if (quantity==0){
         } else {
 
             Set set = new Set();
-            Set set1 = (Set) set.run(command.substring(startwith+1));
+            Set set1 = (Set) set.run(command.substring(startwith));
             JSONObject response
                     = js_Pass("command", "set_position", "position", set1.position);
             System.out.println(response

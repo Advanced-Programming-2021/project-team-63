@@ -110,8 +110,8 @@ public class GameController{
         if(!game.getActivePlayer().getHand().contains(game.getActivePlayer().getSelectedCard()))
             return new ApiMessage(ApiMessage.error,"you can’t summon this card");
 
-        if(!game.getActivePlayer().getSelectedCard().getCategory().equals(Category.MONSTER))
-            return new ApiMessage(ApiMessage.error,"you can't summon this card");
+//        if(!game.getActivePlayer().getSelectedCard().getCategory().equals(Category.MONSTER))
+//            return new ApiMessage(ApiMessage.error,"you can't summon this card");
 
         var selectedCard = (MonsterCard)game.getActivePlayer().getSelectedCard();
 

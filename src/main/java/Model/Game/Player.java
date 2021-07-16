@@ -8,18 +8,18 @@ import Model.Game.Card.SpellCard.*;
 import Model.JsonObject.AttackInfo;
 
 public class Player {
-    private String nickname;
-    private Field field;
-    private int lp;
-    private ArrayList<Card> mainDeck;
-    private ArrayList<Card> sideDeck;
-    private ArrayList<Card> cards;
-    private ArrayList<Card> hand;
-    private boolean canRitualSummon;
-    private boolean isMonsterSummon;
-    private boolean isMonsterSet;
-    private int bestLpInWin;
-    private Card selectedCard;
+    protected String nickname;
+    protected Field field;
+    protected int lp;
+    protected ArrayList<Card> mainDeck;
+    protected ArrayList<Card> sideDeck;
+    protected ArrayList<Card> cards;
+    protected ArrayList<Card> hand;
+    protected boolean canRitualSummon;
+    protected boolean isMonsterSummon;
+    protected boolean isMonsterSet;
+    protected int bestLpInWin;
+    protected Card selectedCard;
 
     public Player(String nickName,ArrayList<String> mainDeck,ArrayList<String> sideDeck,int bestLpInWin){
         this.mainDeck = new ArrayList<>();
@@ -329,7 +329,7 @@ public class Player {
             return true;
         if(field.getGraveyard().contains(card))
             return true;
-        if(field.getFieldZone().equals(card))
+        if(card == field.getFieldZone())
             return true;
         return false;
     }

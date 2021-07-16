@@ -290,6 +290,9 @@ public class ProgramController {
     }
 
     public ApiMessage createDuel(String usernamePlayer2, int rounds, GameController gameController) throws Exception {
+        if(usernamePlayer2.equals("ai")){
+
+        }
 
         if(!doesUserWithThisUsernameExist(usernamePlayer2)){
             return new ApiMessage(ApiMessage.error,"there is no player with this username");

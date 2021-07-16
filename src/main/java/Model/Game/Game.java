@@ -67,6 +67,10 @@ public class Game {
         for(MonsterCard monsterCard : player2.getField().getMonsterZone()){
             if(monsterCard != null) monsterCard.setIsMonsterAttackInTurn(false);
         }
+        if(activePlayer.getNickname().equals("AI")){
+            AI ai = (AI) activePlayer;
+            ai.play(this);
+        }
     }
 
     public void nextPhase(){
